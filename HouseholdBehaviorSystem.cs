@@ -19,8 +19,10 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Scripting;
+using Game;
+using Game.Simulation;
 
-namespace Game.Simulation;
+namespace RealEco;
 
 [CompilerGenerated]
 public class HouseholdBehaviorSystem : GameSystemBase
@@ -45,6 +47,7 @@ public class HouseholdBehaviorSystem : GameSystemBase
 
         public void Execute()
         {
+            //Plugin.Log($"ProcessConsumptionJob: {m_Queue.Count}");
             int2 @int = default(int2);
             ResourceStack item;
             while (m_Queue.TryDequeue(out item))
@@ -172,6 +175,7 @@ public class HouseholdBehaviorSystem : GameSystemBase
             {
                 return;
             }
+            //Plugin.Log($"HouseholdTickJob, frame {m_UpdateFrameIndex}: {chunk.Count}");
             NativeArray<Entity> nativeArray = chunk.GetNativeArray(m_EntityType);
             NativeArray<Household> nativeArray2 = chunk.GetNativeArray(ref m_HouseholdType);
             NativeArray<HouseholdNeed> nativeArray3 = chunk.GetNativeArray(ref m_HouseholdNeedType);
@@ -204,6 +208,7 @@ public class HouseholdBehaviorSystem : GameSystemBase
                     m_DebugResourcesQueue.Enqueue(math.clamp(household.m_Resources, -20000, 20000));
                 }
                 float num = GetConsumptionMultiplier(Mathf.RoundToInt((float)householdWealth / math.max(1f, bufferAccessor[i].Length))) * m_EconomyParameters.m_ResourceConsumption * (float)dynamicBuffer.Length;
+                //Plugin.Log($"HouseholdTickJob entity {entity.Index}: needs {value.m_Amount} of {value.m_Resource}, wealth {householdWealth} cons_mult {num}");
                 if (chunk.Has(ref m_TouristHouseholdType))
                 {
                     num *= m_EconomyParameters.m_TouristConsumptionMultiplier;
@@ -244,6 +249,7 @@ public class HouseholdBehaviorSystem : GameSystemBase
                     }
                     if (household.m_Resources < 0)
                     {
+                        //Plugin.Log($"HouseholdTickJob entity {entity.Index}: no resources, create need");
                         float lastCommutePerCitizen = GetLastCommutePerCitizen(dynamicBuffer, m_Workers);
                         int cars = 0;
                         if (m_OwnedVehicles.HasBuffer(entity))
@@ -256,11 +262,15 @@ public class HouseholdBehaviorSystem : GameSystemBase
                             value.m_Amount = kCarAmount;
                             nativeArray3[i] = value;
                             nativeArray2[i] = household;
+                            // Infixo: why break? it needs a car, but there is no consumption
+                            // it registers as HouseholdNeed but when is it fulfilled?
                             break;
                         }
-                        int num3 = math.min(80, Mathf.RoundToInt(200f / math.max(1f, math.sqrt(m_EconomyParameters.m_TrafficReduction * (float)population))));
-                        if (random.NextInt(100) < num3)
-                        {
+                        // Infixo: this is probably for reducing traffic?
+                        // but it cannot work, eventually every household that lacks resources WILL send someone for shopping
+                        //int num3 = math.min(80, Mathf.RoundToInt(200f / math.max(1f, math.sqrt(m_EconomyParameters.m_TrafficReduction * (float)population))));
+                        //if (random.NextInt(100) < num3)
+                        //{
                             ResourceIterator iterator = ResourceIterator.GetIterator();
                             int num4 = 0;
                             while (iterator.Next())
@@ -275,6 +285,8 @@ public class HouseholdBehaviorSystem : GameSystemBase
                                 num4 -= weight;
                                 if (weight > 0 && num4 <= num5)
                                 {
+                                    // Infixo: the core part where actual consumption need is created and inserted into the queue
+                                    // then it gets accumulated and processed by other systems, mainly CommercialDemandSystem
                                     value.m_Resource = iterator.resource;
                                     float price = m_ResourceDatas[m_ResourcePrefabs[iterator.resource]].m_Price;
                                     value.m_Amount = Mathf.CeilToInt((float)(2000 * dynamicBuffer.Length) / price);
@@ -283,12 +295,16 @@ public class HouseholdBehaviorSystem : GameSystemBase
                                     m_ConsumptionQueue.Enqueue(new ResourceStack
                                     {
                                         m_Resource = value.m_Resource,
-                                        m_Amount = Mathf.RoundToInt((float)value.m_Amount / (0.01f * (float)num3))
+                                        // Infixo: actual fix is to keep consumption at the same level as needs
+                                        //m_Amount = Mathf.RoundToInt((float)value.m_Amount / (0.01f * (float)num3))
+                                        m_Amount = value.m_Amount
                                     });
+                                    //int amount = Mathf.RoundToInt((float)value.m_Amount / (0.01f * (float)num3));
+                                    //Plugin.Log($"HouseholdTickJob entity {entity.Index} cims {dynamicBuffer.Length}: needs {value.m_Amount} of {value.m_Resource} at price {price}, consumption {amount}, num3 {num3}, traf {m_EconomyParameters.m_TrafficReduction}, pop {population}");
                                     return;
                                 }
                             }
-                        }
+                        // } // Infixo: removed virtual traffic reduction
                     }
                 }
                 int max = math.clamp(Mathf.RoundToInt(0.06f * (float)population), 64, 1024);
@@ -686,6 +702,7 @@ public class HouseholdBehaviorSystem : GameSystemBase
         m_ConsumptionQueue = new NativeQueue<ResourceStack>(Allocator.Persistent);
         RequireForUpdate(m_HouseholdGroup);
         RequireForUpdate(m_EconomyParameterGroup);
+        Plugin.Log("Modded HouseholdBehaviorSystem created.");
     }
 
     [Preserve]
