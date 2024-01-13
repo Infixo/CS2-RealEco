@@ -28,6 +28,7 @@ public static class PrefabSystem_AddPrefab_Patches
     [HarmonyPrefix]
     public static bool DemandPrefab_Prefix(object __instance, PrefabBase prefab)
     {
+        return true; // DISABLED
         // types: BuildingPrefab, RenderPrefab, StaticObjectPrefab, EconomyPrefab, ZonePrefab, etc.
         if (prefab.GetType().Name == "DemandPrefab")
         {
@@ -50,15 +51,29 @@ public static class PrefabSystem_AddPrefab_Patches
         {
             EconomyPrefab p = (EconomyPrefab)prefab;
             p.m_ExtractorCompanyExportMultiplier = 0.70f; // default: 0.85f, this change effectively increases Extractor production by 21%
-            Plugin.Log($"{prefab.name}: " +
-                $"discount {p.m_CommercialDiscount} extMult {p.m_ExtractorCompanyExportMultiplier} " +
-                $"wages {p.m_Wage0} {p.m_Wage1} {p.m_Wage2} {p.m_Wage3} {p.m_Wage4}");
-            Plugin.Log($"{prefab.name}: " +
-                $"effI {p.m_IndustrialEfficiency} effC {p.m_CommercialEfficiency} effE {p.m_ExtractorEfficiency} " +
-                $"resCon {p.m_ResourceConsumption} tour {p.m_TouristConsumptionMultiplier} traff {p.m_TrafficReduction}");
+            Plugin.Log($"Modded {prefab.name}: ExtExpMult {p.m_ExtractorCompanyExportMultiplier}");
         }
         return true;
     }
+
+    /* Infixo: this does not have any effect which is super weird
+    [HarmonyPrefix]
+    public static bool ExtractorParameterPrefab_Prefix(object __instance, PrefabBase prefab)
+    {
+        // types: BuildingPrefab, RenderPrefab, StaticObjectPrefab, EconomyPrefab, ZonePrefab, etc.
+        if (prefab.GetType().Name == "ExtractorParameterPrefab")
+        {
+            // This tweaks effectively lower the usage rate of natural resources to 50% of the original
+            ExtractorParameterPrefab p = (ExtractorParameterPrefab)prefab;
+            p.m_ForestConsumption = 0.5f; // 1f, Wood is used approx. 3x faster
+            p.m_FertilityConsumption = 0.05f; // 0.1f, Fetile land is used approx. 4x faster
+            p.m_OreConsumption = 1000000f; // 500000f, Ore is used approx. 4x faster
+            p.m_OilConsumption = 200000f; // 100000f, Oil is used 4x faster
+            Plugin.Log($"Modded {prefab.name}: forest {p.m_ForestConsumption} fertility {p.m_FertilityConsumption} ore {p.m_OreConsumption} oil {p.m_OilConsumption}");
+        }
+        return true;
+    }
+    */
 
     private static readonly Dictionary<string, float> MaxWorkersPerCellDict = new Dictionary<string, float>
     {
@@ -98,16 +113,18 @@ public static class PrefabSystem_AddPrefab_Patches
         {"Industrial_VegetableExtractor", WorkplaceComplexity.Simple },
         {"Industrial_LivestockExtractor", WorkplaceComplexity.Simple },
         {"Industrial_CottonExtractor",    WorkplaceComplexity.Simple },
+        {"Industrial_SawMill",            WorkplaceComplexity.Simple },
         // Simple => Manual
         {"Commercial_FoodStore",   WorkplaceComplexity.Manual },
         {"Commercial_Restaurant",  WorkplaceComplexity.Manual },
-        {"Commercial_GasStation",  WorkplaceComplexity.Manual },
+        //{"Commercial_GasStation",  WorkplaceComplexity.Manual },
         {"Commercial_Bar",         WorkplaceComplexity.Manual },
         {"Commercial_ConvenienceFoodStore",     WorkplaceComplexity.Manual },
-        {"Commercial_FashionStore",             WorkplaceComplexity.Manual },
-        {"Industrial_TextileFromCottonFactory", WorkplaceComplexity.Manual },
+        //{"Commercial_FashionStore",             WorkplaceComplexity.Manual },
+        //{"Industrial_TextileFromCottonFactory", WorkplaceComplexity.Manual },
         // Simple => Complex
         {"Commercial_VehicleStore",       WorkplaceComplexity.Complex },
+        {"Industrial_MetalSmelter",       WorkplaceComplexity.Complex },
         {"Industrial_OilExtractor",       WorkplaceComplexity.Complex },
         {"Commercial_ChemicalStore",      WorkplaceComplexity.Complex },
         {"Industrial_MachineryFactory",   WorkplaceComplexity.Complex },
@@ -117,10 +134,10 @@ public static class PrefabSystem_AddPrefab_Patches
         // Complex => Hitech
         {"Industrial_ElectronicsFactory", WorkplaceComplexity.Hitech },
         {"Industrial_PlasticsFactory",    WorkplaceComplexity.Hitech },
-        {"Industrial_OilRefinery",        WorkplaceComplexity.Hitech },
-        {"Commercial_DrugStore",          WorkplaceComplexity.Hitech },
+        //{"Industrial_OilRefinery",        WorkplaceComplexity.Hitech },
+        //{"Commercial_DrugStore",          WorkplaceComplexity.Hitech },
         {"Industrial_ChemicalFactory",    WorkplaceComplexity.Hitech },
-        {"Industrial_VehicleFactory",     WorkplaceComplexity.Hitech },
+        //{"Industrial_VehicleFactory",     WorkplaceComplexity.Hitech },
         {"Office_Bank",                   WorkplaceComplexity.Hitech },
         {"Office_MediaCompany",           WorkplaceComplexity.Hitech },
     };
