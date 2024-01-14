@@ -50,7 +50,7 @@ public static class PrefabSystem_AddPrefab_Patches
         if (prefab.GetType().Name == "EconomyPrefab")
         {
             EconomyPrefab p = (EconomyPrefab)prefab;
-            p.m_ExtractorCompanyExportMultiplier = 0.70f; // default: 0.85f, this change effectively increases Extractor production by 21%
+            p.m_ExtractorCompanyExportMultiplier = 0.65f; // default: 0.85f, this change effectively increases Extractor production by 31%
             Plugin.Log($"Modded {prefab.name}: ExtExpMult {p.m_ExtractorCompanyExportMultiplier}");
         }
         return true;
@@ -77,10 +77,10 @@ public static class PrefabSystem_AddPrefab_Patches
 
     private static readonly Dictionary<string, float> MaxWorkersPerCellDict = new Dictionary<string, float>
     {
-        {"Industrial_ForestryExtractor",  0.05f}, // 0.02
+        {"Industrial_ForestryExtractor",  0.04f}, // 0.02
         {"Industrial_GrainExtractor",     0.06f}, // 0.032
         {"Industrial_OreExtractor",       0.10f}, // 0.04
-        {"Industrial_OilExtractor",       0.12f}, // 0.04
+        {"Industrial_OilExtractor",       0.15f}, // 0.04
         {"Industrial_CoalMine",           0.15f}, // 0.1
         {"Industrial_StoneQuarry",        0.12f}, // 0.08
         {"Industrial_VegetableExtractor", 0.08f}, // 0.032
@@ -106,7 +106,7 @@ public static class PrefabSystem_AddPrefab_Patches
     
     private static readonly Dictionary<string, WorkplaceComplexity> ComplexityDict = new Dictionary<string, WorkplaceComplexity>
     {
-        // Infixo stats before 9,28,11,4 => after 11,19,10,12
+        // Infixo stats before 9,28,11,4 => after 8,21,14,9
         // Manual => Simple
         {"Industrial_GrainExtractor",     WorkplaceComplexity.Simple },
         {"Industrial_OreExtractor",       WorkplaceComplexity.Simple },
@@ -120,13 +120,13 @@ public static class PrefabSystem_AddPrefab_Patches
         //{"Commercial_GasStation",  WorkplaceComplexity.Manual },
         {"Commercial_Bar",         WorkplaceComplexity.Manual },
         {"Commercial_ConvenienceFoodStore",     WorkplaceComplexity.Manual },
-        //{"Commercial_FashionStore",             WorkplaceComplexity.Manual },
+        {"Commercial_FashionStore",             WorkplaceComplexity.Manual },
         //{"Industrial_TextileFromCottonFactory", WorkplaceComplexity.Manual },
         // Simple => Complex
-        {"Commercial_VehicleStore",       WorkplaceComplexity.Complex },
+        //{"Commercial_VehicleStore",       WorkplaceComplexity.Complex },
         {"Industrial_MetalSmelter",       WorkplaceComplexity.Complex },
-        {"Industrial_OilExtractor",       WorkplaceComplexity.Complex },
-        {"Commercial_ChemicalStore",      WorkplaceComplexity.Complex },
+        //{"Industrial_OilExtractor",       WorkplaceComplexity.Complex },
+        //{"Commercial_ChemicalStore",      WorkplaceComplexity.Complex },
         {"Industrial_MachineryFactory",   WorkplaceComplexity.Complex },
         {"Industrial_BeverageFromGrainFactory",      WorkplaceComplexity.Complex },
         {"Industrial_BeverageFromVegetablesFactory", WorkplaceComplexity.Complex },
