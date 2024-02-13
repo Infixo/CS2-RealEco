@@ -19,16 +19,16 @@ public static class PrefabSystem_AddPrefab_Patches
         {ResourceInEditor.Furniture, 90 },
         //{ResourceInEditor.Vehicles,    -
         {ResourceInEditor.Petrochemicals,  30 },
-        {ResourceInEditor.Plastics, 90 },
-        //{ResourceInEditor.Electronics, -
-        //{ResourceInEditor.Software,    -
+        {ResourceInEditor.Plastics, 70 }, // 110
+        {ResourceInEditor.Electronics, 90 }, // 120
+        //{ResourceInEditor.Software,    - // 40
         //{ResourceInEditor.Chemicals,   -
         //{ResourceInEditor.Pharmaceuticals, -
         {ResourceInEditor.Beverages, 45 },
         {ResourceInEditor.Textiles, 60 },
-        {ResourceInEditor.Telecom, 60 },
-        //{ResourceInEditor.Financial   -
-        {ResourceInEditor.Media, 50 },
+        {ResourceInEditor.Telecom, 60 }, // 80
+        {ResourceInEditor.Financial, 80 }, // 100
+        //{ResourceInEditor.Media, 50 }, // 60
         //{ResourceInEditor.Entertainment
         //{ResourceInEditor.Recreation
     };
@@ -123,19 +123,18 @@ public static class PrefabSystem_AddPrefab_Patches
         {
             EconomyPrefab p = (EconomyPrefab)prefab;
             p.m_ExtractorCompanyExportMultiplier = 0.75f; // default: 0.85f, this change effectively increases Extractor production; 0.65f for 31%, 0.75f for 13%, 0.70 for 21%
-            p.m_IndustrialProfitFactor = 0.0009f; // 0.0001f
+            p.m_IndustrialProfitFactor = 0.0007f; // 0.0001f
             Plugin.Log($"Modded {prefab.name}: ExtrExpMult {p.m_ExtractorCompanyExportMultiplier} IndProfFact {p.m_IndustrialProfitFactor}");
-            /*
-            p.m_Wage0 = 1500; // 1200, increase wages
-            p.m_Wage1 = 2500; // 2000
-            p.m_Wage2 = 3500; // 2500
-            p.m_Wage3 = 4500; // 3500
-            p.m_Wage4 = 5500; // 5000
-            p.m_Pension = 800; // 800 - for Elders
-            p.m_FamilyAllowance = 300; // 300 - for Child and Teen
-            p.m_UnemploymentBenefit = 800; // 800 - for unemployed Adults
+            // adjust wages
+            p.m_Wage0 = 1400; // 1200
+            p.m_Wage1 = 1800; // 2000
+            //p.m_Wage2 = 3500; // 2500
+            //p.m_Wage3 = 4500; // 3500
+            p.m_Wage4 = 4500; // 5000
+            //p.m_Pension = 800; // 800 - for Elders
+            //p.m_FamilyAllowance = 300; // 300 - for Child and Teen
+            //p.m_UnemploymentBenefit = 800; // 800 - for unemployed Adults
             Plugin.Log($"Modded {prefab.name}: Wages {p.m_Wage0} {p.m_Wage1} {p.m_Wage2} {p.m_Wage3} {p.m_Wage4} Pension {p.m_Pension}");
-            */
         }
         return true;
     }
@@ -187,11 +186,22 @@ public static class PrefabSystem_AddPrefab_Patches
         {"Industrial_LivestockExtractor", 90},
         {"Industrial_CottonExtractor",    70},
         */
-        { "Office_SoftwareCompany",  8 }, // 20, 1 Electronics -> Software
-        { "Office_Bank",             6 }, // 20, 1 Software
-        { "Office_MediaCompany",    10 }, // 20, 1 Software
-        { "Office_TelecomCompany",   8 }, // 20, 1 Electronics + 2 Software
-
+        // industry
+        { "Industrial_FoodFactory",      3 }, // 1 Vegetables + 1 Livestock -> 2 Food
+        { "Industrial_MachineryFactory", 1 }, // 1 Steel + 1 Metal -> Machinery
+        { "Industrial_VehicleFactory",   1 }, // 1 Plastics + 1 Metal -> Vehicles
+        { "Industrial_BeverageFromGrainFactory",      2 }, // 1 Grain -> 1 Beverages
+        { "Industrial_BeverageFromVegetablesFactory", 2 }, // 1 Vegetables -> 1 Beverages
+        { "Industrial_TextileFromCottonFactory",         2 }, // 1 Cotton -> 1 Textile
+        { "Industrial_TextileFromLivestockFactory",      2 }, // 1 Livestock -> 1 Textile
+        { "Industrial_TextileFromPetrochemicalsFactory", 2 }, // 1 Grain -> 3 Texttiles
+        { "Industrial_ConvenienceFoodFromLivestockFactory", 2 }, // 1 Livestock -> 1 Conv.food
+        { "Industrial_ConvenienceFoodFromGrainFactory",     2 }, // 1 Grain -> 1 Conv.food
+        // office
+        { "Office_SoftwareCompany", 10 }, // 1 Electronics -> 20 Software
+        { "Office_Bank",             4 }, // 1 Software -> 20 Financial
+        { "Office_MediaCompany",    10 }, // 1 Software -> 20 Media
+        { "Office_TelecomCompany",  10 }, // 1 Electronics + 2 Software -> 20 Telecom
     };
     
     private static readonly Dictionary<string, WorkplaceComplexity> ComplexityDict = new Dictionary<string, WorkplaceComplexity>
@@ -253,14 +263,14 @@ public static class PrefabSystem_AddPrefab_Patches
         {"Commercial_RecreactionStore", 35}, // 360
         // extractors
         {"Industrial_ForestryExtractor", 25}, // 30
-        {"Industrial_GrainExtractor", 30}, // 25
+        {"Industrial_GrainExtractor", 20}, // 25
         {"Industrial_OreExtractor", 30}, // 35
         {"Industrial_OilExtractor", 60}, // 90
         {"Industrial_CoalMine", 45}, // 60
         {"Industrial_StoneQuarry", 25}, // 30
-        {"Industrial_VegetableExtractor", 30}, // 30
+        {"Industrial_VegetableExtractor", 25}, // 30
         {"Industrial_LivestockExtractor", 20}, // 25
-        {"Industrial_CottonExtractor", 30}, // 30
+        {"Industrial_CottonExtractor", 25}, // 30
         // industrial
         {"Industrial_FoodFactory", 30}, // 50, price 40->50
         {"Industrial_PaperMill", 50}, // 85, price 60->70
@@ -286,7 +296,7 @@ public static class PrefabSystem_AddPrefab_Patches
         {"Industrial_FurnitureFactory", 50}, // 30, price 60->90
         {"Industrial_ConvenienceFoodFromGrainFactory", 25}, // 50, price 20->35
         // office
-        {"Office_SoftwareCompany", 80}, // 400
+        {"Office_SoftwareCompany", 70}, // 400
         {"Office_Bank",            70}, // 400
         {"Office_MediaCompany",    80}, // 400, price 60->50
         {"Office_TelecomCompany",  60}, // 400, price 80->60
