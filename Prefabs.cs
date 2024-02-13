@@ -122,7 +122,7 @@ public static class PrefabSystem_AddPrefab_Patches
         if (prefab.GetType().Name == "EconomyPrefab")
         {
             EconomyPrefab p = (EconomyPrefab)prefab;
-            p.m_ExtractorCompanyExportMultiplier = 0.65f; // default: 0.85f, this change effectively increases Extractor production by 31%
+            p.m_ExtractorCompanyExportMultiplier = 0.75f; // default: 0.85f, this change effectively increases Extractor production; 0.65f for 31%, 0.75f for 13%, 0.70 for 21%
             p.m_IndustrialProfitFactor = 0.0009f; // 0.0001f
             Plugin.Log($"Modded {prefab.name}: ExtrExpMult {p.m_ExtractorCompanyExportMultiplier} IndProfFact {p.m_IndustrialProfitFactor}");
             /*
@@ -162,14 +162,14 @@ public static class PrefabSystem_AddPrefab_Patches
     private static readonly Dictionary<string, float> MaxWorkersPerCellDict = new Dictionary<string, float>
     {
         {"Industrial_ForestryExtractor",  0.04f}, // 0.02
-        {"Industrial_GrainExtractor",     0.06f}, // 0.032
-        {"Industrial_OreExtractor",       0.10f}, // 0.04
-        {"Industrial_OilExtractor",       0.15f}, // 0.04
+        {"Industrial_GrainExtractor",     0.05f}, // 0.032
+        {"Industrial_OreExtractor",       0.08f}, // 0.04
+        {"Industrial_OilExtractor",       0.12f}, // 0.04
         {"Industrial_CoalMine",           0.15f}, // 0.1
         {"Industrial_StoneQuarry",        0.12f}, // 0.08
-        {"Industrial_VegetableExtractor", 0.08f}, // 0.032
-        {"Industrial_LivestockExtractor", 0.10f}, // 0.04
-        {"Industrial_CottonExtractor",    0.10f}, // 0.04
+        {"Industrial_VegetableExtractor", 0.06f}, // 0.032
+        {"Industrial_LivestockExtractor", 0.09f}, // 0.04
+        {"Industrial_CottonExtractor",    0.07f}, // 0.04
     };
     
     private static readonly Dictionary<string, int> OutputAmountDict = new Dictionary<string, int>
@@ -253,14 +253,14 @@ public static class PrefabSystem_AddPrefab_Patches
         {"Commercial_RecreactionStore", 35}, // 360
         // extractors
         {"Industrial_ForestryExtractor", 25}, // 30
-        {"Industrial_GrainExtractor", 20}, // 25
+        {"Industrial_GrainExtractor", 30}, // 25
         {"Industrial_OreExtractor", 30}, // 35
-        {"Industrial_OilExtractor", 50}, // 90
-        {"Industrial_CoalMine", 40}, // 60
+        {"Industrial_OilExtractor", 60}, // 90
+        {"Industrial_CoalMine", 45}, // 60
         {"Industrial_StoneQuarry", 25}, // 30
-        {"Industrial_VegetableExtractor", 25}, // 30
+        {"Industrial_VegetableExtractor", 30}, // 30
         {"Industrial_LivestockExtractor", 20}, // 25
-        {"Industrial_CottonExtractor", 25}, // 30
+        {"Industrial_CottonExtractor", 30}, // 30
         // industrial
         {"Industrial_FoodFactory", 30}, // 50, price 40->50
         {"Industrial_PaperMill", 50}, // 85, price 60->70
