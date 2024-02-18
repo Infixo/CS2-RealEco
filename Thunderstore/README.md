@@ -3,8 +3,7 @@
 This mod allows to build a self-sufficient city in terms of resources production and consumption. Except for a single change in HouseholdBehaviorSystem, it achieves that by only modifying existing game parameters like companies profitability, resources price and base consumption or workplaces complexity. The mod's effects become more visible and useful the bigger the city is (>100k).
 
 **Important note.**
-This is the first version released mostly for testing purposes. The feedback about how companies and economy behave is highly appreciated and welcomed. Please see the Support paragraph below on how to reach me.
-However, if you decide to try out the mod, please make sure to turn off other mods that affect economy, resource management and companies. While the mod technically will work as advertised, the results produced will be distorted and not very useful for further balancing.
+Tuning and balancing is an iterative process. The feedback about how companies and economy behave is highly appreciated and welcomed. Please see the Support paragraph below on how to reach me. If you decide to try out the mod, please make sure to turn off other mods that affect economy, resource management and companies. While the mod technically will work as advertised, the results produced may be distorted and not very useful for further balancing.
 
 ### Key features.
  - Increases output from Extractors allowing for bigger cities to be self-sufficient. Resources on standard maps should suffice for cities >300k.
@@ -49,6 +48,10 @@ However, if you decide to try out the mod, please make sure to turn off other mo
   - And not by like 10% or 20% because this is possible due to e.g. wealth factors, but it is 5-6 times more in bigger cities (300k) than in smaller cities (30k).
   - As a result, in bigger cities the demand for some resources skyrockets to absurd amounts.
   - The mod fixes that and the average consumption per cim is stable.
+  
+### Garbage fee adjustment (v0.2)
+  - The garbage fee in the vanilla game may cause some industrial companies to not level-up.
+  - The mod lowers the garbage fee so those companies will level-up.
 
 ## Technical
 
@@ -64,6 +67,9 @@ However, if you decide to try out the mod, please make sure to turn off other mo
 - Nothing atm.
 
 ### Changelog
+- v0.2.0 (2024-02-18)
+  - Tuning and balancing, especially in the early game.
+  - Garbage fee adjustment.
 - v0.1.0 (2024-02-15)
   - Initial build.
 
