@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Game.Prefabs;
 using Game.Economy;
 using HarmonyLib;
-using Unity.Core;
 
 namespace RealEco;
 
@@ -127,13 +126,13 @@ public static class PrefabSystem_AddPrefab_Patches
             p.m_IndustrialProfitFactor = 0.0008f; // default 0.0001f, commercial is 0.0010f, extractor is 64/10000 i.e. 0.0064f
             Plugin.Log($"Modded {prefab.name}: ExtrExpMult {p.m_ExtractorCompanyExportMultiplier} IndProfFact {p.m_IndustrialProfitFactor}");
             // adjust wages
-            p.m_Wage0 = 1400; // 1200
-            p.m_Wage1 = 1700; // 2000
-            p.m_Wage2 = 2640; // 2500
-            p.m_Wage3 = 3520; // 3500
-            p.m_Wage4 = 4350; // 5000
-            //p.m_Pension = 900; // 800 - for Elders
-            //p.m_FamilyAllowance = 400; // 300 - for Child and Teen
+            p.m_Wage0 = 1550; // 1200
+            p.m_Wage1 = 1900; // 2000
+            p.m_Wage2 = 2980; // 2500
+            p.m_Wage3 = 4020; // 3500
+            p.m_Wage4 = 5010; // 5000
+            p.m_Pension = 1000; // 800 - for Elders
+            p.m_FamilyAllowance = 500; // 300 - for Child and Teen
             //p.m_UnemploymentBenefit = 600; // 800 - for unemployed Adults
             Plugin.Log($"Modded {prefab.name}: Wages {p.m_Wage0} {p.m_Wage1} {p.m_Wage2} {p.m_Wage3} {p.m_Wage4} Pension {p.m_Pension} Unemp {p.m_UnemploymentBenefit} Family {p.m_FamilyAllowance}");
         }
@@ -141,8 +140,8 @@ public static class PrefabSystem_AddPrefab_Patches
         if (prefab.GetType().Name == "ServiceFeeParameterPrefab")
         {
             ServiceFeeParameterPrefab p = (ServiceFeeParameterPrefab)prefab;
-            p.m_GarbageFee.m_Default = 0.5f;
-            Plugin.Log($"Modded {prefab.name}: GarbageFeece {p.m_GarbageFee.m_Default}");
+            p.m_GarbageFee.m_Default = 0.4f;
+            Plugin.Log($"Modded {prefab.name}: GarbageFee {p.m_GarbageFee.m_Default}");
         }
 
         return true;
@@ -269,16 +268,16 @@ public static class PrefabSystem_AddPrefab_Patches
         {"Commercial_BookStore", 80}, // 420
         {"Commercial_VehicleStore", 50}, // 240
         {"Commercial_Restaurant", 80}, // 420
-        {"Commercial_ElectronicsStore", 120}, // 600
+        {"Commercial_ElectronicsStore", 110}, // 600
         {"Commercial_GasStation", 50}, // 240
         {"Commercial_Hotel", 100}, // 500
         {"Commercial_Bar", 70}, // 380
         {"Commercial_ChemicalStore", 70}, // 380
         {"Commercial_ConvenienceFoodStore", 60}, // 330
         {"Commercial_DrugStore", 120}, // 600
-        {"Commercial_FashionStore", 100}, // 500
+        {"Commercial_FashionStore", 95}, // 500
         {"Commercial_FurnitureStore", 60}, // 300
-        {"Commercial_LiquorStore", 80}, // 400
+        {"Commercial_LiquorStore", 75}, // 400
         {"Commercial_PlasticsStore", 70}, // 360
         {"Commercial_RecreactionStore", 70}, // 360
         // extractors
@@ -292,34 +291,34 @@ public static class PrefabSystem_AddPrefab_Patches
         //{"Industrial_LivestockExtractor", 25}, // 25
         //{"Industrial_CottonExtractor", 30}, // 30
         // industrial
-        {"Industrial_FoodFactory", 40}, // 50, price 40->50
+        {"Industrial_FoodFactory", 45}, // 50, price 40->50
         {"Industrial_PaperMill", 40}, // 85, price 60->70
         {"Industrial_BioRefinery", 65}, // 100, price 25->30
         {"Industrial_ElectronicsFactory", 45}, // 100
-        {"Industrial_MetalSmelter", 35}, // 50
+        {"Industrial_MetalSmelter", 40}, // 50
         {"Industrial_OilRefinery", 50}, // 120, price 25->30
         {"Industrial_PlasticsFactory", 45}, // 60, price 110->90
         {"Industrial_SteelPlant", 45}, //85
         {"Industrial_MachineryFactory", 30}, // 50
-        {"Industrial_MineralPlant", 40}, // 40
-        {"Industrial_ConcreteFactory", 30}, // 50
+        {"Industrial_MineralPlant", 45}, // 40
+        {"Industrial_ConcreteFactory", 40}, // 50
         {"Industrial_ChemicalFactory", 60}, // 70
         {"Industrial_PharmaceuticalsFactory", 50}, // 100
         {"Industrial_VehicleFactory", 45}, // 75
         {"Industrial_BeverageFromGrainFactory", 35}, // 40, price 34->45
         {"Industrial_BeverageFromVegetablesFactory", 30}, // 40, price 34->45
-        {"Industrial_ConvenienceFoodFromLivestockFactory", 30}, // 40, price 20->35
-        {"Industrial_TextileFromCottonFactory", 35}, // 50, price 34->60
+        {"Industrial_ConvenienceFoodFromLivestockFactory", 35}, // 40, price 20->35
+        {"Industrial_TextileFromCottonFactory", 40}, // 50, price 34->60
         {"Industrial_TextileFromLivestockFactory", 40}, // 40, price 34->60
         {"Industrial_TextileFromPetrochemicalsFactory", 30}, // 50, price 34->60
-        {"Industrial_SawMill", 30}, // 32
-        {"Industrial_FurnitureFactory", 60}, // 30, price 60->90
-        {"Industrial_ConvenienceFoodFromGrainFactory", 25}, // 50, price 20->35
+        {"Industrial_SawMill", 35}, // 32
+        {"Industrial_FurnitureFactory", 50}, // 30, price 60->90
+        {"Industrial_ConvenienceFoodFromGrainFactory", 30}, // 50, price 20->35
         // office
-        {"Office_SoftwareCompany", 80}, // 400
-        {"Office_Bank",            75}, // 400
-        {"Office_MediaCompany",    80}, // 400, price 60->50
-        {"Office_TelecomCompany",  75}, // 400, price 80->60
+        {"Office_SoftwareCompany", 85}, // 400
+        {"Office_Bank",            85}, // 400
+        {"Office_MediaCompany",    85}, // 400, price 60->50
+        {"Office_TelecomCompany",  85}, // 400, price 80->60
         // warehouse - all changed from 10 to 15
         {"Industrial_WarehouseConvenienceFood", 15},
         {"Industrial_WarehouseGrain",     15},
@@ -401,7 +400,35 @@ public static class PrefabSystem_AddPrefab_Patches
         return true;
     }
 
-    /*
+
+    private static readonly Dictionary<string, float> ZoneUpkeepDict = new Dictionary<string, float>
+    {
+        {"EU Residential High",  600}, // 900
+        {"NA Residential High",  600}, // 900
+        {"EU Residential Mixed",  330}, // 450
+        {"NA Residential Mixed",  330}, // 450
+        {"EU Residential Medium", 200}, // 250
+        {"NA Residential Medium", 200}, // 250
+        {"Residential LowRent",   300}, // 900
+        {"Office High",           400}, // 200
+    };
+
+    [HarmonyPrefix]
+    public static bool ZonePrefab_Prefix(PrefabBase prefab)
+    {
+        if (prefab.GetType().Name == "ZonePrefab")
+        {
+            // Component ZoneServiceConsumption
+            if (ZoneUpkeepDict.ContainsKey(prefab.name) && prefab.Has<ZoneServiceConsumption>())
+            {
+                ZoneServiceConsumption comp = prefab.GetComponent<ZoneServiceConsumption>();
+                comp.m_Upkeep = ZoneUpkeepDict[prefab.name];
+                Plugin.Log($"Modded {prefab.name}: upkeep {comp.m_Upkeep}");
+            }
+        }
+        return true;
+    }
+            
     [HarmonyPrefix]
     public static bool Buildings_Prefix(object __instance, PrefabBase prefab)
     {
@@ -428,10 +455,9 @@ public static class PrefabSystem_AddPrefab_Patches
             //foreach (var component in prefab.components)
                 //Plugin.Log($"{prefab.name}: {component.GetType().Name}");
         }
-        
+
         return true;
     }
-    */
 }
 
 /*
