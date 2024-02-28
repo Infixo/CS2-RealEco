@@ -10,7 +10,7 @@ class Patches
     [HarmonyPostfix]
     public static void Initialize_Postfix(UpdateSystem updateSystem)
     {
-        updateSystem.UpdateAt<RealEco.HouseholdBehaviorSystem>(SystemUpdatePhase.GameSimulation);
+        updateSystem.UpdateAt<RealEco.Systems.HouseholdBehaviorSystem>(SystemUpdatePhase.GameSimulation);
     }
 
     // Original HouseholdBehaviorSystem

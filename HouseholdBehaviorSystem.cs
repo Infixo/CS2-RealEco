@@ -22,7 +22,7 @@ using UnityEngine.Scripting;
 using Game;
 using Game.Simulation;
 
-namespace RealEco;
+namespace RealEco.Systems;
 
 [CompilerGenerated]
 public class HouseholdBehaviorSystem : GameSystemBase
