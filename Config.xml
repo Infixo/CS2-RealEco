@@ -1,5 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration>
+
+<!-- The mod will only process prefab types listed below -->
+<!-- With detailed logging enabled, the mod will list also list all prefabs that are not modified -->
+
+<ValidPrefabTypes>
+	<PrefabType>DemandPrefab</PrefabType>
+	<PrefabType>EconomyPrefab</PrefabType>
+	<PrefabType>ResourcePrefab</PrefabType>
+	<PrefabType>HouseholdPrefab</PrefabType>
+</ValidPrefabTypes>
+
+<!-- RESOURCES -->
+
+<Prefab name="ResourceConvenienceFood">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="35" />
+		<Field name="m_BaseConsumption" valueFloat="15" />
+	</Component>
+</Prefab>
+<Prefab name="ResourceFood">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="50" />
+		<Field name="m_BaseConsumption" valueFloat="25" />
+	</Component>
+</Prefab>
+<Prefab name="ResourcePaper">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="70" />
+	</Component>
+</Prefab>
+<Prefab name="ResourceFurniture">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="90" />
+	</Component>
+</Prefab>
+<Prefab name="ResourceVehicles">
+	<Component name="ResourcePrefab">
+		<Field name="m_CarConsumption" valueInt="5" />
+	</Component>
+</Prefab>
+<Prefab name="ResourcePetrochemicals">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="30" />
+	</Component>
+</Prefab>
+<Prefab name="ResourcePlastics">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="70" />
+		<Field name="m_CarConsumption" valueInt="5" />
+	</Component>
+</Prefab>
+<Prefab name="ResourceElectronics">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="90" />
+		<Field name="m_BaseConsumption" valueFloat="20" />
+		<Field name="m_CarConsumption" valueInt="5" />
+	</Component>
+</Prefab>
+<Prefab name="ResourceChemicals">
+	<Component name="ResourcePrefab">
+		<Field name="m_BaseConsumption" valueFloat="20" />
+		<Field name="m_CarConsumption" valueInt="10" />
+	</Component>
+</Prefab>
+<Prefab name="ResourcePharmaceuticals">
+	<Component name="ResourcePrefab">
+		<Field name="m_BaseConsumption" valueFloat="15" />
+	</Component>
+</Prefab>
+<Prefab name="ResourceMachinery">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="150" />
+	</Component>
+</Prefab>
+<Prefab name="ResourceBeverages">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="45" />
+		<Field name="m_BaseConsumption" valueFloat="15" />
+	</Component>
+</Prefab>
+<Prefab name="ResourceTextiles">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="60" />
+		<Field name="m_BaseConsumption" valueFloat="30" />
+	</Component>
+</Prefab>
+<Prefab name="ResourceTelecom">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="60" />
+		<Field name="m_BaseConsumption" valueFloat="25" />
+	</Component>
+</Prefab>
+<Prefab name="ResourceFinancial">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="80" />
+		<Field name="m_BaseConsumption" valueFloat="20" />
+		<Field name="m_CarConsumption" valueInt="10" />
+	</Component>
+</Prefab>
+<Prefab name="ResourceMedia">
+	<Component name="ResourcePrefab">
+		<Field name="m_BaseConsumption" valueFloat="15" />
+	</Component>
+</Prefab>
+
+
   <!-- CompanyPrefab, Extractors -->
   <Prefab name="Industrial_ForestryExtractor">
     <Component name="ProcessingCompany">

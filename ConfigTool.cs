@@ -37,16 +37,29 @@ public static class ConfigTool_Patches
     /// <param name="prefabConfig"></param>
     /// <param name="comp"></param>
     /// <param name="compConfig"></param>
-    private static void ConfigureComponent(PrefabBase prefab, PrefabXml prefabConfig, ComponentBase component, ComponentXml compConfig)
+    private static void ConfigureComponent(PrefabBase prefab, PrefabXml prefabConfig, ComponentBase component) //, ComponentXml compConfig)
     {
-        Type compType = component.GetType();
-        if (Plugin.Logging.Value) Plugin.Log($"Configuring component {prefab.name}.{compType.Name}");
+        string compName = component.GetType().Name;
+
+        if (!prefabConfig.TryGetComponent(compName, out ComponentXml compConfig))
+        {
+            //Plugin.LogIf($"{prefab.name}.{compName}: valid");
+            //ConfigureComponent(prefab, prefabConfig, component, compConfig);
+            //}
+            //else
+            Plugin.LogIf($"{prefab.name}.{compName}: SKIP");
+            return;
+        }
+
+        Plugin.LogIf($"{prefab.name}.{compName}: valid");
         foreach (FieldXml fieldConfig in compConfig.Fields)
         {
             // Get the FieldInfo object for the field with the given name
-            FieldInfo field = compType.GetField(fieldConfig.Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            FieldInfo field = component.GetType().GetField(fieldConfig.Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (field != null)
             {
+                object oldValue = field.GetValue(component);
+
                 // TODO: extend for other field types
                 if (field.FieldType == typeof(float))
                 {
@@ -57,13 +70,13 @@ public static class ConfigTool_Patches
                     field.SetValue(component, fieldConfig.ValueInt);
                 }
                 if (Plugin.Logging.Value)
-                    Plugin.Log($"{prefab.name}.{component.name}.{field.Name}: {field.GetValue(component)} ({field.FieldType}, {fieldConfig})");
+                    Plugin.Log($"{prefab.name}.{compName}.{field.Name}: {oldValue} -> {field.GetValue(component)} ({field.FieldType}, {fieldConfig})");
                 else
-                    Plugin.Log($"{prefab.name}.{component.name}.{field.Name}: {field.GetValue(component)}");
+                    Plugin.Log($"{prefab.name}.{compName}.{field.Name}: {field.GetValue(component)}");
             }
             else
             {
-                Plugin.Log($"Warning! Field {fieldConfig.Name} not found in component {compType.Name}.");
+                Plugin.Log($"{prefab.name}.{compName}: Warning! Field {fieldConfig.Name} not found in the component.");
             }
         }
         if (Plugin.Logging.Value) DumpFields(prefab, component); // debug
@@ -76,18 +89,20 @@ public static class ConfigTool_Patches
     /// <param name="prefabConfig"></param>
     private static void ConfigurePrefab(PrefabBase prefab, PrefabXml prefabConfig)
     {
-        Plugin.LogIf($"Configuring prefab {prefab.name}");
+        Plugin.LogIf($"{prefab.name}: valid {prefab.GetType().Name}");
+        // check first if the main prefab needs to be changed
+        ConfigureComponent(prefab, prefabConfig, prefab);
         // iterate through components and see which ones need to be changed
         foreach (ComponentBase component in prefab.components)
         {
-            string compName = component.GetType().Name;
-            if (prefabConfig.TryGetComponent(compName, out ComponentXml compConfig))
-            {
-                Plugin.LogIf($"{prefab.name}.{compName}: valid");
-                ConfigureComponent(prefab, prefabConfig, component, compConfig);
-            }
-            else
-                Plugin.LogIf($"{prefab.name}.{compName}: SKIP");
+            //string compName = component.GetType().Name;
+            //if (prefabConfig.TryGetComponent(compName, out ComponentXml compConfig))
+            //{
+                //Plugin.LogIf($"{prefab.name}.{compName}: valid");
+                ConfigureComponent(prefab, prefabConfig, component);
+            //}
+            //else
+                //Plugin.LogIf($"{prefab.name}.{compName}: SKIP");
         }
     }
 
@@ -95,9 +110,14 @@ public static class ConfigTool_Patches
     [HarmonyPrefix]
     public static bool PrefabSystem_AddPrefab_Prefix(object __instance, PrefabBase prefab)
     {
-        if (ConfigToolXml.Config.TryGetPrefab(prefab.name, out PrefabXml prefabConfig))
+        if (ConfigToolXml.Config.IsPrefabValid(prefab.GetType().Name))
         {
-            ConfigurePrefab(prefab, prefabConfig);
+            if (ConfigToolXml.Config.TryGetPrefab(prefab.name, out PrefabXml prefabConfig))
+            {
+                ConfigurePrefab(prefab, prefabConfig);
+            }
+            else
+                Plugin.LogIf($"{prefab.name}: SKIP {prefab.GetType().Name}");
         }
         return true;
     }

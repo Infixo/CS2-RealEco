@@ -9,21 +9,15 @@ namespace RealEco.Config;
 [XmlRoot("Configuration")]
 public class ConfigurationXml
 {
-    // VALID COMPONENTS - FOR THE FUTURE
-    //[XmlArray("ValidComponents")]
-    //[XmlArrayItem(typeof(string), ElementName = "Component")]
-    //public string[] ValidComponents;
-    /*
-    public bool IsComponentValid(string nameToCheck)
+    [XmlArray("ValidPrefabTypes")]
+    [XmlArrayItem(typeof(string), ElementName = "PrefabType")]
+    public string[] ValidPrefabTypes;
+    
+    public bool IsPrefabValid(string nameToCheck)
     {
-        if (ValidComponents is null || ValidComponents.Length == 0) return false;
-        return Array.IndexOf(ValidComponents, nameToCheck) != -1;
-        //foreach (string propPart in ValidComponents)
-        //if (propName == propPart)
-        //return true;
-        //return false;
+        if (ValidPrefabTypes is null || ValidPrefabTypes.Length == 0) return false;
+        return Array.IndexOf(ValidPrefabTypes, nameToCheck) != -1;
     }
-    */
 
     [XmlElement("Prefab")]
     public List<PrefabXml> Prefabs { get; set; }
@@ -190,18 +184,18 @@ public static class ConfigToolXml
             }
             // Verify and output deserialized data
             //Plugin.Log($"NULL: {Settings is null}");
-            /*
-            if (Config.ValidComponents.Length == 0)
+            
+            if (Config.ValidPrefabTypes.Length == 0)
             {
-                Plugin.Log("Warning! No valid components are defined.");
+                Plugin.Log("Warning! No valid prefab types are defined.");
             }
             else
             {
-                Plugin.Log($"VALID COMPONENTS {Config.ValidComponents.Length}");
-                foreach (string compName in Config.ValidComponents)
-                    Plugin.Log(compName);
+                Plugin.LogIf($"VALID PREFAB TYPES {Config.ValidPrefabTypes.Length}");
+                foreach (string name in Config.ValidPrefabTypes)
+                    Plugin.LogIf(name);
             }
-            */
+            
             if (Plugin.Logging.Value)
             {
                 Plugin.Log("PREFAB CONFIG DATA");
