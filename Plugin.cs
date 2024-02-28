@@ -22,6 +22,11 @@ public class Plugin : BaseUnityPlugin
     internal static new ManualLogSource Logger; // BepInEx logging
     private static ILog s_Log; // CO logging
 
+    public static void LogIf(string text, bool bMethod = false)
+    {
+        if (Logging.Value) Log(text, bMethod);
+    }
+
     public static void Log(string text, bool bMethod = false)
     {
         if (bMethod) text = GetCallingMethod(2) + ": " + text;
@@ -48,12 +53,20 @@ public class Plugin : BaseUnityPlugin
         return mb.DeclaringType + "." + mb.Name;
     }
 
+    // Mod settings
+    public static ConfigEntry<bool> Logging;
+    public static ConfigEntry<bool> ConfigDump;
+
     private void Awake()
     {
         Logger = base.Logger;
 
         // CO logging standard as described here https://cs2.paradoxwikis.com/Logging
         s_Log = LogManager.GetLogger(MyPluginInfo.PLUGIN_NAME);
+
+        // Mod settings
+        Logging = base.Config.Bind<bool>("Debug", "Logging", false, "Enables detailed logging.");
+        ConfigDump = base.Config.Bind<bool>("Debug", "ConfigDump", false, "Saves configuration to a secondary xml file.");
 
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
 
@@ -65,5 +78,8 @@ public class Plugin : BaseUnityPlugin
         foreach (var patchedMethod in patchedMethods) {
             Logger.LogInfo($"Patched method: {patchedMethod.Module.Name}:{patchedMethod.Name}");
         }
+
+        // READ CONFIG DATA
+        RealEco.Config.ConfigToolXml.LoadConfig();
     }
 }

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <!-- CompanyPrefab, Extractors -->
+  <Prefab name="Industrial_ForestryExtractor">
+    <Component name="ProcessingCompany">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.04"/> <!-- 0.02 -->
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="0" /> <!-- WorkplaceComplexity 0 Manual,1 Simple,2 Complex,3 Hitech -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_GrainExtractor">
+    <Component name="ProcessingCompany">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.06"/> <!-- 0.032 -->
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="1" /> <!-- WorkplaceComplexity 0 Manual,1 Simple,2 Complex,3 Hitech -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_OreExtractor">
+    <Component name="ProcessingCompany">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.10"/> <!-- 0.04 -->
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="1" /> <!-- WorkplaceComplexity 0 Manual,1 Simple,2 Complex,3 Hitech -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_OilExtractor">
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="0" /> <!-- WorkplaceComplexity 0 Manual,1 Simple,2 Complex,3 Hitech -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_CoalMine">
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="0" /> <!-- WorkplaceComplexity 0 Manual,1 Simple,2 Complex,3 Hitech -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_StoneQuarry">
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="0" /> <!-- WorkplaceComplexity 0 Manual,1 Simple,2 Complex,3 Hitech -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_VegetableExtractor">
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="1" /> <!-- WorkplaceComplexity 0 Manual,1 Simple,2 Complex,3 Hitech -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_LivestockExtractor">
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="1" /> <!-- WorkplaceComplexity 0 Manual,1 Simple,2 Complex,3 Hitech -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_CottonExtractor">
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="1" /> <!-- WorkplaceComplexity 0 Manual,1 Simple,2 Complex,3 Hitech -->
+    </Component>
+  </Prefab>
+  <!-- 
+  ProcessingCompany
+        {"Industrial_ForestryExtractor",  0.04f}, // 0.02
+        {"Industrial_GrainExtractor",     0.06f}, // 0.032
+        {"Industrial_OreExtractor",       0.10f}, // 0.04
+        {"Industrial_OilExtractor",       0.15f}, // 0.04
+        {"Industrial_CoalMine",           0.15f}, // 0.1
+        {"Industrial_StoneQuarry",        0.12f}, // 0.08
+        {"Industrial_VegetableExtractor", 0.08f}, // 0.032
+        {"Industrial_LivestockExtractor", 0.10f}, // 0.04
+        {"Industrial_CottonExtractor",    0.10f}, // 0.04
+        
+        
+
+  -->
+  <Prefab name="PostSortingFacility01">
+		<Component name="PostFacility">
+			<Field name="m_SortingRate" valueInt="100" />
+			<Field name="m_PostTruckCapacity" valueInt="100" />
+			<Field name="m_SomeRef" value="other_name" />
+		</Component>
+    <Component name="Workplace">
+      <Field name="m_EveningShiftProbability" valueFloat="0.75" />
+      <Field name="m_Workplaces" valueInt="50" />
+      <Field name="m_TextField" value="workPost" />
+    </Component>
+  </Prefab>
+	<Prefab name="SchoolTst">
+		<Component name="Workplace">
+			<Field name="m_EveningShiftProbability" valueFloat="0.75" />
+			<Field name="m_Workplaces" valueInt="50" />
+			<Field name="m_TextField" value="workSchool" />
+		</Component>
+    <Component name="BuildingProperties">
+      <Field name="m_ResidentialProperties" valueInt="200" />
+      <Field name="m_SpaceMultiplier" value="5.5" />
+    </Component>
+  </Prefab>
+	<Prefab name="ResidentialTest">
+		<Component name="BuildingProperties">
+			<Field name="m_ResidentialProperties" valueInt="200" />
+			<Field name="m_SpaceMultiplier" value="5.5" />
+		</Component>
+	</Prefab>
+</Configuration>
