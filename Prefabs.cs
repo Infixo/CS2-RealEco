@@ -69,6 +69,7 @@ public static class PrefabSystem_AddPrefab_Patches
     [HarmonyPrefix]
     public static bool Resources_Prefix(object __instance, PrefabBase prefab)
     {
+        return true; // DISABLED
         // types: BuildingPrefab, RenderPrefab, StaticObjectPrefab, EconomyPrefab, ZonePrefab, etc.
         if (prefab.GetType().Name == "ResourcePrefab")
         {
@@ -118,11 +119,12 @@ public static class PrefabSystem_AddPrefab_Patches
     [HarmonyPrefix]
     public static bool EconomyPrefab_Prefix(object __instance, PrefabBase prefab)
     {
+        return true; // DISABLED
         // types: BuildingPrefab, RenderPrefab, StaticObjectPrefab, EconomyPrefab, ZonePrefab, etc.
         if (prefab.GetType().Name == "EconomyPrefab")
         {
             EconomyPrefab p = (EconomyPrefab)prefab;
-            p.m_ExtractorCompanyExportMultiplier = 0.75f; // default: 0.85f, this change effectively increases Extractor production; 0.65f for 31%, 0.75f for 13%, 0.70 for 21%
+            p.m_ExtractorCompanyExportMultiplier = 0.70f; // default: 0.85f, this change effectively increases Extractor production; 0.65f for 31%, 0.75f for 13%, 0.70 for 21%
             p.m_IndustrialProfitFactor = 0.0008f; // default 0.0001f, commercial is 0.0010f, extractor is 64/10000 i.e. 0.0064f
             Plugin.Log($"Modded {prefab.name}: ExtrExpMult {p.m_ExtractorCompanyExportMultiplier} IndProfFact {p.m_IndustrialProfitFactor}");
             // adjust wages
@@ -315,10 +317,10 @@ public static class PrefabSystem_AddPrefab_Patches
         {"Industrial_FurnitureFactory", 50}, // 30, price 60->90
         {"Industrial_ConvenienceFoodFromGrainFactory", 30}, // 50, price 20->35
         // office
-        {"Office_SoftwareCompany", 85}, // 400
-        {"Office_Bank",            85}, // 400
-        {"Office_MediaCompany",    85}, // 400, price 60->50
-        {"Office_TelecomCompany",  85}, // 400, price 80->60
+        {"Office_SoftwareCompany", 90}, // 400
+        {"Office_Bank",            90}, // 400
+        {"Office_MediaCompany",    90}, // 400, price 60->50
+        {"Office_TelecomCompany",  90}, // 400, price 80->60
         // warehouse - all changed from 10 to 15
         {"Industrial_WarehouseConvenienceFood", 15},
         {"Industrial_WarehouseGrain",     15},
@@ -352,6 +354,7 @@ public static class PrefabSystem_AddPrefab_Patches
     [HarmonyPrefix]
     public static bool Companies_Prefix(PrefabBase prefab)
     {
+        return true; // DISABLED
         if (prefab.GetType().Name == "CompanyPrefab")
         {
             // Component ProcessingCompany => m_MaxWorkersPerCell
@@ -403,19 +406,31 @@ public static class PrefabSystem_AddPrefab_Patches
 
     private static readonly Dictionary<string, float> ZoneUpkeepDict = new Dictionary<string, float>
     {
-        {"EU Residential High",  600}, // 900
-        {"NA Residential High",  600}, // 900
+        {"EU Residential High",   500}, // 900
+        {"NA Residential High",   500}, // 900
         {"EU Residential Mixed",  330}, // 450
         {"NA Residential Mixed",  330}, // 450
         {"EU Residential Medium", 200}, // 250
         {"NA Residential Medium", 200}, // 250
-        {"Residential LowRent",   300}, // 900
-        {"Office High",           400}, // 200
+        {"Residential LowRent",   250}, // 900
+        {"Office High",           350}, // 200
+    };
+
+    private static readonly Dictionary<string, float> ZoneSpaceMultiplierDict = new Dictionary<string, float>
+    {
+        //{"EU Commercial High", 5}, // 5
+        //{"NA Commercial High", 5}, // 5
+        {"EU Commercial Low",  1.2f}, // 1
+        {"NA Commercial Low",  1.2f}, // 1
+        {"Industrial Manufacturing", 1.4f}, // 1
+        {"Office High",              7.0f}, // 5
+        {"Office Low",               1.2f}, // 1
     };
 
     [HarmonyPrefix]
     public static bool ZonePrefab_Prefix(PrefabBase prefab)
     {
+        return true; // DISABLED
         if (prefab.GetType().Name == "ZonePrefab")
         {
             // Component ZoneServiceConsumption
@@ -424,6 +439,13 @@ public static class PrefabSystem_AddPrefab_Patches
                 ZoneServiceConsumption comp = prefab.GetComponent<ZoneServiceConsumption>();
                 comp.m_Upkeep = ZoneUpkeepDict[prefab.name];
                 Plugin.Log($"Modded {prefab.name}: upkeep {comp.m_Upkeep}");
+            }
+            // Component ZoneProperties
+            if (ZoneSpaceMultiplierDict.ContainsKey(prefab.name) && prefab.Has<ZoneProperties>())
+            {
+                ZoneProperties comp = prefab.GetComponent<ZoneProperties>();
+                comp.m_SpaceMultiplier = ZoneSpaceMultiplierDict[prefab.name];
+                Plugin.Log($"Modded {prefab.name}: spcmult {comp.m_SpaceMultiplier:F1}");
             }
         }
         return true;
