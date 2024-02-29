@@ -73,7 +73,7 @@
 </Prefab>
 <Prefab name="Industrial Manufacturing">
 	<Component name="ZoneProperties">
-		<Field name="m_SpaceMultiplier" valueFloat="1.4" /> <!-- 1.0 -->
+		<Field name="m_SpaceMultiplier" valueFloat="1.3" /> <!-- 1.0 -->
 	</Component>
 </Prefab>
 <Prefab name="Office High">
@@ -308,5 +308,438 @@
       <Field name="m_Output.m_Amount" valueInt="10"/> <!-- 1 Electronics + 2 Software -> 20 Telecom -->
     </Component>
 </Prefab>
+
+<!-- COMMERCIALS -->
+
+  <Prefab name="Commercial_FoodStore">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="80" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="0" /> <!-- Simple => Manual -->
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_BookStore">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="80" />
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_VehicleStore">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="50" />
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_Restaurant">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="80" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="0" /> <!-- Simple => Manual -->
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_ElectronicsStore">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="110" />
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_GasStation">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="50" />
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_Hotel">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="100" />
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_Bar">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="70" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="0" /> <!-- Simple => Manual -->
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_ChemicalStore">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="70" />
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_ConvenienceFoodStore">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="60" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="0" /> <!-- Simple => Manual -->
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_DrugStore">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="120" />
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_FashionStore">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="95" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="0" /> <!-- Simple => Manual -->
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_FurnitureStore">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="60" />
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_LiquorStore">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="75" />
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_PlasticsStore">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="70" />
+    </Component>
+  </Prefab>
+  <Prefab name="Commercial_RecreactionStore">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="70" />
+    </Component>
+  </Prefab>
+  
+<!-- INDUSTRIALS -->
+  
+  <Prefab name="Industrial_FoodFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="45" />
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_Output.m_Amount" valueInt="3" /> <!-- 1 Vegetables + 1 Livestock -> 2 Food -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_PaperMill">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="40" />
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.4" /> <!-- 0.3 Complex -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_BioRefinery">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="65" />
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.6" /> <!-- 0.65 Hitech -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_ElectronicsFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="45" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="3" /> <!-- Complex => Hitech -->
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.6" /> <!-- 0.65 Hitech -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_MetalSmelter">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="40" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="2" /> <!-- Simple => Complex -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_OilRefinery">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="50" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_PlasticsFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="45" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="3" /> <!-- Complex => Hitech -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_SteelPlant">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="45" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_MachineryFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="30" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="2" /> <!-- Simple => Complex -->
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_Output.m_Amount" valueInt="1" /> <!-- 1 Steel + 1 Metal -> 2 Machinery -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_MineralPlant">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="45" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_ConcreteFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="40" />
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.4" /> <!-- 0.25 Simple -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_ChemicalFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="60" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="3" /> <!-- Complex => Hitech -->
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_MaxWorkersPerCell" valueInt="0" valueFloat="0.6" /> <!-- 0.65 Hitech -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_PharmaceuticalsFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="50" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_VehicleFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="45" />
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.4" /> <!-- 0.3 Complex -->
+      <Field name="m_Output.m_Amount" valueInt="1" /> <!-- 1 Plastics + 1 Metal -> 2 Vehicles -->								
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_BeverageFromGrainFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="35" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="2" /> <!-- Simple => Complex -->
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_Output.m_Amount" valueInt="2" /> <!-- 1 Grain -> 1 Beverages -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_BeverageFromVegetablesFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="30" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="2" /> <!-- Simple => Complex -->
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_Output.m_Amount" valueInt="2" /> <!-- 1 Vegetables -> 1 Beverages -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_ConvenienceFoodFromLivestockFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="35" />
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_Output.m_Amount" valueInt="2" /> <!-- 1 Livestock -> 1 Conv.food -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_TextileFromCottonFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="40" />
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.6" /> <!-- 0.65 Simple -->
+      <Field name="m_Output.m_Amount" valueInt="2" /> <!-- 1 Cotton -> 1 Textile -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_TextileFromLivestockFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="40" />
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_Output.m_Amount" valueInt="2" /> <!-- 1 Livestock -> 1 Textile -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_TextileFromPetrochemicalsFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="30" />
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_Output.m_Amount" valueInt="2" /> <!-- 1 Petrochemicals -> 3 Texttiles -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_SawMill">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="35" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="1" /> <!-- Manual => Simple -->
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.4" /> <!-- 0.32 Simple -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_FurnitureFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="50" />
+    </Component>
+    <Component name="Workplace">
+      <Field name="m_Complexity" valueInt="2" /> <!-- Simple => Complex -->
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_ConvenienceFoodFromGrainFactory">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="30" />
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_Output.m_Amount" valueInt="2" /> <!-- 1 Grain -> 1 Conv.food -->
+    </Component>
+  </Prefab>
+  
+  
+<!-- WAREHOUSES -->
+<!-- All bumped from 10 to 15, however I am not sure if this helps -->
+  
+  <Prefab name="Industrial_WarehouseConvenienceFood">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseGrain">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehousePaper">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseVehicles">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseWood">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseElectronics">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseMetals">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseOil">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehousePlastics">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseOre">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehousePetrochemicals">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseStone">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseCoal">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseLivestock">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseCotton">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseSteel">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseMinerals">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseConcrete">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseMachinery">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseChemicals">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehousePharmaceuticals">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseBeverages">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseTextiles">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseFood">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseVegetables">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseTimber">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
+  <Prefab name="Industrial_WarehouseFurniture">
+    <Component name="CompanyPrefab">
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+  </Prefab>
 
 </Configuration>
