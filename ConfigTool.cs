@@ -36,10 +36,29 @@ public static class ConfigTool_Patches
     /// <param name="prefab"></param>
     /// <param name="prefabConfig"></param>
     /// <param name="comp"></param>
-    /// <param name="compConfig"></param>
-    private static void ConfigureComponent(PrefabBase prefab, PrefabXml prefabConfig, ComponentBase component) //, ComponentXml compConfig)
+    private static void ConfigureComponent(PrefabBase prefab, PrefabXml prefabConfig, ComponentBase component)
     {
         string compName = component.GetType().Name;
+
+        // Structs within components are handled as separate components
+        if (compName == "ProcessingCompany" && prefabConfig.TryGetComponent("IndustrialProcess", out ComponentXml structConfig))
+        {
+            // IndustrialProcess - currently 2 fields are supported
+            ProcessingCompany comp = component as ProcessingCompany;
+            IndustrialProcess oldProc = comp.process;
+            if (structConfig.TryGetField("m_MaxWorkersPerCell", out FieldXml mwpcField) && mwpcField.ValueFloatSpecified)
+            {
+                comp.process.m_MaxWorkersPerCell = mwpcField.ValueFloat ?? oldProc.m_MaxWorkersPerCell;
+                Plugin.LogIf($"{prefab.name}.IndustrialProcess.{mwpcField.Name}: {oldProc.m_MaxWorkersPerCell} -> {comp.process.m_MaxWorkersPerCell} ({comp.process.m_MaxWorkersPerCell.GetType()}, {mwpcField})");
+            }
+            if (structConfig.TryGetField("m_Output.m_Amount", out FieldXml outamtField) && outamtField.ValueIntSpecified)
+            {
+                comp.process.m_Output.m_Amount = outamtField.ValueInt ?? oldProc.m_Output.m_Amount;
+                Plugin.LogIf($"{prefab.name}.IndustrialProcess.{outamtField.Name}: {oldProc.m_Output.m_Amount} -> {comp.process.m_Output.m_Amount} ({comp.process.m_Output.m_Amount.GetType()}, {outamtField})");
+            }
+            if (!Plugin.Logging.Value)
+                Plugin.LogIf($"{prefab.name}.IndustrialProcess: wpc {comp.process.m_MaxWorkersPerCell} output {comp.process.m_Output.m_Amount}");
+        }
 
         if (!prefabConfig.TryGetComponent(compName, out ComponentXml compConfig))
         {
