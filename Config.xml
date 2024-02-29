@@ -427,7 +427,7 @@
   </Prefab>
   <Prefab name="Industrial_BioRefinery">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="65" />
+      <Field name="profitability" valueInt="0" valueFloat="55" /> <!-- 100 -->
     </Component>
     <Component name="IndustrialProcess">
       <Field name="m_MaxWorkersPerCell" valueFloat="0.6" /> <!-- 0.65 Hitech -->
@@ -472,12 +472,13 @@
   </Prefab>
   <Prefab name="Industrial_MachineryFactory">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="30" />
+      <Field name="profitability" valueInt="0" valueFloat="35" /> <!-- 50 -->
     </Component>
     <Component name="Workplace">
       <Field name="m_Complexity" valueInt="2" /> <!-- Simple => Complex -->
     </Component>
     <Component name="IndustrialProcess">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.45" /> <!-- 0.5 Complex -->
       <Field name="m_Output.m_Amount" valueInt="1" /> <!-- 1 Steel + 1 Metal -> 2 Machinery -->
     </Component>
   </Prefab>
@@ -488,10 +489,10 @@
   </Prefab>
   <Prefab name="Industrial_ConcreteFactory">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="40" />
+      <Field name="profitability" valueInt="0" valueFloat="45" />
     </Component>
     <Component name="IndustrialProcess">
-      <Field name="m_MaxWorkersPerCell" valueFloat="0.4" /> <!-- 0.25 Simple -->
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.35" /> <!-- 0.25 Simple -->
     </Component>
   </Prefab>
   <Prefab name="Industrial_ChemicalFactory">
@@ -507,12 +508,15 @@
   </Prefab>
   <Prefab name="Industrial_PharmaceuticalsFactory">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="50" />
+      <Field name="profitability" valueInt="0" valueFloat="45" /> <!-- 100 -->
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.65" /> <!-- 0.6 Hitech -->
     </Component>
   </Prefab>
   <Prefab name="Industrial_VehicleFactory">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="45" />
+      <Field name="profitability" valueInt="0" valueFloat="45" /> <!-- 75 -->
     </Component>
     <Component name="IndustrialProcess">
       <Field name="m_MaxWorkersPerCell" valueFloat="0.4" /> <!-- 0.3 Complex -->

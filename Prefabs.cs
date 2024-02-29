@@ -144,7 +144,7 @@ public static class PrefabSystem_AddPrefab_Patches
         if (prefab.GetType().Name == "ServiceFeeParameterPrefab")
         {
             ServiceFeeParameterPrefab p = (ServiceFeeParameterPrefab)prefab;
-            p.m_GarbageFee.m_Default = 0.5f;
+            p.m_GarbageFee.m_Default = 0.4f;
             Plugin.Log($"Modded {prefab.name}: GarbageFee {p.m_GarbageFee.m_Default}");
         }
 
