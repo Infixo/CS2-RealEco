@@ -9,7 +9,7 @@ namespace RealEco;
 [HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
 public static class PrefabSystem_AddPrefab_Patches
 {
-    private static readonly Dictionary<ResourceInEditor, float> ResourcePriceDict = new Dictionary<ResourceInEditor, float>()
+    public static readonly Dictionary<ResourceInEditor, float> ResourcePriceDict = new Dictionary<ResourceInEditor, float>()
     {
         {ResourceInEditor.ConvenienceFood, 35 },
         {ResourceInEditor.Food, 50 },
@@ -33,7 +33,7 @@ public static class PrefabSystem_AddPrefab_Patches
         //{ResourceInEditor.Recreation
     };
 
-    private static readonly Dictionary<ResourceInEditor, float> ResourceBaseConsumptionDict = new Dictionary<ResourceInEditor, float>()
+    public static readonly Dictionary<ResourceInEditor, float> ResourceBaseConsumptionDict = new Dictionary<ResourceInEditor, float>()
     {
         {ResourceInEditor.ConvenienceFood, 15 },
         {ResourceInEditor.Food, 25 },
@@ -56,7 +56,7 @@ public static class PrefabSystem_AddPrefab_Patches
         //{ResourceInEditor.Recreation
     };
 
-    private static readonly Dictionary<ResourceInEditor, int> ResourceCarConsumptionDict = new Dictionary<ResourceInEditor, int>()
+    public static readonly Dictionary<ResourceInEditor, int> ResourceCarConsumptionDict = new Dictionary<ResourceInEditor, int>()
     {
         {ResourceInEditor.Vehicles, 5 }, // 20
         //{ResourceInEditor.Petrochemicals, 30 }, // 30
@@ -66,10 +66,10 @@ public static class PrefabSystem_AddPrefab_Patches
         {ResourceInEditor.Financial, 10 }, // 5
     };
 
+    /* No longer in use, Resource paranms in xml
     [HarmonyPrefix]
     public static bool Resources_Prefix(object __instance, PrefabBase prefab)
     {
-        return true; // DISABLED
         // types: BuildingPrefab, RenderPrefab, StaticObjectPrefab, EconomyPrefab, ZonePrefab, etc.
         if (prefab.GetType().Name == "ResourcePrefab")
         {
@@ -97,11 +97,12 @@ public static class PrefabSystem_AddPrefab_Patches
         }
         return true;
     }
-    
+    */
+
+    /* Not in use, Demand prefab not changed
     [HarmonyPrefix]
     public static bool DemandPrefab_Prefix(object __instance, PrefabBase prefab)
     {
-        return true; // DISABLED
         // types: BuildingPrefab, RenderPrefab, StaticObjectPrefab, EconomyPrefab, ZonePrefab, etc.
         if (prefab.GetType().Name == "DemandPrefab")
         {
@@ -115,12 +116,12 @@ public static class PrefabSystem_AddPrefab_Patches
         }
         return true;
     }
+    */
 
     [HarmonyPrefix]
     public static bool EconomyPrefab_Prefix(object __instance, PrefabBase prefab)
     {
-        return true; // DISABLED
-        // types: BuildingPrefab, RenderPrefab, StaticObjectPrefab, EconomyPrefab, ZonePrefab, etc.
+        /* These params are in xml now
         if (prefab.GetType().Name == "EconomyPrefab")
         {
             EconomyPrefab p = (EconomyPrefab)prefab;
@@ -138,11 +139,12 @@ public static class PrefabSystem_AddPrefab_Patches
             //p.m_UnemploymentBenefit = 600; // 800 - for unemployed Adults
             Plugin.Log($"Modded {prefab.name}: Wages {p.m_Wage0} {p.m_Wage1} {p.m_Wage2} {p.m_Wage3} {p.m_Wage4} Pension {p.m_Pension} Unemp {p.m_UnemploymentBenefit} Family {p.m_FamilyAllowance}");
         }
+        */
 
         if (prefab.GetType().Name == "ServiceFeeParameterPrefab")
         {
             ServiceFeeParameterPrefab p = (ServiceFeeParameterPrefab)prefab;
-            p.m_GarbageFee.m_Default = 0.4f;
+            p.m_GarbageFee.m_Default = 0.5f;
             Plugin.Log($"Modded {prefab.name}: GarbageFee {p.m_GarbageFee.m_Default}");
         }
 
@@ -168,7 +170,7 @@ public static class PrefabSystem_AddPrefab_Patches
     }
     */
 
-    private static readonly Dictionary<string, float> MaxWorkersPerCellDict = new Dictionary<string, float>
+    public static readonly Dictionary<string, float> MaxWorkersPerCellDict = new Dictionary<string, float>
     {
         // extractors
         {"Industrial_ForestryExtractor",  0.04f}, // 0.02
@@ -192,7 +194,7 @@ public static class PrefabSystem_AddPrefab_Patches
         {"Industrial_TextileFromCottonFactory",0.6f }, // 0.65, Simple
     };
     
-    private static readonly Dictionary<string, int> OutputAmountDict = new Dictionary<string, int>
+    public static readonly Dictionary<string, int> OutputAmountDict = new Dictionary<string, int>
     {
         // default values are 30 for all
         // Infixo: this doesn't increase production because it is countered by increased WPU so the profitability stays the same
@@ -225,7 +227,7 @@ public static class PrefabSystem_AddPrefab_Patches
         { "Office_TelecomCompany",  10 }, // 1 Electronics + 2 Software -> 20 Telecom
     };
     
-    private static readonly Dictionary<string, WorkplaceComplexity> ComplexityDict = new Dictionary<string, WorkplaceComplexity>
+    public static readonly Dictionary<string, WorkplaceComplexity> ComplexityDict = new Dictionary<string, WorkplaceComplexity>
     {
         // Infixo stats before 9,28,11,4 => after 8,21,14,9
         // Manual => Simple
@@ -263,7 +265,7 @@ public static class PrefabSystem_AddPrefab_Patches
         {"Office_MediaCompany",           WorkplaceComplexity.Hitech },
     };
 
-    private static readonly Dictionary<string, float> ProfitabilityDict = new Dictionary<string, float>
+    public static readonly Dictionary<string, float> ProfitabilityDict = new Dictionary<string, float>
     {
         // commercial (1/5th)
         {"Commercial_FoodStore", 80}, // 400
@@ -354,9 +356,10 @@ public static class PrefabSystem_AddPrefab_Patches
     [HarmonyPrefix]
     public static bool Companies_Prefix(PrefabBase prefab)
     {
-        return true; // DISABLED
         if (prefab.GetType().Name == "CompanyPrefab")
         {
+            /* These params are in xml now
+           
             // Component ProcessingCompany => m_MaxWorkersPerCell
             if (MaxWorkersPerCellDict.ContainsKey(prefab.name) && prefab.Has<ProcessingCompany>())
             {
@@ -389,14 +392,14 @@ public static class PrefabSystem_AddPrefab_Patches
                 pci.m_Output.m_Amount = OutputAmountDict[prefab.name];
                 Plugin.Log($"Modded {prefab.name}.ProcessingCompany: out {pci.m_Output.m_Resource} {pci.m_Output.m_Amount} in1 {pci.m_Input1.m_Resource} {pci.m_Input1.m_Amount} in2 {pci.m_Input2.m_Resource} {pci.m_Input2.m_Amount} wpc {pci.m_MaxWorkersPerCell} tr {pc.transports}");
             }
+            */
 
             // Special case: Industrial_BioRefinery, make it use less Grain
             if (prefab.name == "Industrial_BioRefinery")
             {
                 ProcessingCompany pc = prefab.GetComponent<ProcessingCompany>();
-                IndustrialProcess pci = pc.process;
-                pci.m_Input1.m_Amount = 1;
-                Plugin.Log($"Modded {prefab.name}.ProcessingCompany: out {pci.m_Output.m_Resource} {pci.m_Output.m_Amount} in1 {pci.m_Input1.m_Resource} {pci.m_Input1.m_Amount} in2 {pci.m_Input2.m_Resource} {pci.m_Input2.m_Amount} wpc {pci.m_MaxWorkersPerCell} tr {pc.transports}");
+                pc.process.m_Input1.m_Amount = 1;
+                Plugin.Log($"Modded {prefab.name}.ProcessingCompany: out {pc.process.m_Output.m_Resource} {pc.process.m_Output.m_Amount} in1 {pc.process.m_Input1.m_Resource} {pc.process.m_Input1.m_Amount}");
             }
             
         }
@@ -427,6 +430,7 @@ public static class PrefabSystem_AddPrefab_Patches
         {"Office Low",               1.2f}, // 1
     };
 
+    /* Not in use, all params in xml now
     [HarmonyPrefix]
     public static bool ZonePrefab_Prefix(PrefabBase prefab)
     {
@@ -450,7 +454,9 @@ public static class PrefabSystem_AddPrefab_Patches
         }
         return true;
     }
-            
+    */
+    
+    /* Reserved for the future
     [HarmonyPrefix]
     public static bool Buildings_Prefix(object __instance, PrefabBase prefab)
     {
@@ -480,6 +486,7 @@ public static class PrefabSystem_AddPrefab_Patches
 
         return true;
     }
+    */
 }
 
 /*
