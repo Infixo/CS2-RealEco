@@ -24,6 +24,7 @@ public class ConfigurationXml
 
     public bool TryGetPrefab(string name, out PrefabXml prefab)
     {
+        //Plugin.Log($"TryGetPrefab: {name}");
         prefab = default(PrefabXml);
         foreach (var item in Prefabs)
             if (item.Name == name)
@@ -57,6 +58,7 @@ public class PrefabXml
 
     internal bool TryGetComponent(string name, out ComponentXml component)
     {
+        //Plugin.Log($"TryGetComponent: {name}");
         component = default(ComponentXml);
         foreach (var item in Components)
             if (item.Name == name)
@@ -91,6 +93,7 @@ public class ComponentXml
 
     internal bool TryGetField(string name, out FieldXml field)
     {
+        //Plugin.Log($"TryGetField: {name}");
         field = default(FieldXml);
         foreach (var item in Fields)
             if (item.Name == name)

@@ -41,6 +41,7 @@ public static class ConfigTool_Patches
         string compName = component.GetType().Name;
 
         // Structs within components are handled as separate components
+        // TODO: When more structs are implemented, use Reflection to create a flexible code for all possible cases
         if (compName == "ProcessingCompany" && prefabConfig.TryGetComponent("IndustrialProcess", out ComponentXml structConfig))
         {
             // IndustrialProcess - currently 2 fields are supported
@@ -62,10 +63,6 @@ public static class ConfigTool_Patches
 
         if (!prefabConfig.TryGetComponent(compName, out ComponentXml compConfig))
         {
-            //Plugin.LogIf($"{prefab.name}.{compName}: valid");
-            //ConfigureComponent(prefab, prefabConfig, component, compConfig);
-            //}
-            //else
             Plugin.LogIf($"{prefab.name}.{compName}: SKIP");
             return;
         }
@@ -113,16 +110,7 @@ public static class ConfigTool_Patches
         ConfigureComponent(prefab, prefabConfig, prefab);
         // iterate through components and see which ones need to be changed
         foreach (ComponentBase component in prefab.components)
-        {
-            //string compName = component.GetType().Name;
-            //if (prefabConfig.TryGetComponent(compName, out ComponentXml compConfig))
-            //{
-                //Plugin.LogIf($"{prefab.name}.{compName}: valid");
-                ConfigureComponent(prefab, prefabConfig, component);
-            //}
-            //else
-                //Plugin.LogIf($"{prefab.name}.{compName}: SKIP");
-        }
+            ConfigureComponent(prefab, prefabConfig, component);
     }
 
     [HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
@@ -170,3 +158,50 @@ public static class ConfigTool_Patches
         if (Plugin.ConfigDump.Value) ConfigToolXml.SaveConfig();
     }
 }
+
+// FOR THE FUTURE
+/* This code reads a dictionary and puts it into config xml
+
+
+ConfigurationXml config = ConfigToolXml.Config;
+
+foreach (var item in PrefabSystem_AddPrefab_Patches.MaxWorkersPerCellDict)
+{
+    Plugin.Log($"DICT {item.Key} {item.Value}");
+    PrefabXml prefabConfig = default(PrefabXml);
+    if (!config.TryGetPrefab(item.Key, out prefabConfig))
+        config.Prefabs.Add( new PrefabXml { Name = item.Key, Components = new List<ComponentXml>() });
+    if (config.TryGetPrefab(item.Key, out prefabConfig))
+    {
+        ComponentXml compConfig = default(ComponentXml);
+        if (!prefabConfig.TryGetComponent("IndustrialProcess", out compConfig))
+            prefabConfig.Components.Add( new ComponentXml { Name = "IndustrialProcess", Fields = new List<FieldXml>() });
+        if (prefabConfig.TryGetComponent("IndustrialProcess", out compConfig))
+        {
+            if (!compConfig.TryGetField("m_MaxWorkersPerCell", out FieldXml fieldConfig))
+                compConfig.Fields.Add(new FieldXml { Name = "m_MaxWorkersPerCell", ValueFloat = item.Value });
+        }
+    }
+}
+
+ConfigurationXml config = ConfigToolXml.Config;
+
+foreach (var item in PrefabSystem_AddPrefab_Patches.ProfitabilityDict)
+{
+    Plugin.Log($"DICT {item.Key} {item.Value}");
+    PrefabXml prefabConfig = default(PrefabXml);
+    if (!config.TryGetPrefab(item.Key, out prefabConfig))
+        config.Prefabs.Add( new PrefabXml { Name = item.Key, Components = new List<ComponentXml>() });
+    if (config.TryGetPrefab(item.Key, out prefabConfig))
+    {
+        ComponentXml compConfig = default(ComponentXml);
+        if (!prefabConfig.TryGetComponent("CompanyPrefab", out compConfig))
+            prefabConfig.Components.Add(new ComponentXml { Name = "CompanyPrefab", Fields = new List<FieldXml>() });
+        if (prefabConfig.TryGetComponent("CompanyPrefab", out compConfig))
+        {
+            if (!compConfig.TryGetField("profitability", out FieldXml fieldConfig))
+                compConfig.Fields.Add(new FieldXml { Name = "profitability", ValueFloat = item.Value });
+        }
+    }
+}
+*/
