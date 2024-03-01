@@ -10,7 +10,8 @@
 	<PrefabType>ResourcePrefab</PrefabType>
 	<PrefabType>ZonePrefab</PrefabType>
 	<PrefabType>CompanyPrefab</PrefabType>
-	<!--<PrefabType>BuildingPrefab</PrefabType>-->
+	<PrefabType>BuildingPrefab</PrefabType>
+	<PrefabType>BuildingExtensionPrefab</PrefabType>
 </ValidPrefabTypes>
 
 
@@ -745,5 +746,64 @@
       <Field name="profitability" valueInt="0" valueFloat="15" />
     </Component>
   </Prefab>
+
+
+<!-- CITY SERVICES BUILDINGS -->
+<!-- None on Workplace Complexity - only main buuilding matters :( extensions just add new workers but their Complexity is ignored :( -->
+
+<!-- Elementary School -->
+<Prefab name="ElementarySchool01"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="30" /> <!-- 10, 1000 places -->
+	<!--<Field name="m_Complexity" valueInt="1" />--> <!-- Simple => ok -->
+</Component></Prefab>
+<Prefab name="ElementarySchool01 Extension Wing"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="20" /> <!-- 4, 500 places -->
+</Component></Prefab>
+<Prefab name="ElementarySchool01 Childrens Clinic"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="10" /> <!-- 4 -->
+</Component></Prefab>
+
+<!-- High School -->
+<Prefab name="HighSchool01"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="30" /> <!-- 12, 800 places -->
+	<Field name="m_Complexity" valueInt="2" /> <!-- Simple => Complex -->
+</Component></Prefab>
+<Prefab name="HighSchool01 Extension Wing"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="20" /> <!-- 4, 400 places -->
+</Component></Prefab>
+<Prefab name="HighSchool01 Library"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="10" /> <!-- 4 -->
+</Component></Prefab>
+<Prefab name="HighSchool01 Sports Field"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="10" /> <!-- 4 -->
+</Component></Prefab>
+
+<!-- College -->
+<Prefab name="College01"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="40" /> <!-- 32, 1000 places -->
+	<!--<Field name="m_Complexity" valueInt="2" />--> <!-- Complex => ok -->
+</Component></Prefab>
+<Prefab name="College01 Extension Wing"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="25" /> <!-- 10, 500 places -->
+</Component></Prefab>
+<Prefab name="College01 Library"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="15" /> <!-- 10 -->
+</Component></Prefab>
+
+<!-- University -->
+<Prefab name="University01"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="100" /> <!-- 28, 2000 places -->
+	<!--<Field name="m_Complexity" valueInt="3" />--> <!-- Hitech => ok -->
+</Component></Prefab>
+<Prefab name="University01 Extension Wing"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="25" /> <!-- 10, 500 places -->
+</Component></Prefab>
+<Prefab name="University01 Library"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="20" /> <!-- 10 -->
+</Component></Prefab>
+<Prefab name="University01 Park"><Component name="Workplace">
+	<Field name="m_Workplaces" valueInt="10" /> <!-- 10 -->
+</Component></Prefab>
+
 
 </Configuration>
