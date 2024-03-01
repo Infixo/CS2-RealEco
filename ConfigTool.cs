@@ -126,6 +126,30 @@ public static class ConfigTool_Patches
             else
                 Plugin.LogIf($"{prefab.name}: SKIP {prefab.GetType().Name}");
         }
+        // 240301 extract specific components
+        /*
+        ConfigurationXml config = ConfigToolXml.Config;
+        if (prefab.Has<Workplace>())
+        {
+            Workplace comp = prefab.GetComponent<Workplace>();
+            PrefabXml prefabConfig = default(PrefabXml);
+            if (!config.TryGetPrefab(prefab.name, out prefabConfig))
+                config.Prefabs.Add(new PrefabXml { Name = prefab.name, Components = new List<ComponentXml>() });
+            if (config.TryGetPrefab(prefab.name, out prefabConfig))
+            {
+                ComponentXml compConfig = default(ComponentXml);
+                if (!prefabConfig.TryGetComponent("Workplace", out compConfig))
+                    prefabConfig.Components.Add(new ComponentXml { Name = "Workplace", Fields = new List<FieldXml>() });
+                if (prefabConfig.TryGetComponent("Workplace", out compConfig))
+                {
+                    if (!compConfig.TryGetField("m_Workplaces", out FieldXml field1Config))
+                        compConfig.Fields.Add(new FieldXml { Name = "m_Workplaces", ValueInt = comp.m_Workplaces });
+                    if (!compConfig.TryGetField("m_Complexity", out FieldXml field2Config))
+                        compConfig.Fields.Add(new FieldXml { Name = "m_Complexity", ValueInt = (int)comp.m_Complexity });
+                }
+            }
+        }
+        */
         return true;
     }
 
