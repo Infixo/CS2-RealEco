@@ -12,7 +12,7 @@
 		<AssemblyName>RealEco</AssemblyName>
 		<RootNamespace>RealEco</RootNamespace>
 		<Description>Real Economy - rebalances resources consumption.</Description>
-		<Version>0.2.0</Version>
+		<Version>0.3.0</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>latest</LangVersion>
 		<RestoreAdditionalProjectSources>

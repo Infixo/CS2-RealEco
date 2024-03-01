@@ -66,7 +66,7 @@ public static class PrefabSystem_AddPrefab_Patches
         {ResourceInEditor.Financial, 10 }, // 5
     };
 
-    /* No longer in use, Resource paranms in xml
+    /* No longer in use, Resource params are in xml
     [HarmonyPrefix]
     public static bool Resources_Prefix(object __instance, PrefabBase prefab)
     {

@@ -160,7 +160,7 @@ public static class ConfigTool_Patches
 }
 
 // FOR THE FUTURE
-/* This code reads a dictionary and puts it into config xml
+/* This code reads a dictionary and puts it into the config xml
 
 
 ConfigurationXml config = ConfigToolXml.Config;
