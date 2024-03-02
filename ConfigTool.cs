@@ -58,7 +58,7 @@ public static class ConfigTool_Patches
                 Plugin.LogIf($"{prefab.name}.IndustrialProcess.{outamtField.Name}: {oldProc.m_Output.m_Amount} -> {comp.process.m_Output.m_Amount} ({comp.process.m_Output.m_Amount.GetType()}, {outamtField})");
             }
             if (!Plugin.Logging.Value)
-                Plugin.LogIf($"{prefab.name}.IndustrialProcess: wpc {comp.process.m_MaxWorkersPerCell} output {comp.process.m_Output.m_Amount}");
+                Plugin.Log($"{prefab.name}.IndustrialProcess: wpc {comp.process.m_MaxWorkersPerCell} output {comp.process.m_Output.m_Amount}");
         }
 
         if (!prefabConfig.TryGetComponent(compName, out ComponentXml compConfig))
