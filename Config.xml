@@ -23,11 +23,11 @@
 		<Field name="m_ExtractorCompanyExportMultiplier" valueFloat="0.70" />
 		<!-- default 0.0001f, commercial is 0.0010f, extractor is 64/10000 i.e. 0.0064f -->
 		<Field name="m_IndustrialProfitFactor" valueFloat="0.0008" />
-		<Field name="m_Wage0" valueInt="1550" /> <!-- 1200 -->
-		<Field name="m_Wage1" valueInt="1900" /> <!-- 2000 -->
-		<Field name="m_Wage2" valueInt="2980" /> <!-- 2500 -->
-		<Field name="m_Wage3" valueInt="4020" /> <!-- 3500 -->
-		<Field name="m_Wage4" valueInt="5010" /> <!-- 5000 -->
+		<Field name="m_Wage0" valueInt="1330" /> <!-- 1200, 1550 -->
+		<Field name="m_Wage1" valueInt="1700" /> <!-- 2000, 1900 -->
+		<Field name="m_Wage2" valueInt="2770" /> <!-- 2500, 2980 -->
+		<Field name="m_Wage3" valueInt="3880" /> <!-- 3500, 4020 -->
+		<Field name="m_Wage4" valueInt="5040" /> <!-- 5000, 5010 -->
 		<Field name="m_Pension" valueInt="1000" /> <!-- 800 -->
 		<Field name="m_FamilyAllowance" valueInt="500" /> <!-- 300 -->
 		<!--<Field name="m_UnemploymentBenefit" valueInt="600" />--><!-- 800 -->
@@ -87,7 +87,7 @@
 </Prefab>
 <Prefab name="Office Low">
 	<Component name="ZoneProperties">
-		<Field name="m_SpaceMultiplier" valueFloat="1.2" /> <!-- 1.0 -->
+		<Field name="m_SpaceMultiplier" valueFloat="1.1" /> <!-- 1.0 -->
 	</Component>
 </Prefab>
 <Prefab name="EU Commercial High">
@@ -288,7 +288,7 @@
 
 <Prefab name="Office_SoftwareCompany">
 	<Component name="CompanyPrefab">
-		<Field name="profitability" valueFloat="90" /> <!-- 400 -->
+		<Field name="profitability" valueFloat="80" /> <!-- 400 -->
 	</Component>
     <Component name="IndustrialProcess">
       <Field name="m_Output.m_Amount" valueInt="15"/> <!-- 1 Electronics -> 20 Software -->
@@ -296,7 +296,7 @@
 </Prefab>
 <Prefab name="Office_Bank">
 	<Component name="CompanyPrefab">
-		<Field name="profitability" valueFloat="90" /> <!-- 400 -->
+		<Field name="profitability" valueFloat="80" /> <!-- 400 -->
 	</Component>
     <Component name="IndustrialProcess">
       <Field name="m_Output.m_Amount" valueInt="3"/> <!-- 1 Software -> 20 Financial -->
@@ -307,7 +307,7 @@
 </Prefab>
 <Prefab name="Office_MediaCompany">
 	<Component name="CompanyPrefab">
-		<Field name="profitability" valueFloat="90" /> <!-- 400 price 60->50 -->
+		<Field name="profitability" valueFloat="80" /> <!-- 400 price 60->50 -->
 	</Component>
     <Component name="IndustrialProcess">
       <Field name="m_Output.m_Amount" valueInt="15"/> <!-- 1 Software -> 20 Media -->
@@ -318,7 +318,7 @@
 </Prefab>
 <Prefab name="Office_TelecomCompany">
 	<Component name="CompanyPrefab">
-		<Field name="profitability" valueFloat="90" /> <!-- 400 price 80->60 -->
+		<Field name="profitability" valueFloat="80" /> <!-- 400 price 80->60 -->
 	</Component>
     <Component name="IndustrialProcess">
       <Field name="m_Output.m_Amount" valueInt="8"/> <!-- 1 Electronics + 2 Software -> 20 Telecom -->
@@ -558,7 +558,7 @@
   </Prefab>
   <Prefab name="Industrial_BeverageFromVegetablesFactory">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="30" />
+      <Field name="profitability" valueInt="0" valueFloat="40" />
     </Component>
     <Component name="Workplace">
       <Field name="m_Complexity" valueInt="2" /> <!-- Simple => Complex -->
@@ -594,7 +594,7 @@
   </Prefab>
   <Prefab name="Industrial_TextileFromPetrochemicalsFactory">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="30" />
+      <Field name="profitability" valueInt="0" valueFloat="35" />
     </Component>
     <Component name="IndustrialProcess">
       <Field name="m_Output.m_Amount" valueInt="2" /> <!-- 1 Petrochemicals -> 3 Texttiles -->
@@ -621,7 +621,7 @@
   </Prefab>
   <Prefab name="Industrial_ConvenienceFoodFromGrainFactory">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="30" />
+      <Field name="profitability" valueInt="0" valueFloat="35" />
     </Component>
     <Component name="IndustrialProcess">
       <Field name="m_Output.m_Amount" valueInt="2" /> <!-- 1 Grain -> 1 Conv.food -->
@@ -854,31 +854,29 @@
   </Component>
 </Prefab>
 
-
+  <!-- Airport -->
   <Prefab name="Airport01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="20" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="120" valueFloat="0" /> <!-- 20 -->
+      <Field name="m_Complexity" valueInt="2" valueFloat="0" /> <!-- Hitech => Complex -->
     </Component>
   </Prefab>
   <Prefab name="Airport01 Business Terminal">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="30" valueFloat="0" /> <!-- 10 -->
     </Component>
   </Prefab>
   <Prefab name="Airport01 Cargo Terminal">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="16" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="40" valueFloat="0" /> <!-- 16 -->
     </Component>
   </Prefab>
   <Prefab name="Airport01 Services">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="6" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="40" valueFloat="0" /> <!-- 6 -->
     </Component>
   </Prefab>
+  <!-- American Football Field -->
   <Prefab name="AmericanFootballField01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
@@ -894,7 +892,7 @@
   <!-- Bus Depot -->
   <Prefab name="BusDepot01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="35" valueFloat="0" /> <!-- 16, there are 25 buses... -->
+      <Field name="m_Workplaces" valueInt="40" valueFloat="0" /> <!-- 16, there are 25 buses... -->
       <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
@@ -933,52 +931,50 @@
       <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Cargo Harbor -->
   <Prefab name="CargoHarbor01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="14" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="40" valueFloat="0" /> <!-- 14 -->
+      <Field name="m_Complexity" valueInt="2" valueFloat="0" /> <!-- Complex => ok -->
     </Component>
   </Prefab>
   <Prefab name="CargoHarbor01 Cargo Cranes">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="CargoHarbor01 Railway Connection">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="CargoHarbor01 Warehouses">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="6" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Cargo Train Terminal -->
   <Prefab name="CargoTrainTerminal01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="8" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="32" valueFloat="0" /> <!-- 8 -->
+      <Field name="m_Complexity" valueInt="2" valueFloat="0" /> <!-- Complex => ok -->
     </Component>
   </Prefab>
   <Prefab name="CargoTrainTerminal01 Extra Tracks">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="6" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="CargoTrainTerminal01 Storage Warehouse">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Cemetery -->
   <Prefab name="Cemetery01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="12" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Complexity" valueInt="1" valueFloat="0" /> <!-- Simple => ok -->
     </Component>
   </Prefab>
   <Prefab name="Cemetery01 Chapel">
@@ -999,36 +995,38 @@
       <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Central Bank -->
   <Prefab name="CentralBank01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="40" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="200" valueFloat="0" /> <!-- 40 -->
+      <Field name="m_Complexity" valueInt="3" valueFloat="0" /> <!-- Complex => Hitech -->
     </Component>
   </Prefab>
+  <!-- Central Investigation Bureau -->
   <Prefab name="CentralInvestigationBureau01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="100" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="300" valueFloat="0" /> <!-- 100 -->
+      <Field name="m_Complexity" valueInt="3" valueFloat="0" /> <!-- Hitech => ok -->
     </Component>
   </Prefab>
+  <!-- City Hall -->
   <Prefab name="CityHall01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="16" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="100" valueFloat="0" /> <!-- 16 -->
+      <Field name="m_Complexity" valueInt="2" valueFloat="0" /> <!-- Complex => ok -->
     </Component>
   </Prefab>
   <Prefab name="CityHall01 Court">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="30" valueFloat="0" /> <!-- 10 -->
     </Component>
   </Prefab>
   <Prefab name="CityHall01 Planning Offices">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="30" valueFloat="0" /> <!-- 10 -->
     </Component>
   </Prefab>
+  <!-- Coal Power Plant -->
   <Prefab name="CoalPowerPlant01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="32" valueFloat="0" />
@@ -1053,17 +1051,18 @@
       <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Community Pool -->
   <Prefab name="CommunityPool01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="10" valueFloat="0" /> <!-- 4 -->
+      <Field name="m_Complexity" valueInt="1" valueFloat="0" /> <!-- Simple => ok -->
     </Component>
   </Prefab>
   <!-- Crematorium -->
   <Prefab name="Crematorium01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Complexity" valueInt="1" valueFloat="0" /> <!-- Simple => ok -->
     </Component>
   </Prefab>
   <Prefab name="Crematorium01 Additional Incinerator">
@@ -1110,12 +1109,6 @@
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
       <Field name="m_Complexity" valueInt="1" valueFloat="0" />
-    </Component>
-  </Prefab>
-  <Prefab name="ParkingHall01 Car Wash">
-    <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="EmergencyBatteryStation01 Diesel Generator">
@@ -1170,60 +1163,58 @@
       <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Gas Power Plant -->
   <Prefab name="GasPowerPlant01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="28" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="70" valueFloat="0" /> <!-- 28 -->
+      <Field name="m_Complexity" valueInt="2" valueFloat="0" /> <!-- Complex => ok -->
     </Component>
   </Prefab>
   <Prefab name="GasPowerPlant01 Additional Turbine">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="14" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="GasPowerPlant01 Advanced Furnace">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="6" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="GasPowerPlant01 Fuel Storage Extension">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="6" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Geological Research Center -->
   <Prefab name="GeologicalResearchCenter01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="32" valueFloat="0" />
       <Field name="m_Complexity" valueInt="3" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Geothermal Power Plant -->
   <Prefab name="GeothermalPowerPlant01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="22" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="60" valueFloat="0" /> <!-- 22 -->
+      <Field name="m_Complexity" valueInt="2" valueFloat="0" /> <!-- Complex => ok -->
     </Component>
   </Prefab>
   <Prefab name="GeothermalPowerPlant01 Additional Transformer Station">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="0" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="GeothermalPowerPlant01 Additional Turbine">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="14" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="GeothermalPowerPlant01 Binary Cycle Power Station">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Groundwater Pumping Station -->
   <Prefab name="GroundwaterPumpingStation01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="8" valueFloat="0" />
@@ -1236,24 +1227,24 @@
       <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Harbor -->
   <Prefab name="Harbor01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="12" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="80" valueFloat="0" /> <!-- 12 -->
+      <Field name="m_Complexity" valueInt="2" valueFloat="0" /> <!-- Complex => ok -->
     </Component>
   </Prefab>
   <Prefab name="Harbor01 Extra Pier">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="Harbor01 Transit Terminal">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Hazardous Waste Processing Site -->
   <Prefab name="HazardousWasteProcessingSite01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="60" valueFloat="0" />
@@ -1272,153 +1263,150 @@
       <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Hospital -->
   <Prefab name="Hospital01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="60" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="90" valueFloat="0" /> <!-- 60 -->
+      <Field name="m_Complexity" valueInt="3" valueFloat="0" /> <!-- Hitech => ok -->
     </Component>
   </Prefab>
   <Prefab name="Hospital01 Helipad">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="6" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="Hospital01 Special Ward">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="20" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="Hospital01 Trauma Center">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="15" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Hydroelectric Power Plant -->
   <Prefab name="HydroelectricPowerPlant01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="18" valueFloat="0" />
       <Field name="m_Complexity" valueInt="2" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Incineration Plant -->
   <Prefab name="IncinerationPlant01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="40" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Complexity" valueInt="1" valueFloat="0" /> <!-- Complex => Simple -->
     </Component>
   </Prefab>
   <Prefab name="IncinerationPlant01 Extra Incinerator Furnace">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="16" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="IncinerationPlant01 Garbage Truck Depot">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="IncinerationPlant01 Storage Extension">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- InternationalAirport -->
   <Prefab name="InternationalAirport01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="50" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="400" valueFloat="0" /> <!-- 50 -->
+      <Field name="m_Complexity" valueInt="2" valueFloat="0" /> <!-- Complex => ok -->
     </Component>
   </Prefab>
+  <!-- Landfill -->
   <Prefab name="Landfill01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="30" valueFloat="0" /> <!--- 10, 20 trucks -->
+      <Field name="m_Complexity" valueInt="0" valueFloat="0" /> <!-- Manual => ok -->
     </Component>
   </Prefab>
   <Prefab name="Landfill01 Garbage Truck Depot">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="6" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="15" valueFloat="0" /> <!-- 6, 10 trucks -->
     </Component>
   </Prefab>
   <Prefab name="Landfill01 Hazardous Waste Collection Point">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="8" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="Landfill01 Waste Recycling Unit">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="8" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Large Emergency Shelter -->
   <Prefab name="LargeEmergencyShelter01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="14" valueFloat="0" />
       <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Large Hadron Collider -->
   <Prefab name="LargeHadronCollider01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="52" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="150" valueFloat="0" /> <!-- 52 -->
+      <Field name="m_Complexity" valueInt="3" valueFloat="0" /> <!-- Hitech => ok -->
     </Component>
   </Prefab>
+  <!-- Medical Clinic -->
   <Prefab name="MedicalClinic01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="12" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="30" valueFloat="0" /> <!-- 12 -->
+      <Field name="m_Complexity" valueInt="2" valueFloat="0" /> <!-- Complex => ok -->
     </Component>
   </Prefab>
   <Prefab name="MedicalClinic01 Ambulance Depot">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="2" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="5" valueFloat="0" /> <!-- 2 -->
     </Component>
   </Prefab>
   <Prefab name="MedicalClinic01 Extension Wing">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="6" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="15" valueFloat="0" /> <!-- 6 -->
     </Component>
   </Prefab>
+  <!-- MedicalUniversity -->
   <Prefab name="MedicalUniversity01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="48" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="75" valueFloat="0" /> <!-- 48 -->
+      <Field name="m_Complexity" valueInt="3" valueFloat="0" /> <!-- Hitech => ok -->
     </Component>
   </Prefab>
   <Prefab name="MedicalUniversity01 Extension Wing">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="16" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="25" valueFloat="0" /> <!-- 16 -->
     </Component>
   </Prefab>
   <Prefab name="MedicalUniversity01 Practice Clinic">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="14" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="MedicalUniversity01 Research Facilities">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="20" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Nuclear Power Plant -->
   <Prefab name="NuclearPowerPlant01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="134" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="200" valueFloat="0" /> <!-- 134 -->
+      <Field name="m_Complexity" valueInt="3" valueFloat="0" /> <!-- Hitech => ok -->
     </Component>
   </Prefab>
+  <!-- Observation Tower -->
   <Prefab name="ObservationTower01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="12" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="32" valueFloat="0" /> <!-- 12 -->
       <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
@@ -1426,6 +1414,12 @@
   <Prefab name="ParkingHall01"> <!-- Overground Parking Building, 160 places -->
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="12" valueFloat="0" /> <!-- 12 -->
+      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
+    </Component>
+  </Prefab>
+  <Prefab name="ParkingHall01 Car Wash">
+    <Component name="Workplace">
+      <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
       <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
@@ -1560,6 +1554,7 @@
       <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Prison -->
   <Prefab name="Prison01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="50" valueFloat="0" />
@@ -1578,60 +1573,60 @@
       <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Radio Mast -->
   <Prefab name="RadioMast01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="1" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="2" valueFloat="0" /> <!-- 1 -->
+      <Field name="m_Complexity" valueInt="0" valueFloat="0" /> <!-- Manual => ok -->
     </Component>
   </Prefab>
+  <!-- Radio Telescope -->
   <Prefab name="RadioTelescope01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="24" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
+      <Field name="m_Complexity" valueInt="3" valueFloat="0" /> <!-- Hitech => ok -->
     </Component>
   </Prefab>
+  <!-- Rail Yard -->
   <Prefab name="RailYard01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="8" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="30" valueFloat="0" /> <!-- 8, 10 trains -->
+      <Field name="m_Complexity" valueInt="2" valueFloat="0" /> <!-- Complex => ok -->
     </Component>
   </Prefab>
   <Prefab name="RailYard01 Extra Rails">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="10" valueFloat="0" /> <!-- 4, 5 trains -->
     </Component>
   </Prefab>
   <Prefab name="RailYard01 Maintenance Hall">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="6" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="15" valueFloat="0" /> <!-- 6 -->
     </Component>
   </Prefab>
+  <!-- Recycling Center -->
   <Prefab name="RecyclingCenter01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="32" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="48" valueFloat="0" /> <!-- 32 -->
+      <Field name="m_Complexity" valueInt="2" valueFloat="0" /> <!-- Complex => ok -->
     </Component>
   </Prefab>
   <Prefab name="RecyclingCenter01 Garbage Truck Depot">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="RecyclingCenter01 Hazardous Waste Collection Point">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="RecyclingCenter01 Storage Extension">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Road Maintenance Depot -->
   <Prefab name="RoadMaintenanceDepot01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
@@ -1644,174 +1639,170 @@
       <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Satellite Uplink -->
   <Prefab name="SatelliteUplink01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
       <Field name="m_Complexity" valueInt="3" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Server Farm -->
   <Prefab name="ServerFarm01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="20" valueFloat="0" /> <!-- 10 -->
+      <Field name="m_Complexity" valueInt="3" valueFloat="0" /> <!-- Complex => Hitech -->
     </Component>
   </Prefab>
   <Prefab name="ServerFarm01 Server Upgrade">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="3" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="10" valueFloat="0" /> <!-- 3 -->
     </Component>
   </Prefab>
+  <!-- Small Coal Power Plant -->
   <Prefab name="SmallCoalPowerPlant01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="25" valueFloat="0" /> <!-- 10 -->
+      <Field name="m_Complexity" valueInt="1" valueFloat="0" /> <!-- Simple => ok -->
     </Component>
   </Prefab>
+  <!-- Solar Power Station -->
   <Prefab name="SolarPowerStation01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="16" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="20" valueFloat="0" /> <!-- 16 -->
+      <Field name="m_Complexity" valueInt="3" valueFloat="0" /> <!-- Complex => Hitech -->
     </Component>
   </Prefab>
   <Prefab name="SolarPowerStation01 Additional Transformer Station">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="0" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="SolarPowerStation01 Backup Battery">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Space Center -->
   <Prefab name="SpaceCenter01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="50" valueFloat="0" />
       <Field name="m_Complexity" valueInt="3" valueFloat="0" />
     </Component>
   </Prefab>
-  <Prefab name="SubwayStation01">
+  <!-- Subway Stations -->
+  <Prefab name="SubwayStation01"> <!-- Underground -->
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="8" valueFloat="0" /> <!-- 4 -->
+      <Field name="m_Complexity" valueInt="1" valueFloat="0" /> <!-- Simple => ok -->
     </Component>
   </Prefab>
   <Prefab name="SubwayStation01 Station Services">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="8" valueFloat="0" /> <!-- 4 -->
     </Component>
   </Prefab>
-  <Prefab name="SubwayStation02">
+  <Prefab name="SubwayStation02"> <!-- Overground -->
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="8" valueFloat="0" /> <!-- 4 -->
+      <Field name="m_Complexity" valueInt="1" valueFloat="0" /> <!-- Simple => ok -->
     </Component>
   </Prefab>
   <Prefab name="SubwayStation02 Station Services">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="8" valueFloat="0" /> <!-- 4 -->
     </Component>
   </Prefab>
+  <!-- Subway Yard -->
   <Prefab name="SubwayYard01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="13" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="30" valueFloat="0" /> <!-- 13, 10 trains -->
+      <Field name="m_Complexity" valueInt="2" valueFloat="0" /> <!-- Complex => ok -->
     </Component>
   </Prefab>
   <Prefab name="SubwayYard01 Extra Rails">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="10" valueFloat="0" /> <!-- 4, 5 trains -->
     </Component>
   </Prefab>
   <Prefab name="SubwayYard01 Maintenance Hall">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="6" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="2" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Taxi Depot -->
   <Prefab name="TaxiDepot01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="8" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="30" valueFloat="0" /> <!-- 8, 20 taxis -->
+      <Field name="m_Complexity" valueInt="1" valueFloat="0" /> <!-- Simple => ok -->
     </Component>
   </Prefab>
   <Prefab name="TaxiDepot01 Dispatch Center">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="TaxiDepot01 Electric Taxis">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="TaxiDepot01 Taxi Garage">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="10" valueFloat="0" /> <!-- 4, 5 taxis -->
     </Component>
   </Prefab>
+  <!-- Technical University -->
   <Prefab name="TechnicalUniversity01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="48" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="75" valueFloat="0" /> <!-- 48 -->
+      <Field name="m_Complexity" valueInt="3" valueFloat="0" /> <!-- Hitech => ok -->
     </Component>
   </Prefab>
   <Prefab name="TechnicalUniversity01 Extension Wing">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="16" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="25" valueFloat="0" /> <!-- 16 -->
       <Field name="m_Complexity" valueInt="3" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="TechnicalUniversity01 Workshop Upgrade">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="14" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Telecom Tower -->
   <Prefab name="TelecomTower01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="10" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="3" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Train Station -->
   <Prefab name="TrainStation01">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="6" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="15" valueFloat="0" /> <!-- 6 -->
+      <Field name="m_Complexity" valueInt="1" valueFloat="0" /> <!-- Simple => ok -->
     </Component>
   </Prefab>
   <Prefab name="TrainStation01 Extra Platforms">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="2" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="TrainStation01 Services">
     <Component name="Workplace">
-      <Field name="m_Workplaces" valueInt="4" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Workplaces" valueInt="10" valueFloat="0" /> <!-- 4 -->
     </Component>
   </Prefab>
   <Prefab name="TrainStation01 Subway Interface">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="2" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
   <Prefab name="TrainStation01 Taxi Stop">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="2" valueFloat="0" />
-      <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Tram Depot -->
   <Prefab name="TramDepot01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="6" valueFloat="0" />
@@ -1854,13 +1845,14 @@
       <Field name="m_Complexity" valueInt="0" valueFloat="0" />
     </Component>
   </Prefab>
-  <!-- Adminstration-->
+  <!-- Welfare Office-->
   <Prefab name="WelfareOffice01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="80" valueFloat="0" /> <!-- 12 -->
-      <Field name="m_Complexity" valueInt="1" valueFloat="0" />
+      <Field name="m_Complexity" valueInt="1" valueFloat="0" /> <!-- Simple => ok -->
     </Component>
   </Prefab>
+  <!-- Landmarks -->
   <Prefab name="FerrisWheel01">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="18" valueFloat="0" />
@@ -1927,6 +1919,8 @@
       <Field name="m_Complexity" valueInt="2" valueFloat="0" />
     </Component>
   </Prefab>
+  <!-- Outside Connections: not changed -->
+  <!--
   <Prefab name="Road Outside Connection - Twoway">
     <Component name="Workplace">
       <Field name="m_Workplaces" valueInt="1" valueFloat="0" />
@@ -1951,6 +1945,6 @@
       <Field name="m_Complexity" valueInt="1" valueFloat="0" />
     </Component>
   </Prefab>
-
+  -->
 
 </Configuration>
