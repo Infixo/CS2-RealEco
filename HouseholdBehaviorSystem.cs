@@ -285,11 +285,13 @@ public class HouseholdBehaviorSystem : GameSystemBase
                                 num4 -= weight;
                                 if (weight > 0 && num4 <= num5)
                                 {
+                                    // 240306 money
+                                    int moneyPerCim = EconomyUtils.GetResources(Resource.Money, resources) / dynamicBuffer.Length;
                                     // Infixo: the core part where actual consumption need is created and inserted into the queue
                                     // then it gets accumulated and processed by other systems, mainly CommercialDemandSystem
                                     value.m_Resource = iterator.resource;
                                     float price = m_ResourceDatas[m_ResourcePrefabs[iterator.resource]].m_Price;
-                                    value.m_Amount = Mathf.CeilToInt((float)(2000 * dynamicBuffer.Length) / price);
+                                    value.m_Amount = Mathf.CeilToInt((float)(math.clamp(moneyPerCim, 1000, 3000) * dynamicBuffer.Length) / price); // 240306 buy more resources, default is 2000
                                     nativeArray3[i] = value;
                                     nativeArray2[i] = household;
                                     m_ConsumptionQueue.Enqueue(new ResourceStack
@@ -300,7 +302,7 @@ public class HouseholdBehaviorSystem : GameSystemBase
                                         m_Amount = value.m_Amount
                                     });
                                     //int amount = Mathf.RoundToInt((float)value.m_Amount / (0.01f * (float)num3));
-                                    //Plugin.Log($"HouseholdTickJob entity {entity.Index} cims {dynamicBuffer.Length}: needs {value.m_Amount} of {value.m_Resource} at price {price}, consumption {amount}, num3 {num3}, traf {m_EconomyParameters.m_TrafficReduction}, pop {population}");
+                                    //Plugin.Log($"HouseholdTickJob {entity.Index}: cims {dynamicBuffer.Length} needs {value.m_Amount} of {value.m_Resource} at price {price} money {money} wealth {householdWealth}");//, consumption {amount}, num3 {num3}, traf {m_EconomyParameters.m_TrafficReduction}, pop {population}");
                                     return;
                                 }
                             }
