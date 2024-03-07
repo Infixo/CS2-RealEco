@@ -68,15 +68,15 @@ public class Plugin : BaseUnityPlugin
         Logging = base.Config.Bind<bool>("Debug", "Logging", false, "Enables detailed logging.");
         ConfigDump = base.Config.Bind<bool>("Debug", "ConfigDump", false, "Saves configuration to a secondary xml file.");
 
-        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
+        Log($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
 
         var harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID + "_Cities2Harmony");
         var patchedMethods = harmony.GetPatchedMethods().ToArray();
 
-        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} made patches! Patched methods: " + patchedMethods.Length);
+        Log($"Plugin {MyPluginInfo.PLUGIN_GUID} made patches! Patched methods: " + patchedMethods.Length);
 
         foreach (var patchedMethod in patchedMethods) {
-            Logger.LogInfo($"Patched method: {patchedMethod.Module.Name}:{patchedMethod.Name}");
+            Log($"Patched method: {patchedMethod.Module.Name}:{patchedMethod.Name}");
         }
 
         // READ CONFIG DATA
