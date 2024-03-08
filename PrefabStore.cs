@@ -33,14 +33,14 @@ public static class PrefabStore_Patches
 
  */
 
-    private static CompanyPrefab CreateNewCompanyPrefab(string prefabName, ResourceInEditor resource, WorkplaceComplexity complexity, float maxWorkersPerCell)
+    private static CompanyPrefab CreateNewCompanyPrefab(string prefabName, ResourceInEditor resource, WorkplaceComplexity complexity, float maxWorkersPerCell, float profitability)
     {
         // CompanyPrefab
         CompanyPrefab prefab = ScriptableObject.CreateInstance<CompanyPrefab>();
         prefab.name = prefabName;
         prefab.prefab = prefab; // prefab is also a ComponentBase
         prefab.zone = Game.Zones.AreaType.Commercial;
-        prefab.profitability = 100f;
+        prefab.profitability = profitability;
         // ServiceCompany
         ServiceCompany serviceCompany = prefab.AddComponent<ServiceCompany>();
         //serviceCompany.name = serviceCompany.GetType().Name;
@@ -87,10 +87,10 @@ public static class PrefabStore_Patches
         if (!isAdded && __instance.name == "CompaniesCollection")
         {
             Plugin.Log($"Adding new CompanyPrefabs");
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.4f));
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Complex, 0.4f));
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.4f));
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_MediaStore", ResourceInEditor.Media, WorkplaceComplexity.Complex, 0.4f));
+            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.25f, 60f)); // price 85
+            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Simple, 0.35f, 60f)); // price 60
+            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.25f, 60f)); // price 70
+            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_MediaStore", ResourceInEditor.Media, WorkplaceComplexity.Simple, 0.35f, 60f)); // price 60
             isAdded = true;
         }
         return true;
@@ -101,6 +101,7 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool ZonePrefab_Prefix(PrefabBase prefab)
     {
+        /*
         static void AddResource(ref ResourceInEditor[] array, ResourceInEditor resource)
         {
             if (Array.IndexOf(array, resource) < 0)
@@ -120,7 +121,7 @@ public static class PrefabStore_Patches
                 Plugin.Log($"... {resource} already in the array");
             }
         }
-
+        */
         if (prefab.GetType().Name == "ZonePrefab" && prefab.TryGet<ZoneProperties>(out ZoneProperties comp) && comp.m_AllowedSold.Length > 0)
         {
             if (Array.IndexOf(comp.m_AllowedSold, ResourceInEditor.Software) < 0)
