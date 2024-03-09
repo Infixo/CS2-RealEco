@@ -20,8 +20,10 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Scripting;
+using Game;
+using Game.Simulation;
 
-namespace Game.Simulation;
+namespace RealEco.Systems;
 
 [CompilerGenerated]
 public class CitizenBehaviorSystem : GameSystemBase
@@ -403,7 +405,11 @@ public class CitizenBehaviorSystem : GameSystemBase
             component.m_Location = position;
             component.m_ResourceNeeded = need.m_Resource;
             component.m_AmountNeeded = need.m_Amount;
+            // 240306 fix Office
+            //if (need.m_Resource == Resource.Software || need.m_Resource == Resource.Telecom || need.m_Resource == Resource.Media || need.m_Resource == Resource.Financial)
+                //component.m_Flags = SetupTargetFlags.Industrial;
             m_CommandBuffer.AddComponent(chunkIndex, citizen, component);
+            //Plugin.Log($"Shopping {household.Index}: {need.m_Resource} {need.m_Amount} => {component.m_Flags}");
         }
 
         private float GetTimeLeftUntilInterval(float2 interval)
@@ -482,6 +488,7 @@ public class CitizenBehaviorSystem : GameSystemBase
                                     m_Resource = haveCoordinatedMeetingData.m_Purpose.m_Resource,
                                     m_Amount = haveCoordinatedMeetingData.m_Purpose.m_Data
                                 }, position);
+                                //Plugin.Log($"...in meeting, household need NOT removed");
                                 return true;
                             }
                             if (haveCoordinatedMeetingData.m_Purpose.m_Purpose == Purpose.Traveling)
@@ -687,6 +694,7 @@ public class CitizenBehaviorSystem : GameSystemBase
                             {
                                 m_CommandBuffer.RemoveComponent<Leisure>(unfilteredChunkIndex, entity);
                             }
+                            //Plugin.Log($"...in building, household need removed");
                             continue;
                         }
                     }

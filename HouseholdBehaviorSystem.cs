@@ -208,7 +208,7 @@ public class HouseholdBehaviorSystem : GameSystemBase
                     m_DebugResourcesQueue.Enqueue(math.clamp(household.m_Resources, -20000, 20000));
                 }
                 float num = GetConsumptionMultiplier(Mathf.RoundToInt((float)householdWealth / math.max(1f, bufferAccessor[i].Length))) * m_EconomyParameters.m_ResourceConsumption * (float)dynamicBuffer.Length;
-                //Plugin.Log($"HouseholdTickJob entity {entity.Index}: needs {value.m_Amount} of {value.m_Resource}, wealth {householdWealth} cons_mult {num}");
+                //Plugin.Log($"HouseholdTickJob1 {entity.Index}: had {household.m_Resources} needs {value.m_Amount} of {value.m_Resource} wealth {householdWealth} cons_mult {num}");
                 if (chunk.Has(ref m_TouristHouseholdType))
                 {
                     num *= m_EconomyParameters.m_TouristConsumptionMultiplier;
@@ -240,6 +240,7 @@ public class HouseholdBehaviorSystem : GameSystemBase
                     num2++;
                 }
                 household.m_Resources -= num2;
+                //Plugin.Log($"HouseholdTickJob2 {entity.Index}: used {num2} has {household.m_Resources} cons_mult {num}");
                 if (value.m_Resource == Resource.NoResource)
                 {
                     int carCount = 0;
@@ -302,7 +303,7 @@ public class HouseholdBehaviorSystem : GameSystemBase
                                         m_Amount = value.m_Amount
                                     });
                                     //int amount = Mathf.RoundToInt((float)value.m_Amount / (0.01f * (float)num3));
-                                    //Plugin.Log($"HouseholdTickJob {entity.Index}: cims {dynamicBuffer.Length} needs {value.m_Amount} of {value.m_Resource} at price {price} money {money} wealth {householdWealth}");//, consumption {amount}, num3 {num3}, traf {m_EconomyParameters.m_TrafficReduction}, pop {population}");
+                                    //Plugin.Log($"HouseholdTickJob3 {entity.Index}: cims {dynamicBuffer.Length} needs {value.m_Amount} of {value.m_Resource} at price {price} money {moneyPerCim} wealth {householdWealth}");//, consumption {amount}, num3 {num3}, traf {m_EconomyParameters.m_TrafficReduction}, pop {population}");
                                     return;
                                 }
                             }

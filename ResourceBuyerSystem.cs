@@ -25,8 +25,10 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Scripting;
+using Game;
+using Game.Simulation;
 
-namespace Game.Simulation;
+namespace RealEco.Systems;
 
 [CompilerGenerated]
 public class ResourceBuyerSystem : GameSystemBase
@@ -228,23 +230,29 @@ public class ResourceBuyerSystem : GameSystemBase
                     DynamicBuffer<Game.Economy.Resources> resources = m_Resources[item.m_Seller];
                     int resources2 = EconomyUtils.GetResources(item.m_Resource, resources);
                     EconomyUtils.AddResources(item.m_Resource, -math.min(resources2, Mathf.RoundToInt((float)item.m_Amount / num4)), resources);
+                    //Plugin.Log($"ResourceBuy1 {item.m_Seller.Index}->{item.m_Buyer.Index} {item.m_Amount} {item.m_Resource}: seller stock {-math.min(resources2, Mathf.RoundToInt((float)item.m_Amount / num4))}");
                 }
                 EconomyUtils.AddResources(Resource.Money, -Mathf.RoundToInt(num), m_Resources[item.m_Buyer]);
+                //Plugin.Log($"ResourceBuy2 {item.m_Seller.Index}->{item.m_Buyer.Index} {item.m_Amount} {item.m_Resource}: buyer money {-Mathf.RoundToInt(num)} flags {item.m_Flags}");
                 if (m_Households.HasComponent(item.m_Buyer))
                 {
                     Household value2 = m_Households[item.m_Buyer];
                     value2.m_Resources += Mathf.RoundToInt(num);
                     m_Households[item.m_Buyer] = value2;
+                    //Plugin.Log($"ResourceBuy3 {item.m_Seller.Index}->{item.m_Buyer.Index} {item.m_Amount} {item.m_Resource}: household {Mathf.RoundToInt(num)}");
                 }
                 else if (m_BuyingCompanies.HasComponent(item.m_Buyer))
                 {
                     BuyingCompany value3 = m_BuyingCompanies[item.m_Buyer];
                     value3.m_LastTradePartner = item.m_Seller;
                     m_BuyingCompanies[item.m_Buyer] = value3;
-                    if ((item.m_Flags & SaleFlags.Virtual) != 0)
-                    {
+                    // 240309 FIX FOR VANISHING RESOURCES AND BANKRUPTING COMMERCIALS
+                    // This is necessary ALWAYS to get the resources we've just paid for
+                    //if ((item.m_Flags & SaleFlags.Virtual) != 0)
+                    //{
                         EconomyUtils.AddResources(item.m_Resource, item.m_Amount, m_Resources[item.m_Buyer]);
-                    }
+                        //Plugin.Log($"ResourceBuy4 {item.m_Seller.Index}->{item.m_Buyer.Index} {item.m_Amount} {item.m_Resource}: buyer stock {item.m_Amount}");
+                    //}
                 }
                 if (m_TaxPayers.HasComponent(item.m_Seller))
                 {
@@ -285,6 +293,7 @@ public class ResourceBuyerSystem : GameSystemBase
                 {
                     DynamicBuffer<Game.Economy.Resources> resources3 = m_Resources[item.m_Seller];
                     EconomyUtils.AddResources(Resource.Money, Mathf.RoundToInt(num / num4), resources3);
+                    //Plugin.Log($"ResourceBuy5 {item.m_Seller.Index}->{item.m_Buyer.Index} {item.m_Amount} {item.m_Resource}: seller money {Mathf.RoundToInt(num / num4)}");
                 }
                 if (item.m_Resource != Resource.Vehicles || item.m_Amount != HouseholdBehaviorSystem.kCarAmount || !m_PropertyRenters.HasComponent(item.m_Seller))
                 {
@@ -453,7 +462,7 @@ public class ResourceBuyerSystem : GameSystemBase
             NativeArray<AttendingMeeting> nativeArray5 = chunk.GetNativeArray(ref m_AttendingMeetingType);
             for (int i = 0; i < nativeArray3.Length; i++)
             {
-                Entity e = nativeArray[i];
+                Entity e = nativeArray[i]; // Entity = ResourceBought
                 ResourceBought resourceBought = nativeArray3[i];
                 if (m_PrefabRefData.HasComponent(resourceBought.m_Payer) && m_PrefabRefData.HasComponent(resourceBought.m_Seller))
                 {
@@ -466,15 +475,16 @@ public class ResourceBuyerSystem : GameSystemBase
                     salesEvent.m_Distance = resourceBought.m_Distance;
                     SalesEvent value = salesEvent;
                     m_SalesQueue.Enqueue(value);
+                    //Plugin.Log($"SalesEvent1 {salesEvent.m_Seller.Index}->{salesEvent.m_Buyer.Index} {salesEvent.m_Amount} {salesEvent.m_Resource}: flags {salesEvent.m_Flags} dist {salesEvent.m_Distance}");
                 }
                 m_CommandBuffer.RemoveComponent<ResourceBought>(unfilteredChunkIndex, e);
             }
             for (int j = 0; j < nativeArray2.Length; j++)
             {
                 ResourceBuyer resourceBuyer = nativeArray2[j];
-                Entity entity = nativeArray[j];
+                Entity entity = nativeArray[j]; // Entity = ResourceBuyer & TripNeeded
                 DynamicBuffer<TripNeeded> dynamicBuffer = bufferAccessor[j];
-                bool flag = false;
+                bool flag = false; // immaterial resource
                 Entity entity2 = m_ResourcePrefabs[resourceBuyer.m_ResourceNeeded];
                 if (m_ResourceDatas.HasComponent(entity2))
                 {
@@ -517,10 +527,12 @@ public class ResourceBuyerSystem : GameSystemBase
                             salesEvent.m_Distance = pathInformation.m_Distance;
                             SalesEvent value2 = salesEvent;
                             m_SalesQueue.Enqueue(value2);
+                            //Plugin.Log($"SalesEvent2 {salesEvent.m_Seller.Index}->{salesEvent.m_Buyer.Index} {salesEvent.m_Amount} {salesEvent.m_Resource}: flags {salesEvent.m_Flags} dist {salesEvent.m_Distance}");
                             m_CommandBuffer.RemoveComponent(unfilteredChunkIndex, entity, in m_PathfindTypes);
                             m_CommandBuffer.RemoveComponent<ResourceBuyer>(unfilteredChunkIndex, entity);
-                            if (!flag)
-                            {
+							// 240309 Cims will also visit new shops for shopping
+                            //if (!flag) // not immaterial
+                            //{
                                 TripNeeded elem = default(TripNeeded);
                                 elem.m_TargetAgent = destination;
                                 elem.m_Purpose = Purpose.Shopping;
@@ -534,7 +546,8 @@ public class ResourceBuyerSystem : GameSystemBase
                                         m_Target = destination
                                     });
                                 }
-                            }
+                                //Plugin.Log($"TripNeeded {entity.Index}->{destination.Index} {elem.m_Data} {elem.m_Resource}: {elem.m_Purpose}");
+                            //}
                         }
                         else
                         {
@@ -559,6 +572,7 @@ public class ResourceBuyerSystem : GameSystemBase
                 }
                 else if ((!m_HouseholdMembers.HasComponent(entity) || (!m_TouristHouseholds.HasComponent(m_HouseholdMembers[entity].m_Household) && !m_CommuterHouseholds.HasComponent(m_HouseholdMembers[entity].m_Household))) && m_CurrentBuildings.HasComponent(entity) && m_OutsideConnections.HasComponent(m_CurrentBuildings[entity].m_CurrentBuilding) && !nativeArray5.IsCreated)
                 {
+                    // IMPORT FROM OUTSIDE CONNECTION
                     SaleFlags flags = SaleFlags.ImportFromOC;
                     SalesEvent salesEvent = default(SalesEvent);
                     salesEvent.m_Amount = resourceBuyer.m_AmountNeeded;
@@ -569,6 +583,7 @@ public class ResourceBuyerSystem : GameSystemBase
                     salesEvent.m_Distance = 0f;
                     SalesEvent value4 = salesEvent;
                     m_SalesQueue.Enqueue(value4);
+                    //Plugin.Log($"SalesEvent3 {salesEvent.m_Seller.Index}->{salesEvent.m_Buyer.Index} {salesEvent.m_Amount} {salesEvent.m_Resource}: flags {salesEvent.m_Flags} distOC");
                     m_CommandBuffer.RemoveComponent<ResourceBuyer>(unfilteredChunkIndex, entity);
                 }
                 else
@@ -581,10 +596,12 @@ public class ResourceBuyerSystem : GameSystemBase
                         Household householdData = m_Households[household];
                         DynamicBuffer<HouseholdCitizen> dynamicBuffer2 = m_HouseholdCitizens[household];
                         FindShopForCitizen(chunk, unfilteredChunkIndex, entity, resourceBuyer.m_ResourceNeeded, resourceBuyer.m_AmountNeeded, resourceBuyer.m_Flags, citizen, householdData, dynamicBuffer2.Length);
+                        //Plugin.Log($"FindShopForCitizen {entity.Index} {resourceBuyer.m_AmountNeeded} {resourceBuyer.m_ResourceNeeded}: flags {resourceBuyer.m_Flags} household {household.Index}");
                     }
                     else
                     {
                         FindShopForCompany(chunk, unfilteredChunkIndex, entity, resourceBuyer.m_ResourceNeeded, resourceBuyer.m_AmountNeeded, resourceBuyer.m_Flags);
+                        //Plugin.Log($"FindShopForCompany {entity.Index} {resourceBuyer.m_AmountNeeded} {resourceBuyer.m_ResourceNeeded}: flags {resourceBuyer.m_Flags}");
                     }
                 }
             }
@@ -996,6 +1013,7 @@ public class ResourceBuyerSystem : GameSystemBase
         RequireForUpdate(m_BuyerQuery);
         RequireForUpdate(m_EconomyParameterQuery);
         RequireForUpdate(m_PopulationQuery);
+		Plugin.Log("Modded ResourceBuyerSystem created.");
     }
 
     [Preserve]

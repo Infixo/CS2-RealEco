@@ -5,11 +5,14 @@ using UnityEngine;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Colossal.Entities;
 using Game;
 using Game.Companies;
 using Game.Economy;
 using Game.Prefabs;
 using Game.Simulation;
+using Game.Buildings;
+using Game.UI.InGame;
 using HarmonyLib;
 
 namespace RealEco;
@@ -17,6 +20,57 @@ namespace RealEco;
 [HarmonyPatch]
 class DeveloperPatches
 {
+
+    /* Example how to add extra info to the Developer UI Info
+    [HarmonyPatch(typeof(Game.UI.InGame.DeveloperInfoUISystem), "UpdateExtractorCompanyInfo")]
+    [HarmonyPostfix]
+    public static void UpdateExtractorCompanyInfo_Postfix(Entity entity, Entity prefab, InfoList info, EntityQuery _____query_746694603_5)
+    {
+        // private EntityQuery __query_746694603_5;
+        //Plugin.Log("UpdateExtractorCompanyInfo");
+        ExtractorParameterData singleton = _____query_746694603_5.GetSingleton<ExtractorParameterData>();
+        info.Add(new InfoList.Item($"ExtPar: {singleton.m_FertilityConsumption} {singleton.m_ForestConsumption} {singleton.m_OreConsumption} {singleton.m_OilConsumption}"));
+    }
+    */
+
+    [HarmonyPatch(typeof(Game.UI.InGame.DeveloperInfoUISystem), "UpdateZoneInfo")]
+    [HarmonyPostfix]
+    public static void DeveloperInfoUISystem_UpdateZoneInfo_Postfix(DeveloperInfoUISystem __instance, Entity entity, Entity prefab, GenericInfo info)
+    {
+        //Plugin.Log("UpdateExtractorCompanyInfo");
+        if (!__instance.EntityManager.HasComponent<Building>(entity))
+        {
+            entity = __instance.EntityManager.GetComponentData<PropertyRenter>(entity).m_Property;
+            prefab = __instance.EntityManager.GetComponentData<PrefabRef>(entity).m_Prefab;
+        }
+        BuildingPropertyData comp = __instance.EntityManager.GetComponentData<BuildingPropertyData>(prefab);
+        info.value += $" space {comp.m_SpaceMultiplier} res {comp.m_ResidentialProperties}";
+    }
+
+    [HarmonyPatch(typeof(Game.UI.InGame.DeveloperInfoUISystem), "UpdateStorageInfo")]
+    [HarmonyPrefix]
+
+    private static bool DeveloperInfoUISystem_UpdateStorageInfo_Prefix(DeveloperInfoUISystem __instance, Entity entity, Entity prefab, InfoList info)
+    {
+        info.label = "Storage";
+        if (__instance.EntityManager.TryGetComponent<StorageCompanyData>(prefab, out var component2))
+            info.label = "Storage Company";
+        if (__instance.EntityManager.TryGetComponent<StorageLimitData>(prefab, out var component) && __instance.EntityManager.TryGetBuffer(entity, isReadOnly: true, out DynamicBuffer<Game.Economy.Resources> buffer))
+        {
+            //AddUpgradeData(entity, ref component);
+            info.Add(new InfoList.Item($"Storage Limit: {component.m_Limit}"));
+            //int num = math.max(1, EconomyUtils.CountResources(component2.m_StoredResources));
+            //long num2 = component.m_Limit; // / num;
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                info.Add(new InfoList.Item($"{EconomyUtils.GetName(buffer[i].m_Resource)} ({buffer[i].m_Amount})"));
+            }
+        }
+        return false; // don't execute the original
+    }
+
+
+
     [HarmonyPatch(typeof(Game.Debug.EconomyDebugSystem), "PrintCompanyDebug")]
     [HarmonyPrefix]
     public static bool EconomyDebugSystem_PrintCompanyDebug_Prefix(ComponentLookup<ResourceData> resourceDatas)

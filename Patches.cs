@@ -1,4 +1,11 @@
+using UnityEngine;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Jobs;
+using Unity.Mathematics;
 using Colossal.Collections;
+using Colossal.Entities;
 using Game;
 using Game.Buildings;
 using Game.City;
@@ -6,15 +13,7 @@ using Game.Companies;
 using Game.Economy;
 using Game.Prefabs;
 using Game.Simulation;
-using Game.UI.InGame;
 using HarmonyLib;
-using UnityEngine;
-using Unity.Burst;
-using Unity.Collections;
-using Unity.Entities;
-using Unity.Jobs;
-using Unity.Mathematics;
-using Colossal.Entities;
 
 namespace RealEco;
 
@@ -25,9 +24,9 @@ class Patches
     [HarmonyPostfix]
     public static void Initialize_Postfix(UpdateSystem updateSystem)
     {
-        //updateSystem.UpdateAt<RealEco.Systems.CommercialDemandSystem>(SystemUpdatePhase.GameSimulation);
+        updateSystem.UpdateAt<RealEco.Systems.ResourceBuyerSystem>(SystemUpdatePhase.GameSimulation);
         updateSystem.UpdateAt<RealEco.Systems.HouseholdBehaviorSystem>(SystemUpdatePhase.GameSimulation);
-        //updateSystem.UpdateAt<RealEco.Systems.CitizenBehaviorSystem>(SystemUpdatePhase.GameSimulation);
+        //updateSystem.UpdateAt<RealEco.Systems.CitizenBehaviorSystem>(SystemUpdatePhase.GameSimulation); // debug only
     }
 
     private static JobHandle baseDependency = new JobHandle();
@@ -147,7 +146,6 @@ class Patches
     {
         return false; // don't execute the original system
     }
-
     /*
     [HarmonyPatch(typeof(Game.Simulation.CitizenBehaviorSystem), "OnUpdate")]
     [HarmonyPrefix]
@@ -156,31 +154,11 @@ class Patches
         return false; // don't execute the original system
     }
     */
-
-    /* Example how to add extra info to the Developer UI Info
-    [HarmonyPatch(typeof(Game.UI.InGame.DeveloperInfoUISystem), "UpdateExtractorCompanyInfo")]
-    [HarmonyPostfix]
-    public static void UpdateExtractorCompanyInfo_Postfix(Entity entity, Entity prefab, InfoList info, EntityQuery _____query_746694603_5)
+    [HarmonyPatch(typeof(Game.Simulation.ResourceBuyerSystem), "OnUpdate")]
+    [HarmonyPrefix]
+    static bool ResourceBuyerSystem_OnUpdate()
     {
-        // private EntityQuery __query_746694603_5;
-        //Plugin.Log("UpdateExtractorCompanyInfo");
-        ExtractorParameterData singleton = _____query_746694603_5.GetSingleton<ExtractorParameterData>();
-        info.Add(new InfoList.Item($"ExtPar: {singleton.m_FertilityConsumption} {singleton.m_ForestConsumption} {singleton.m_OreConsumption} {singleton.m_OilConsumption}"));
-    }
-    */
-    
-    [HarmonyPatch(typeof(Game.UI.InGame.DeveloperInfoUISystem), "UpdateZoneInfo")]
-    [HarmonyPostfix]
-    public static void UpdateZoneInfo_Postfix(DeveloperInfoUISystem __instance, Entity entity, Entity prefab, GenericInfo info)
-    {
-        //Plugin.Log("UpdateExtractorCompanyInfo");
-        if (!__instance.EntityManager.HasComponent<Building>(entity))
-        {
-            entity = __instance.EntityManager.GetComponentData<PropertyRenter>(entity).m_Property;
-            prefab = __instance.EntityManager.GetComponentData<PrefabRef>(entity).m_Prefab;
-        }
-        BuildingPropertyData comp = __instance.EntityManager.GetComponentData<BuildingPropertyData>(prefab);
-        info.value += $" space {comp.m_SpaceMultiplier} res {comp.m_ResidentialProperties}";
+        return false; // don't execute the original system
     }
 }
 

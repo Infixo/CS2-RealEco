@@ -1,18 +1,18 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Game.Economy;
 using Game.Prefabs;
 using Game.SceneFlow;
-using HarmonyLib;
-using System.Collections.Generic;
 using Game.Simulation;
+using HarmonyLib;
 
 namespace RealEco;
 
 [HarmonyPatch]
 public static class PrefabStore_Patches
 {
-    private static bool isAdded = false;
+    static bool CompaniesCreated = false;
 
 /*
  * [2024-02-27 13:47:58,574] [INFO]  CompanyPrefab.Commercial_ElectronicsStore.CompanyPrefab.zone: Commercial
@@ -64,12 +64,14 @@ public static class PrefabStore_Patches
         workplace.m_Complexity = complexity;
         workplace.m_EveningShiftProbability = 0.2f;
         workplace.m_NightShiftProbability = 0f;
+        Plugin.Log($"New company prefab: {prefabName} {resource} wrk {complexity} wpc {maxWorkersPerCell} prof {profitability}");
         // done
         return prefab;
     }
 
     // Step 1a. AssetLibrary - there are 3 passes
     // Loading: foreach AssetCollection in m_Collections calls -> collection.AddPrefabsTo(prefabSystem);
+    /*
     [HarmonyPatch(typeof(Game.SceneFlow.AssetLibrary), "Load")]
     [HarmonyPrefix]
     public static bool AssetLibrary_Load(AssetLibrary __instance, int ___m_AssetCount)
@@ -77,6 +79,7 @@ public static class PrefabStore_Patches
         Plugin.Log($"AssetLibrary.Load: {__instance.name}, {__instance.m_Collections.Count} collections, {___m_AssetCount} assets");
         return true;
     }
+    */
 
     // Step 1b: AssetLibary -> AssetCollection, mThis is called 1035 times
     // Loading: foreach (PrefabBase prefab in m_Prefabs) calls ->  prefabSystem.AddPrefab(prefab, base.name);
@@ -85,14 +88,14 @@ public static class PrefabStore_Patches
     public static bool AssetCollection_AddPrefabsTo_Prefix(AssetCollection __instance)
     {
         //Plugin.Log($"AssetCollection.AddPrefabsTo: {__instance.name} {__instance.isActive}, {__instance.m_Collections.Count} collections, {__instance.m_Prefabs.Count} prefabs");
-        if (!isAdded && __instance.name == "CompaniesCollection")
+        if (!CompaniesCreated && __instance.name == "CompaniesCollection")
         {
-            Plugin.Log($"Adding new CompanyPrefabs");
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.22f, 70f)); // price 85 = bankrupt
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Simple, 0.3f, 60f)); // price 60 = bankrupt
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.22f, 60f)); // price 70 => OK
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_MediaStore", ResourceInEditor.Media, WorkplaceComplexity.Simple, 0.3f, 60f)); // price 60 ?
-            isAdded = true;
+            //Plugin.Log($"Adding new CompanyPrefabs");
+            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.22f, 70f)); // price 85
+            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Simple, 0.3f, 60f)); // price 60
+            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.22f, 60f)); // price 70
+            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_MediaStore", ResourceInEditor.Media, WorkplaceComplexity.Simple, 0.3f, 60f)); // price 60
+            CompaniesCreated = true;
         }
         return true;
     }
@@ -121,6 +124,9 @@ public static class PrefabStore_Patches
         return true;
     }
 
+    // Need to remember resources to patch later statistics and taxes
+    static Dictionary<Game.Economy.ResourceInEditor, ResourcePrefab> ResourcePrefabs = new();
+
     // Step 1c:  prefabSystem.AddPrefab(prefab, base.name) -> usual patched method
     [HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
     [HarmonyPrefix]
@@ -138,6 +144,55 @@ public static class PrefabStore_Patches
                 if (comp.m_TaxAreas.Length == 0)
                     text = "None";
                 Plugin.Log($"{prefab.name}.{comp.name}.m_TaxAreas: {text}");
+                // store the prefab for later use
+                ResourcePrefab resPrefab = prefab as ResourcePrefab;
+                if (!ResourcePrefabs.ContainsKey(resPrefab.m_Resource))
+                {
+                    ResourcePrefabs.Add(resPrefab.m_Resource, resPrefab);
+                    //Plugin.Log($"...storing {prefab.name} for later use (total {ResourcePrefabs.Count})");
+                }
+            }
+        }
+        return true;
+    }
+
+
+    static Dictionary<Game.City.StatisticType, bool> StatisticsTypesToPatch = new()
+    {
+        {  Game.City.StatisticType.CommercialTaxableIncome, true },
+        {  Game.City.StatisticType.ServiceCount, true },
+        {  Game.City.StatisticType.ServiceWealth, true },
+        {  Game.City.StatisticType.ServiceWorkers, true },
+        {  Game.City.StatisticType.ServiceMaxWorkers, true },
+    };
+
+    // Step 1c:  prefabSystem.AddPrefab(prefab, base.name) -> usual patched method
+    [HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
+    [HarmonyPrefix]
+    public static bool ResourceStatistic_Prefix(PrefabBase prefab)
+    {
+        if (prefab.GetType() == typeof(ResourceStatistic) && ResourcePrefabs.Count == 4)
+        {
+            ResourceStatistic stat = prefab as ResourceStatistic;
+            if (StatisticsTypesToPatch.ContainsKey(stat.m_StatisticsType) && StatisticsTypesToPatch[stat.m_StatisticsType])
+            {
+                Plugin.Log($"{prefab.name}.{stat.GetType().Name}.m_StatisticsType: {stat.m_StatisticsType}");
+                // add new resources
+                List<ResourcePrefab> tempList = new List<ResourcePrefab>(stat.m_Resources); // Convert the array to a list
+                // Add the new resources to the list
+                tempList.Add(ResourcePrefabs[ResourceInEditor.Software]);
+                tempList.Add(ResourcePrefabs[ResourceInEditor.Telecom]);
+                tempList.Add(ResourcePrefabs[ResourceInEditor.Financial]);
+                tempList.Add(ResourcePrefabs[ResourceInEditor.Media]);
+                stat.m_Resources = tempList.ToArray(); // Convert the list back to an array
+                StatisticsTypesToPatch[stat.m_StatisticsType] = false;
+                // show in the log
+                string text = "";
+                for (int i = 0; i < stat.m_Resources.Length; i++)
+                    text += stat.m_Resources[i].m_Resource.ToString() + "|";
+                if (stat.m_Resources.Length == 0)
+                    text = "None";
+                Plugin.Log($"{prefab.name}.{stat.GetType().Name}.m_Resources: {text}");
             }
         }
         return true;
@@ -146,6 +201,7 @@ public static class PrefabStore_Patches
     // Step 2: Creation of Systems
 
     // Step 3: This is called 1 time
+    /*
     [HarmonyPatch(typeof(Game.SceneFlow.GameManager), "LoadPrefabs")]
     [HarmonyPrefix]
     public static bool LoadPrefabs_Postfix()
@@ -153,9 +209,10 @@ public static class PrefabStore_Patches
         Plugin.Log("*** Game.SceneFlow.GameManager.LoadPrefabs");
         return true;
     }
-
+    */
     // Step 4: This is called 1 time, at the very end, even after modded systems are created
     // Some prefabs are added here e.g. "Building Land Value"
+    /*
     [HarmonyPatch(typeof(Game.Prefabs.PrefabInitializeSystem), "OnUpdate")]
     [HarmonyPrefix]
     public static bool OnUpdate_Postfix()
@@ -163,7 +220,7 @@ public static class PrefabStore_Patches
         Plugin.Log("*** PrefabInitializeSystem.OnUpdate ***");
         return true;
     }
-
+    */
 }
 
 
