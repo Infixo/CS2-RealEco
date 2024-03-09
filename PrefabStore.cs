@@ -12,6 +12,7 @@ namespace RealEco;
 public static class PrefabStore_Patches
 {
     static bool CompaniesCreated = false;
+    static CompanyPrefab[] CompanyPrefabs = new CompanyPrefab[4];
 
 /*
  * [2024-02-27 13:47:58,574] [INFO]  CompanyPrefab.Commercial_ElectronicsStore.CompanyPrefab.zone: Commercial
@@ -90,10 +91,12 @@ public static class PrefabStore_Patches
         if (Plugin.FeatureNewCompanies.Value && !CompaniesCreated && __instance.name == "CompaniesCollection")
         {
             //Plugin.Log($"Adding new CompanyPrefabs");
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.22f, 70f)); // price 85
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Simple, 0.3f, 60f)); // price 60
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.22f, 60f)); // price 70
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_MediaStore", ResourceInEditor.Media, WorkplaceComplexity.Simple, 0.3f, 60f)); // price 60
+            CompanyPrefabs[0] = CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.22f, 70f); // price 85
+            CompanyPrefabs[1] = CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Simple, 0.3f, 60f); // price 60
+            CompanyPrefabs[2] = CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.22f, 60f); // price 70
+            CompanyPrefabs[3] = CreateNewCompanyPrefab("Commercial_MediaStore", ResourceInEditor.Media, WorkplaceComplexity.Simple, 0.3f, 60f); // price 60
+            for (int i = 0; i < CompanyPrefabs.Length; i++)
+                __instance.m_Prefabs.Add(CompanyPrefabs[i]);
             CompaniesCreated = true;
         }
         return true;
@@ -192,6 +195,73 @@ public static class PrefabStore_Patches
                 if (stat.m_Resources.Length == 0)
                     text = "None";
                 Plugin.Log($"{prefab.name}.{stat.GetType().Name}.m_Resources: {text}");
+            }
+        }
+        return true;
+    }
+
+
+    static Dictionary<string, int> BrandsToPatch = new()
+    {
+        // -1 means it is patched
+        // 0 - Software
+        { "Cebeliverse", 0 },
+        { "ChirpyTeck", 0 },
+        { "DennyAlsLaw", 0 },
+        { "DLCHut", 0 },
+        { "FaultStudios", 0 },
+        { "FixedTraffic", 0 },
+        { "LuiboDigital", 0 },
+        { "Speltware", 0 },
+        { "Szoftver", 0 },
+        { "TechOMat", 0 },
+        // 1 - Telecom
+        { "Kapine", 1 },
+        { "LehtoElectronics", 1 },
+        { "Pteropus", 1 },
+        // 2 - Financial
+        { "BanhammerBank", 2 },
+        { "CRIMoore", 2 },
+        { "Pihi", 2 },
+        { "SnafuInsurance", 2 },
+        { "StadelmannAndBardolf", 2 },
+        { "THELawAndAccounting", 2 },
+        // 3 - Media
+        { "AshtrainRecords", 3 },
+        { "BendyLetters", 3 },
+        { "BootAndBug", 3 },
+        { "IndieLizard", 3 },
+        { "MouthwaterPress", 3 },
+        { "Placesstages", 3 },
+        { "PNGMedia", 3 },
+        { "SingTapeRecords", 3 },
+    };
+
+    // Step 1c:  prefabSystem.AddPrefab(prefab, base.name) -> usual patched method
+    [HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
+    [HarmonyPrefix]
+    public static bool BrandPrefab_Prefix(PrefabBase prefab)
+    {
+        if (Plugin.FeatureNewCompanies.Value && prefab.GetType() == typeof(BrandPrefab) && CompaniesCreated)
+        {
+            BrandPrefab brand = prefab as BrandPrefab;
+            if (BrandsToPatch.ContainsKey(brand.name) && BrandsToPatch[brand.name] != -1)
+            {
+                //Plugin.Log($"{prefab.name}.{brand.GetType().Name}: patching");
+            
+                // add new company type to the brand
+                List<CompanyPrefab> tempList = new List<CompanyPrefab>(brand.m_Companies); // Convert the array to a list
+                tempList.Add(CompanyPrefabs[BrandsToPatch[brand.name]]);
+                brand.m_Companies = tempList.ToArray(); // Convert the list back to an array
+                BrandsToPatch[brand.name] = -1;
+            
+                // show in the log
+                string text = "";
+                for (int i = 0; i < brand.m_Companies.Length; i++)
+                    text += brand.m_Companies[i].name + "|";
+                if (brand.m_Companies.Length == 0)
+                    text = "None";
+                Plugin.Log($"{prefab.name}.{brand.GetType().Name}: {text}");
             }
         }
         return true;
