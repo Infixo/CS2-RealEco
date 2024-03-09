@@ -141,7 +141,7 @@ public static class PrefabSystem_AddPrefab_Patches
         }
         */
 
-        if (prefab.GetType().Name == "ServiceFeeParameterPrefab")
+        if (Plugin.FeaturePrefabs.Value && prefab.GetType().Name == "ServiceFeeParameterPrefab")
         {
             ServiceFeeParameterPrefab p = (ServiceFeeParameterPrefab)prefab;
             p.m_GarbageFee.m_Default = 0.4f;
@@ -356,7 +356,7 @@ public static class PrefabSystem_AddPrefab_Patches
     [HarmonyPrefix]
     public static bool Companies_Prefix(PrefabBase prefab)
     {
-        if (prefab.GetType().Name == "CompanyPrefab")
+        if (Plugin.FeaturePrefabs.Value && prefab.GetType().Name == "CompanyPrefab")
         {
             /* These params are in xml now
            

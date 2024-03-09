@@ -24,8 +24,10 @@ class Patches
     [HarmonyPostfix]
     public static void Initialize_Postfix(UpdateSystem updateSystem)
     {
-        updateSystem.UpdateAt<RealEco.Systems.ResourceBuyerSystem>(SystemUpdatePhase.GameSimulation);
-        updateSystem.UpdateAt<RealEco.Systems.HouseholdBehaviorSystem>(SystemUpdatePhase.GameSimulation);
+        if (Plugin.FeatureNewCompanies.Value)
+            updateSystem.UpdateAt<RealEco.Systems.ResourceBuyerSystem>(SystemUpdatePhase.GameSimulation);
+        if (Plugin.FeatureConsumptionFix.Value)
+            updateSystem.UpdateAt<RealEco.Systems.HouseholdBehaviorSystem>(SystemUpdatePhase.GameSimulation);
         //updateSystem.UpdateAt<RealEco.Systems.CitizenBehaviorSystem>(SystemUpdatePhase.GameSimulation); // debug only
     }
 
@@ -62,7 +64,11 @@ class Patches
             ref int ___m_LastBuildingDemand
         )
     {
+        // Skip the patch and execute the original if the feaure is disabled
+        if (!Plugin.FeatureNewCompanies.Value)
+            return true;
 
+        // Patched code
         if (!___m_DemandParameterQuery.IsEmptyIgnoreFilter && !___m_EconomyParameterQuery.IsEmptyIgnoreFilter)
         {
             ___m_LastCompanyDemand = ___m_CompanyDemand.value;
@@ -144,9 +150,15 @@ class Patches
     [HarmonyPrefix]
     static bool HouseholdBehaviorSystem_OnUpdate()
     {
+        // Skip the patch and execute the original if the feaure is disabled
+        if (!Plugin.FeatureConsumptionFix.Value)
+            return true;
+
         return false; // don't execute the original system
     }
-    /*
+
+    /* 
+    // debug only
     [HarmonyPatch(typeof(Game.Simulation.CitizenBehaviorSystem), "OnUpdate")]
     [HarmonyPrefix]
     static bool CitizenBehaviorSystem_OnUpdate()
@@ -154,10 +166,15 @@ class Patches
         return false; // don't execute the original system
     }
     */
+
     [HarmonyPatch(typeof(Game.Simulation.ResourceBuyerSystem), "OnUpdate")]
     [HarmonyPrefix]
     static bool ResourceBuyerSystem_OnUpdate()
     {
+        // Skip the patch and execute the original if the feaure is disabled
+        if (!Plugin.FeatureNewCompanies.Value)
+            return true;
+
         return false; // don't execute the original system
     }
 }
@@ -331,6 +348,7 @@ public struct UpdateCommercialDemandJob : IJob
                 Plugin.Log($"{iterator.resource}: {complexityTest}");
             else
                 Plugin.Log($"{iterator.resource}: ---");*/
+            // 240308 PATCH HERE - DO NOT SKIP IMMATERIAL RESOURCES
             if (/*(resourceData.m_Weight == 0f && !resourceData.m_IsLeisure) || */!EconomyUtils.GetProcessComplexity(m_CommercialProcessDataChunks, m_WorkplaceDatas, iterator.resource, m_EntityType, m_ProcessType, out var complexity))
             {
                 continue;

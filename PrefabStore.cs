@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.Economy;
 using Game.Prefabs;
-using Game.SceneFlow;
 using Game.Simulation;
 using HarmonyLib;
 
@@ -88,7 +87,7 @@ public static class PrefabStore_Patches
     public static bool AssetCollection_AddPrefabsTo_Prefix(AssetCollection __instance)
     {
         //Plugin.Log($"AssetCollection.AddPrefabsTo: {__instance.name} {__instance.isActive}, {__instance.m_Collections.Count} collections, {__instance.m_Prefabs.Count} prefabs");
-        if (!CompaniesCreated && __instance.name == "CompaniesCollection")
+        if (Plugin.FeatureNewCompanies.Value && !CompaniesCreated && __instance.name == "CompaniesCollection")
         {
             //Plugin.Log($"Adding new CompanyPrefabs");
             __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.22f, 70f)); // price 85
@@ -105,7 +104,7 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool ZonePrefab_Prefix(PrefabBase prefab)
     {
-        if (prefab.GetType().Name == "ZonePrefab" && prefab.TryGet<ZoneProperties>(out ZoneProperties comp) && comp.m_AllowedSold.Length > 0)
+        if (Plugin.FeatureNewCompanies.Value && prefab.GetType().Name == "ZonePrefab" && prefab.TryGet<ZoneProperties>(out ZoneProperties comp) && comp.m_AllowedSold.Length > 0)
         {
             if (Array.IndexOf(comp.m_AllowedSold, ResourceInEditor.Software) < 0)
             {
@@ -132,7 +131,7 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool ResourcePrefab_Prefix(PrefabBase prefab)
     {
-        if (prefab.GetType().Name == "ResourcePrefab" && prefab.TryGet<TaxableResource>(out TaxableResource comp))
+        if (Plugin.FeatureNewCompanies.Value && prefab.GetType().Name == "ResourcePrefab" && prefab.TryGet<TaxableResource>(out TaxableResource comp))
         {
             if (comp.m_TaxAreas.Length == 1 && comp.m_TaxAreas[0] == TaxAreaType.Office)
             {
@@ -171,7 +170,7 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool ResourceStatistic_Prefix(PrefabBase prefab)
     {
-        if (prefab.GetType() == typeof(ResourceStatistic) && ResourcePrefabs.Count == 4)
+        if (Plugin.FeatureNewCompanies.Value && prefab.GetType() == typeof(ResourceStatistic) && ResourcePrefabs.Count == 4)
         {
             ResourceStatistic stat = prefab as ResourceStatistic;
             if (StatisticsTypesToPatch.ContainsKey(stat.m_StatisticsType) && StatisticsTypesToPatch[stat.m_StatisticsType])

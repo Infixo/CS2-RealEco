@@ -117,7 +117,7 @@ public static class ConfigTool_Patches
     [HarmonyPrefix]
     public static bool PrefabSystem_AddPrefab_Prefix(object __instance, PrefabBase prefab)
     {
-        if (ConfigToolXml.Config.IsPrefabValid(prefab.GetType().Name))
+        if (Plugin.FeaturePrefabs.Value && ConfigToolXml.Config.IsPrefabValid(prefab.GetType().Name))
         {
             if (ConfigToolXml.Config.TryGetPrefab(prefab.name, out PrefabXml prefabConfig))
             {

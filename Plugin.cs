@@ -56,6 +56,9 @@ public class Plugin : BaseUnityPlugin
     // Mod settings
     public static ConfigEntry<bool> Logging;
     public static ConfigEntry<bool> ConfigDump;
+    public static ConfigEntry<bool> FeaturePrefabs;
+    public static ConfigEntry<bool> FeatureConsumptionFix;
+    public static ConfigEntry<bool> FeatureNewCompanies;
 
     private void Awake()
     {
@@ -67,6 +70,9 @@ public class Plugin : BaseUnityPlugin
         // Mod settings
         Logging = base.Config.Bind<bool>("Debug", "Logging", false, "Enables detailed logging.");
         ConfigDump = base.Config.Bind<bool>("Debug", "ConfigDump", false, "Saves configuration to a secondary xml file.");
+        FeaturePrefabs = base.Config.Bind<bool>("Features", "FeaturePrefabs", true, "Enables new prefab params.");
+        FeatureConsumptionFix = base.Config.Bind<bool>("Features", "FeatureConsumptionFix", true, "Enables Consumption Fix.");
+        FeatureNewCompanies = base.Config.Bind<bool>("Features", "FeatureNewCompanies", false, "Enables commercial companies for immaterial resources.");
 
         Log($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
 
