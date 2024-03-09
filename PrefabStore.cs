@@ -5,6 +5,7 @@ using Game.Prefabs;
 using Game.SceneFlow;
 using HarmonyLib;
 using System.Collections.Generic;
+using Game.Simulation;
 
 namespace RealEco;
 
@@ -83,14 +84,14 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool AssetCollection_AddPrefabsTo_Prefix(AssetCollection __instance)
     {
-        Plugin.Log($"AssetCollection.AddPrefabsTo: {__instance.name} {__instance.isActive}, {__instance.m_Collections.Count} collections, {__instance.m_Prefabs.Count} prefabs");
+        //Plugin.Log($"AssetCollection.AddPrefabsTo: {__instance.name} {__instance.isActive}, {__instance.m_Collections.Count} collections, {__instance.m_Prefabs.Count} prefabs");
         if (!isAdded && __instance.name == "CompaniesCollection")
         {
             Plugin.Log($"Adding new CompanyPrefabs");
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.25f, 60f)); // price 85
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Simple, 0.35f, 60f)); // price 60
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.25f, 60f)); // price 70
-            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_MediaStore", ResourceInEditor.Media, WorkplaceComplexity.Simple, 0.35f, 60f)); // price 60
+            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.22f, 70f)); // price 85 = bankrupt
+            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Simple, 0.3f, 60f)); // price 60 = bankrupt
+            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.22f, 60f)); // price 70 => OK
+            __instance.m_Prefabs.Add(CreateNewCompanyPrefab("Commercial_MediaStore", ResourceInEditor.Media, WorkplaceComplexity.Simple, 0.3f, 60f)); // price 60 ?
             isAdded = true;
         }
         return true;
@@ -101,40 +102,10 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool ZonePrefab_Prefix(PrefabBase prefab)
     {
-        /*
-        static void AddResource(ref ResourceInEditor[] array, ResourceInEditor resource)
-        {
-            if (Array.IndexOf(array, resource) < 0)
-            {
-                // Convert the array to a list
-                List<ResourceInEditor> tempList = new List<ResourceInEditor>(array);
-
-                // Add the new resource to the list
-                tempList.Add(resource);
-
-                // Convert the list back to an array
-                array = tempList.ToArray();
-                Plugin.Log($"... {resource} added to the array");
-            }
-            else
-            {
-                Plugin.Log($"... {resource} already in the array");
-            }
-        }
-        */
         if (prefab.GetType().Name == "ZonePrefab" && prefab.TryGet<ZoneProperties>(out ZoneProperties comp) && comp.m_AllowedSold.Length > 0)
         {
             if (Array.IndexOf(comp.m_AllowedSold, ResourceInEditor.Software) < 0)
             {
-                // not working...
-                //comp.m_AllowedSold.AddItem<ResourceInEditor>(ResourceInEditor.Software);
-                //if (Array.IndexOf(comp.m_AllowedSold, ResourceInEditor.Telecom) < 0)
-                //comp.m_AllowedSold.AddItem<ResourceInEditor>(ResourceInEditor.Telecom);
-                //if (Array.IndexOf(comp.m_AllowedSold, ResourceInEditor.Financial) < 0)
-                //comp.m_AllowedSold.AddItem<ResourceInEditor>(ResourceInEditor.Financial);
-                //if (Array.IndexOf(comp.m_AllowedSold, ResourceInEditor.Media) < 0)
-                //comp.m_AllowedSold.AddItem<ResourceInEditor>(ResourceInEditor.Media);
-                
                 List<ResourceInEditor> tempList = new List<ResourceInEditor>(comp.m_AllowedSold); // Convert the array to a list
                 // Add the new resource to the list
                 tempList.Add(ResourceInEditor.Software);
@@ -144,12 +115,30 @@ public static class PrefabStore_Patches
                 comp.m_AllowedSold = tempList.ToArray(); // Convert the list back to an array
 
                 Game.Economy.Resource res = Game.Economy.EconomyUtils.GetResources(comp.m_AllowedSold);
-                Plugin.Log($"{prefab.GetType().Name}.{prefab.name}.{comp.name}.m_AllowedSold: {Game.Economy.EconomyUtils.GetNames(res)}");
+                Plugin.Log($"{prefab.name}.{comp.name}.m_AllowedSold: {Game.Economy.EconomyUtils.GetNames(res)}");
             }
-            //AddResource(ref comp.m_AllowedSold, ResourceInEditor.Software);
-            //AddResource(ref comp.m_AllowedSold, ResourceInEditor.Telecom);
-            //AddResource(ref comp.m_AllowedSold, ResourceInEditor.Financial);
-            //AddResource(ref comp.m_AllowedSold, ResourceInEditor.Media);
+        }
+        return true;
+    }
+
+    // Step 1c:  prefabSystem.AddPrefab(prefab, base.name) -> usual patched method
+    [HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
+    [HarmonyPrefix]
+    public static bool ResourcePrefab_Prefix(PrefabBase prefab)
+    {
+        if (prefab.GetType().Name == "ResourcePrefab" && prefab.TryGet<TaxableResource>(out TaxableResource comp))
+        {
+            if (comp.m_TaxAreas.Length == 1 && comp.m_TaxAreas[0] == TaxAreaType.Office)
+            {
+                comp.m_TaxAreas = [TaxAreaType.Office, TaxAreaType.Commercial];
+                // show in the log
+                string text = "";
+                for (int i = 0; i < comp.m_TaxAreas.Length; i++)
+                    text += comp.m_TaxAreas[i] + "|";
+                if (comp.m_TaxAreas.Length == 0)
+                    text = "None";
+                Plugin.Log($"{prefab.name}.{comp.name}.m_TaxAreas: {text}");
+            }
         }
         return true;
     }
