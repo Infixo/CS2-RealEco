@@ -10,7 +10,8 @@
 	<PrefabType>ResourcePrefab</PrefabType>
 	<PrefabType>ZonePrefab</PrefabType>
 	<PrefabType>CompanyPrefab</PrefabType>
-	<!--<PrefabType>BuildingPrefab</PrefabType>-->
+	<PrefabType>BuildingPrefab</PrefabType> <!-- for Signature buildings -->
+	<!--<PrefabType>BuildingExtensionPrefab</PrefabType>-->
 </ValidPrefabTypes>
 
 
@@ -22,14 +23,15 @@
 		<Field name="m_ExtractorCompanyExportMultiplier" valueFloat="0.70" />
 		<!-- default 0.0001f, commercial is 0.0010f, extractor is 64/10000 i.e. 0.0064f -->
 		<Field name="m_IndustrialProfitFactor" valueFloat="0.0008" />
-		<Field name="m_Wage0" valueInt="1550" /> <!-- 1200 -->
-		<Field name="m_Wage1" valueInt="1900" /><!-- 1200 -->
-		<Field name="m_Wage2" valueInt="2980" /><!-- 1200 -->
-		<Field name="m_Wage3" valueInt="4020" /><!-- 1200 -->
-		<Field name="m_Wage4" valueInt="5010" /><!-- 1200 -->
+		<Field name="m_Wage0" valueInt="1330" /> <!-- 1200, 1550 -->
+		<Field name="m_Wage1" valueInt="1700" /> <!-- 2000, 1900 -->
+		<Field name="m_Wage2" valueInt="2770" /> <!-- 2500, 2980 -->
+		<Field name="m_Wage3" valueInt="3880" /> <!-- 3500, 4020 -->
+		<Field name="m_Wage4" valueInt="5040" /> <!-- 5000, 5010 -->
 		<Field name="m_Pension" valueInt="1000" /> <!-- 800 -->
-		<Field name="m_FamilyAllowance" valueInt="500" /> <!-- 300 -->
-		<!--<Field name="m_UnemploymentBenefit" valueInt="600" />--><!-- 800 -->
+		<Field name="m_FamilyAllowance" valueInt="400" /> <!-- 300 -->
+		<Field name="m_UnemploymentBenefit" valueInt="600" /> <!-- 800 -->
+		<!--<Field name="m_TrafficReduction" valueFloat="0.0003" />--> <!-- default 0.0005, at 0.0002 the homeless issue starts -->
 	</Component>
 </Prefab>
 
@@ -38,12 +40,12 @@
 
 <Prefab name="EU Residential High">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="500" /> <!-- 900 -->
+		<Field name="m_Upkeep" valueFloat="600" /> <!-- 900 -->
 	</Component>
 </Prefab>
 <Prefab name="NA Residential High">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="500" /> <!-- 900 -->
+		<Field name="m_Upkeep" valueFloat="600" /> <!-- 900 -->
 	</Component>
 </Prefab>
 <Prefab name="EU Residential Mixed">
@@ -68,7 +70,7 @@
 </Prefab>
 <Prefab name="Residential LowRent">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="250" /> <!-- 900 -->
+		<Field name="m_Upkeep" valueFloat="150" /> <!-- 900 -->
 	</Component>
 </Prefab>
 <Prefab name="Industrial Manufacturing">
@@ -78,7 +80,7 @@
 </Prefab>
 <Prefab name="Office High">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="350" /> <!-- 200 -->
+		<Field name="m_Upkeep" valueFloat="500" /> <!-- 200 -->
 	</Component>
 	<Component name="ZoneProperties">
 		<Field name="m_SpaceMultiplier" valueFloat="7.0" /> <!-- 5.0 -->
@@ -86,7 +88,17 @@
 </Prefab>
 <Prefab name="Office Low">
 	<Component name="ZoneProperties">
-		<Field name="m_SpaceMultiplier" valueFloat="1.2" /> <!-- 1.0 -->
+		<Field name="m_SpaceMultiplier" valueFloat="1.1" /> <!-- 1.0 -->
+	</Component>
+</Prefab>
+<Prefab name="EU Commercial High">
+	<Component name="ZoneProperties">
+		<Field name="m_SpaceMultiplier" valueFloat="4.0" /> <!-- 5.0 -->
+	</Component>
+</Prefab>
+<Prefab name="NA Commercial High">
+	<Component name="ZoneProperties">
+		<Field name="m_SpaceMultiplier" valueFloat="4.0" /> <!-- 5.0 -->
 	</Component>
 </Prefab>
 <Prefab name="EU Commercial Low">
@@ -127,7 +139,8 @@
 </Prefab>
 <Prefab name="ResourceVehicles">
 	<Component name="ResourcePrefab">
-		<Field name="m_CarConsumption" valueInt="5" />
+		<Field name="m_InitialPrice" valueFloat="140" /> <!-- 160 -->
+		<Field name="m_CarConsumption" valueInt="10" />
 	</Component>
 </Prefab>
 <Prefab name="ResourcePetrochemicals">
@@ -143,9 +156,14 @@
 </Prefab>
 <Prefab name="ResourceElectronics">
 	<Component name="ResourcePrefab">
-		<Field name="m_InitialPrice" valueFloat="90" />
+		<Field name="m_InitialPrice" valueFloat="90" /> <!-- 120 -->
 		<Field name="m_BaseConsumption" valueFloat="20" />
 		<Field name="m_CarConsumption" valueInt="5" />
+	</Component>
+</Prefab>
+<Prefab name="ResourceSoftware">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="85" /> <!-- 40 -->
 	</Component>
 </Prefab>
 <Prefab name="ResourceChemicals">
@@ -178,13 +196,13 @@
 </Prefab>
 <Prefab name="ResourceTelecom">
 	<Component name="ResourcePrefab">
-		<Field name="m_InitialPrice" valueFloat="60" />
+		<Field name="m_InitialPrice" valueFloat="60" /> <!-- 80 -->
 		<Field name="m_BaseConsumption" valueFloat="25" />
 	</Component>
 </Prefab>
 <Prefab name="ResourceFinancial">
 	<Component name="ResourcePrefab">
-		<Field name="m_InitialPrice" valueFloat="80" />
+		<Field name="m_InitialPrice" valueFloat="70" /> <!-- 100 -->
 		<Field name="m_BaseConsumption" valueFloat="20" />
 		<Field name="m_CarConsumption" valueInt="10" />
 	</Component>
@@ -272,18 +290,18 @@
 
 <Prefab name="Office_SoftwareCompany">
 	<Component name="CompanyPrefab">
-		<Field name="profitability" valueFloat="90" /> <!-- 400 -->
+		<Field name="profitability" valueFloat="70" /> <!-- 400 -->
 	</Component>
     <Component name="IndustrialProcess">
-      <Field name="m_Output.m_Amount" valueInt="10"/> <!-- 1 Electronics -> 20 Software -->
+      <Field name="m_Output.m_Amount" valueInt="15"/> <!-- 1 Electronics -> 20 Software -->
     </Component>
 </Prefab>
 <Prefab name="Office_Bank">
 	<Component name="CompanyPrefab">
-		<Field name="profitability" valueFloat="90" /> <!-- 400 -->
+		<Field name="profitability" valueFloat="70" /> <!-- 400 -->
 	</Component>
     <Component name="IndustrialProcess">
-      <Field name="m_Output.m_Amount" valueInt="6"/> <!-- 1 Software -> 20 Financial -->
+      <Field name="m_Output.m_Amount" valueInt="3"/> <!-- 1 Software -> 20 Financial -->
     </Component>
 	<Component name="Workplace">
 		<Field name="m_Complexity" valueInt="3" /> <!-- Complex => Hitech -->
@@ -291,10 +309,10 @@
 </Prefab>
 <Prefab name="Office_MediaCompany">
 	<Component name="CompanyPrefab">
-		<Field name="profitability" valueFloat="90" /> <!-- 400 price 60->50 -->
+		<Field name="profitability" valueFloat="70" /> <!-- 400 price 60->50 -->
 	</Component>
     <Component name="IndustrialProcess">
-      <Field name="m_Output.m_Amount" valueInt="8"/> <!-- 1 Software -> 20 Media -->
+      <Field name="m_Output.m_Amount" valueInt="15"/> <!-- 1 Software -> 20 Media -->
     </Component>
 	<Component name="Workplace">
 		<Field name="m_Complexity" valueInt="3" /> <!-- Complex => Hitech -->
@@ -302,10 +320,10 @@
 </Prefab>
 <Prefab name="Office_TelecomCompany">
 	<Component name="CompanyPrefab">
-		<Field name="profitability" valueFloat="90" /> <!-- 400 price 80->60 -->
+		<Field name="profitability" valueFloat="70" /> <!-- 400 price 80->60 -->
 	</Component>
     <Component name="IndustrialProcess">
-      <Field name="m_Output.m_Amount" valueInt="10"/> <!-- 1 Electronics + 2 Software -> 20 Telecom -->
+      <Field name="m_Output.m_Amount" valueInt="8"/> <!-- 1 Electronics + 2 Software -> 20 Telecom -->
     </Component>
 </Prefab>
 
@@ -321,13 +339,19 @@
   </Prefab>
   <Prefab name="Commercial_BookStore">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="80" />
+      <Field name="profitability" valueFloat="80" />
+    </Component>
+    <Component name="ServiceCompany">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.4" /> <!-- 0.5 -->
     </Component>
   </Prefab>
   <Prefab name="Commercial_VehicleStore">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="50" />
+      <Field name="profitability" valueInt="0" valueFloat="90" />
     </Component>
+	<Component name="ServiceCompany">
+		<Field name="m_MaxWorkersPerCell" valueFloat="0.3" /> <!-- 0.22 -->
+	</Component>
   </Prefab>
   <Prefab name="Commercial_Restaurant">
     <Component name="CompanyPrefab">
@@ -339,12 +363,15 @@
   </Prefab>
   <Prefab name="Commercial_ElectronicsStore">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="110" />
+      <Field name="profitability" valueInt="0" valueFloat="100" />
+    </Component>
+    <Component name="ServiceCompany">
+      <Field name="m_MaxWorkersPerCell" valueInt="0" valueFloat="0.4" /> <!-- 0.5 -->
     </Component>
   </Prefab>
   <Prefab name="Commercial_GasStation">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="50" />
+      <Field name="profitability" valueInt="0" valueFloat="60" />
     </Component>
   </Prefab>
   <Prefab name="Commercial_Hotel">
@@ -536,7 +563,7 @@
   </Prefab>
   <Prefab name="Industrial_BeverageFromVegetablesFactory">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="30" />
+      <Field name="profitability" valueInt="0" valueFloat="40" />
     </Component>
     <Component name="Workplace">
       <Field name="m_Complexity" valueInt="2" /> <!-- Simple => Complex -->
@@ -558,7 +585,7 @@
       <Field name="profitability" valueInt="0" valueFloat="40" />
     </Component>
     <Component name="IndustrialProcess">
-      <Field name="m_MaxWorkersPerCell" valueFloat="0.6" /> <!-- 0.65 Simple -->
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.5" /> <!-- 0.65 Simple -->
       <Field name="m_Output.m_Amount" valueInt="2" /> <!-- 1 Cotton -> 1 Textile -->
     </Component>
   </Prefab>
@@ -572,7 +599,7 @@
   </Prefab>
   <Prefab name="Industrial_TextileFromPetrochemicalsFactory">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="30" />
+      <Field name="profitability" valueInt="0" valueFloat="35" />
     </Component>
     <Component name="IndustrialProcess">
       <Field name="m_Output.m_Amount" valueInt="2" /> <!-- 1 Petrochemicals -> 3 Texttiles -->
@@ -599,7 +626,7 @@
   </Prefab>
   <Prefab name="Industrial_ConvenienceFoodFromGrainFactory">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="30" />
+      <Field name="profitability" valueInt="0" valueFloat="35" />
     </Component>
     <Component name="IndustrialProcess">
       <Field name="m_Output.m_Amount" valueInt="2" /> <!-- 1 Grain -> 1 Conv.food -->
@@ -609,7 +636,8 @@
   
 <!-- WAREHOUSES -->
 <!-- All bumped from 10 to 15, however I am not sure if this helps -->
-  
+
+<!--  
   <Prefab name="Industrial_WarehouseConvenienceFood">
     <Component name="CompanyPrefab">
       <Field name="profitability" valueInt="0" valueFloat="15" />
@@ -745,5 +773,57 @@
       <Field name="profitability" valueInt="0" valueFloat="15" />
     </Component>
   </Prefab>
+-->
+
+<!-- INDUSTRIAL SIGNATURES -->
+<!-- All have Space Multiplier = 1.5 and some are huge, so the number of workers can reach 2000 -->
+<!-- Level factor is 2.34 for all of them... why??? are they actually Level 3 companies??? -->
+<!-- Init gives them Level 5 and workers' distribution is also from Level 5 -->
+
+<Prefab name="IndustrialManufacturingSignature01"> <!-- vehicles, 36x36, wpc=0.4 => 1814 -->
+	<Component name="BuildingProperties">
+		<Field name="m_SpaceMultiplier" valueFloat="1.1" /> <!-- new: 1330 -->
+	</Component>
+</Prefab>
+<Prefab name="IndustrialManufacturingSignature02"> <!-- 18x10, stone=>minerals, 380 -->
+	<Component name="BuildingProperties">
+		<Field name="m_SpaceMultiplier" valueFloat="1.2" /> <!-- new: 200 -->
+	</Component>
+</Prefab>
+<Prefab name="IndustrialManufacturingSignature03"> <!-- 14x12, livestock=>food, 440 -->
+	<Component name="BuildingProperties">
+		<Field name="m_SpaceMultiplier" valueFloat="1.2" /> <!-- new: 240 -->
+	</Component>
+</Prefab>
+<Prefab name="IndustrialManufacturingSignature04"> <!-- paper, 36x28, wpc=0.4 complex => 1411 -->
+	<Component name="BuildingProperties">
+		<Field name="m_SpaceMultiplier" valueFloat="1.0" /> <!-- new: 940 -->
+	</Component>
+</Prefab>
+<Prefab name="IndustrialManufacturingSignature05"> <!-- chemicals, 19x18, wpc=0.6 hitech => 1100 -->
+	<Component name="BuildingProperties">
+		<Field name="m_SpaceMultiplier" valueFloat="1.1" /> <!-- new: 530 -->
+	</Component>
+</Prefab>
+<Prefab name="IndustrialManufacturingSignature06"> <!-- 28x14, petrochemicals, 800 -->
+	<Component name="BuildingProperties">
+		<Field name="m_SpaceMultiplier" valueFloat="1.2" /> <!-- new: 440 -->
+	</Component>
+</Prefab>
+<Prefab name="IndustrialManufacturingSignature07"> <!-- electronics, 30x22, wpc=0.6 => 1386 -->
+	<Component name="BuildingProperties">
+		<Field name="m_SpaceMultiplier" valueFloat="1.1" /> <!-- new: 1020 -->
+	</Component>
+</Prefab>
+<Prefab name="IndustrialManufacturingSignature08"> <!-- pharmaceuticals, 16x20, wpc=0.65 hitech => 700 -->
+	<Component name="BuildingProperties">
+		<Field name="m_SpaceMultiplier" valueFloat="1.2" /> <!-- new: 585 -->
+	</Component>
+</Prefab>
+<Prefab name="IndustrialManufacturingSignature09"> <!-- 24x30, oil=>petrochemicals, 1400 -->
+	<Component name="BuildingProperties">
+		<Field name="m_SpaceMultiplier" valueFloat="1.0" /> <!-- new: 675 -->
+	</Component>
+</Prefab>
 
 </Configuration>

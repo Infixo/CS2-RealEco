@@ -12,7 +12,7 @@
 		<AssemblyName>RealEco</AssemblyName>
 		<RootNamespace>RealEco</RootNamespace>
 		<Description>Real Economy - rebalances resources consumption.</Description>
-		<Version>0.3.0</Version>
+		<Version>0.4.0</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>latest</LangVersion>
 		<RestoreAdditionalProjectSources>
@@ -53,6 +53,12 @@
 		<Reference Include="libcs2/Colossal.*.dll" Private="False" />
 		<Reference Include="libcs2/Game.dll" Private="False" />
 		<Reference Include="libcs2/Unity.*.dll" Private="False" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="CitizenBehaviorSystem.cs" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Include="CitizenBehaviorSystem.cs" />
 	</ItemGroup>
 
 	<!--
