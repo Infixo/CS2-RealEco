@@ -38,7 +38,8 @@
 
 <Prefab name="DemandParameters">
   <Component name="DemandPrefab">
-    <Field name="m_CommercialBaseDemand" valueFloat="1.5" /> <!-- default: 1.0, values <1 nerf too much sales capacity -->
+    <Field name="m_CommercialBaseDemand" valueFloat="2.0" /> <!-- default: 1.0, values >1 boost sales capacity -->
+	<Field name="m_FreeCommercialProportion" valueFloat="20" /> <!-- default: 10 -->
   </Component>
 </Prefab>
   
@@ -89,7 +90,7 @@
 		<Field name="m_Upkeep" valueFloat="500" /> <!-- 200 -->
 	</Component>
 	<Component name="ZoneProperties">
-		<Field name="m_SpaceMultiplier" valueFloat="7.0" /> <!-- 5.0 -->
+		<Field name="m_SpaceMultiplier" valueFloat="8.0" /> <!-- 5.0 -->
 	</Component>
 </Prefab>
 <Prefab name="Office Low">
@@ -109,12 +110,12 @@
 </Prefab>
 <Prefab name="EU Commercial Low">
 	<Component name="ZoneProperties">
-		<Field name="m_SpaceMultiplier" valueFloat="1.2" /> <!-- 1.0 -->
+		<Field name="m_SpaceMultiplier" valueFloat="1.3" /> <!-- 1.0 -->
 	</Component>
 </Prefab>
 <Prefab name="NA Commercial Low">
 	<Component name="ZoneProperties">
-		<Field name="m_SpaceMultiplier" valueFloat="1.2" /> <!-- 1.0 -->
+		<Field name="m_SpaceMultiplier" valueFloat="1.3" /> <!-- 1.0 -->
 	</Component>
 </Prefab>
 
@@ -146,7 +147,7 @@
 </Prefab>
 <Prefab name="ResourceMeals">
   <Component name="ResourcePrefab">
-    <Field name="m_InitialPrice" valueFloat="45" /> <!-- default 30; too little, it is created from Food which costs 50(!) -->
+    <Field name="m_InitialPrice" valueFloat="60" /> <!-- default 30; too little, it is created from Food which costs 50(!) -->
   </Component>
 </Prefab>
 <Prefab name="ResourceVehicles">
@@ -196,13 +197,13 @@
 </Prefab>
 <Prefab name="ResourceBeverages">
 	<Component name="ResourcePrefab">
-		<Field name="m_InitialPrice" valueFloat="45" />
+		<Field name="m_InitialPrice" valueFloat="40" /> <!-- 34 -->
 		<Field name="m_BaseConsumption" valueFloat="15" />
 	</Component>
 </Prefab>
 <Prefab name="ResourceEntertainment">
 	<Component name="ResourcePrefab">
-		<Field name="m_InitialPrice" valueFloat="80" /> <!-- 100 -->
+		<Field name="m_InitialPrice" valueFloat="90" /> <!-- 100 -->
 	</Component>
 </Prefab>
 <Prefab name="ResourceTextiles">
@@ -353,58 +354,75 @@
 
   <Prefab name="Commercial_FoodStore">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueFloat="30" />
+      <Field name="profitability" valueFloat="20" />
     </Component>
     <Component name="Workplace">
       <Field name="m_Complexity" valueInt="0" /> <!-- Simple => Manual -->
     </Component>
+	<!-- Commercial_FoodStore.ServiceCompany.m_MaxWorkersPerCell: 0.45 -->
+	<!--
+    <Component name="ServiceCompany">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.4" />
+    </Component>
+	-->
   </Prefab>
   <Prefab name="Commercial_BookStore"> <!-- ResourcePaper (60) -->
     <Component name="CompanyPrefab">
       <Field name="profitability" valueFloat="10" />
     </Component>
     <Component name="ServiceCompany">
-      <Field name="m_MaxWorkersPerCell" valueFloat="0.4" /> <!-- 0.5 -->
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.35" /> <!-- 0.5 -->
     </Component>
   </Prefab>
   <Prefab name="Commercial_VehicleStore"> <!-- ResourceVehicles (200) -->
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="8" />
+      <Field name="profitability" valueInt="0" valueFloat="10" />
     </Component>
+	<!--
 	<Component name="ServiceCompany">
-		<Field name="m_MaxWorkersPerCell" valueFloat="0.3" /> <!-- 0.22 -->
+		<Field name="m_MaxWorkersPerCell" valueFloat="0.3" /> //0.22
 	</Component>
+	-->
   </Prefab>
-  <Prefab name="Commercial_Restaurant"> <!-- Food (50) => ResourceMeals (50) -->
+  <Prefab name="Commercial_Restaurant"> <!-- ResourceFood (50) => ResourceMeals (60) -->
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="130" /> <!-- 420 -->
+      <Field name="profitability" valueInt="0" valueFloat="30" /> <!-- 420 -->
+    </Component>
+    <Component name="IndustrialProcess">
+      <Field name="m_Output.m_Amount" valueInt="2"/> <!-- 1 Food -> 1 Meals -->
     </Component>
     <Component name="Workplace">
       <Field name="m_Complexity" valueInt="0" /> <!-- Simple => Manual -->
     </Component>
     <!-- ServiceCompany.m_ServiceConsuming: 20 -->
+	<!-- Commercial_Restaurant.ServiceCompany.m_MaxWorkersPerCell: 0.38 -->
     <Component name="ServiceCompany">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.33" /> <!-- 0.38 -->
       <Field name="m_ServiceConsuming" valueInt="30" />
     </Component>
     <!-- LeisureProvider.m_Efficiency: 40 -->
   </Prefab>
-  <Prefab name="Commercial_ElectronicsStore">
+  <Prefab name="Commercial_ElectronicsStore"> <!-- Complex -->
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="30" />
+      <Field name="profitability" valueInt="0" valueFloat="40" />
     </Component>
     <Component name="ServiceCompany">
-      <Field name="m_MaxWorkersPerCell" valueInt="0" valueFloat="0.4" /> <!-- 0.5 -->
+      <Field name="m_MaxWorkersPerCell" valueInt="0" valueFloat="0.40" /> <!-- 0.5 -->
     </Component>
   </Prefab>
   <Prefab name="Commercial_GasStation"> <!-- ResourcePetrochemicals (30) -->
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="20" />
+      <Field name="profitability" valueInt="0" valueFloat="100" />
     </Component>
   </Prefab>
   <Prefab name="Commercial_Hotel"> <!-- Food (50) => ResourceLodging (200) -->
     <!-- ServiceCompany.m_ServiceConsuming: 1 -->
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="30" />
+      <Field name="profitability" valueInt="0" valueFloat="10" />
+    </Component>
+	<!-- Commercial_Hotel.ServiceCompany.m_MaxWorkersPerCell: 0.32 -->
+    <Component name="ServiceCompany">
+      <Field name="m_MaxWorkersPerCell" valueInt="0" valueFloat="0.28" /> <!-- 0.32 -->
     </Component>
   </Prefab>
   <Prefab name="Commercial_Bar"> <!-- ResourceBeverages (45) -> ResourceEntertainment (80) -->
@@ -420,12 +438,13 @@
     </Component>
     <!-- Commercial_Bar.ServiceCompany.m_ServiceConsuming: 5 -->
     <Component name="ServiceCompany">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.28" /> <!-- 0.35 -->
       <Field name="m_ServiceConsuming" valueInt="2" />
     </Component>
   </Prefab>
   <Prefab name="Commercial_ChemicalStore">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="80" />
+      <Field name="profitability" valueInt="0" valueFloat="150" />
     </Component>
   </Prefab>
   <Prefab name="Commercial_ConvenienceFoodStore">
@@ -435,15 +454,23 @@
     <Component name="Workplace">
       <Field name="m_Complexity" valueInt="0" /> <!-- Simple => Manual -->
     </Component>
+	<!-- Commercial_ConvenienceFoodStore.ServiceCompany.m_MaxWorkersPerCell: 0.34 -->
+    <Component name="ServiceCompany">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.42" /> <!-- 0.34 -->
+    </Component>
   </Prefab>
-  <Prefab name="Commercial_DrugStore">
+  <Prefab name="Commercial_DrugStore"> <!-- Complex -->
     <Component name="CompanyPrefab">
       <Field name="profitability" valueFloat="15" /> <!-- 600 -->
+    </Component>
+	<!-- Commercial_DrugStore.ServiceCompany.m_MaxWorkersPerCell: 0.5 -->
+    <Component name="ServiceCompany">
+      <Field name="m_MaxWorkersPerCell" valueInt="0" valueFloat="0.38" />
     </Component>
   </Prefab>
   <Prefab name="Commercial_FashionStore">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="90" />
+      <Field name="profitability" valueFloat="200" />
     </Component>
     <Component name="Workplace">
       <Field name="m_Complexity" valueInt="0" /> <!-- Simple => Manual -->
@@ -451,12 +478,16 @@
   </Prefab>
   <Prefab name="Commercial_FurnitureStore"> <!-- ResourceFurniture -->
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueFloat="15" />
+      <Field name="profitability" valueFloat="40" />
     </Component>
   </Prefab>
   <Prefab name="Commercial_LiquorStore">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="30" />
+      <Field name="profitability" valueInt="0" valueFloat="15" />
+    </Component>
+	<!-- Commercial_LiquorStore.ServiceCompany.m_MaxWorkersPerCell: 0.38 -->
+    <Component name="ServiceCompany">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.28" /> <!-- 0.38 -->
     </Component>
   </Prefab>
   <Prefab name="Commercial_PlasticsStore">
@@ -471,6 +502,7 @@
     </Component>
     <!-- ServiceCompany.m_ServiceConsuming: 10 -->
     <Component name="ServiceCompany">
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.22" /> <!-- 0.38 -->
       <Field name="m_ServiceConsuming" valueInt="5" />
     </Component>
   </Prefab>
