@@ -277,7 +277,7 @@ public struct UpdateCommercialDemandJob : IJob
 
     public void Execute()
     {
-        //Plugin.Log($"EXECUTE");
+        Plugin.Log($"--- EXECUTE ---");
         ResourceIterator iterator = ResourceIterator.GetIterator();
         Population population = m_Populations[m_City];
         Tourism tourism = m_Tourisms[m_City];
@@ -360,16 +360,22 @@ public struct UpdateCommercialDemandJob : IJob
                 num2 = ((m >= 2) ? (num2 + math.min(5f * (float)workplaces[m], math.max(0, m_EmployableByEducation[m] - m_FreeWorkplaces[m]))) : (num2 + 5f * (float)workplaces[m]));
             }
             float num3 = 0.4f * (num2 / 50f - 1f);
-            float num4 = -3f + 4f * (((float)m_TotalCurrentWorkers[resourceIndex2] + 1f) / ((float)m_TotalMaxWorkers[resourceIndex2] + 1f));
+            float num4 = -9f + 10f * (((float)m_TotalCurrentWorkers[resourceIndex2] + 1f) / ((float)m_TotalMaxWorkers[resourceIndex2] + 1f)); // MODDED: (-3/4) 75% => (-9/10) 90%
             if (num4 > 0f)
             {
                 num4 *= 0.5f;
             }
-            float num5 = ((m_TotalMaximums[resourceIndex2] == 0) ? 0f : (-3f + 10f * (1f - (float)m_TotalAvailables[resourceIndex2] / (float)m_TotalMaximums[resourceIndex2])));
+            float num5 = ((m_TotalMaximums[resourceIndex2] == 0) ? 0f : (-2.5f + 5f * (1f - (float)m_TotalAvailables[resourceIndex2] / (float)m_TotalMaximums[resourceIndex2]))); // MODDED: (-3;10) => (-2.5;5)
             float num6 = 2f * (m_DemandParameters.m_CommercialBaseDemand * (float)m_Consumptions[resourceIndex2] - (float)m_Productions[resourceIndex2]) / math.max(100f, (float)m_Consumptions[resourceIndex2] + 1f);
-            float num7 = -0.1f * ((float)TaxSystem.GetCommercialTaxRate(iterator.resource, m_TaxRates) - 10f);
+            float num7 = -0.2f * ((float)TaxSystem.GetCommercialTaxRate(iterator.resource, m_TaxRates) - 10f); // MODDED: -0.1 => -0.2 (twice bigger effect)
             m_ResourceDemands[resourceIndex2] = Mathf.RoundToInt(100f * (0.2f + num5 + num4 + num3 + num7 + num6));
-            //Plugin.Log($"{iterator.resource}: res {m_ResourceDemands[resourceIndex2]}, cons {m_Consumptions[resourceIndex2]}, free {m_FreeProperties[resourceIndex2]}, svc {num5} wrk {num4} edu {num3} tax {num7} cap {num6}");
+            Plugin.Log($"{iterator.resource} {m_ResourceDemands[resourceIndex2]}/{m_BuildingDemands[resourceIndex2]}: " +
+                $"svc {num5*100:F0} ({m_TotalAvailables[resourceIndex2]}/{m_TotalMaximums[resourceIndex2]}) " +
+                $"cap {num6*100:F0} ({m_Consumptions[resourceIndex2]}/{m_Productions[resourceIndex2]}) " +
+                $"wrk {num4*100:F0} ({m_TotalCurrentWorkers[resourceIndex2]}/{m_TotalMaxWorkers[resourceIndex2]}) " +
+                $"edu {num3*100:F0} " +
+                $"tax {num7*100:F0} " +
+                $"free {m_FreeProperties[resourceIndex2]}");
             int num8 = m_ResourceDemands[resourceIndex2];
             if (m_FreeProperties[resourceIndex2] == 0)
             {
@@ -392,22 +398,22 @@ public struct UpdateCommercialDemandJob : IJob
                 int num10 = DemandUtils.GetDemandFactorEffect(m_ResourceDemands[resourceIndex2], num6) + DemandUtils.GetDemandFactorEffect(m_ResourceDemands[resourceIndex2], num5);
                 int demandFactorEffect3 = DemandUtils.GetDemandFactorEffect(m_ResourceDemands[resourceIndex2], num7);
                 int num11 = demandFactorEffect + demandFactorEffect2 + num10 + demandFactorEffect3;
-                m_DemandFactors[2] += demandFactorEffect;
-                m_DemandFactors[1] += demandFactorEffect2;
+                m_DemandFactors[2] += demandFactorEffect; // EducatedWorkforce
+                m_DemandFactors[1] += demandFactorEffect2; // UneducatedWorkforce
                 if (iterator.resource == Resource.Lodging)
                 {
-                    m_DemandFactors[9] += num10;
+                    m_DemandFactors[9] += num10; // TouristDemand
                 }
                 else if (iterator.resource == Resource.Petrochemicals)
                 {
-                    m_DemandFactors[16] += num10;
+                    m_DemandFactors[16] += num10; // PetrolLocalDemand 
                 }
                 else
                 {
-                    m_DemandFactors[4] += num10;
+                    m_DemandFactors[4] += num10; // LocalDemand 
                 }
-                m_DemandFactors[11] += demandFactorEffect3;
-                m_DemandFactors[13] += math.min(0, num9 - num11);
+                m_DemandFactors[11] += demandFactorEffect3; // Taxes 
+                m_DemandFactors[13] += math.min(0, num9 - num11); // EmptyBuildings
             }
             num++;
             m_ResourceDemands[resourceIndex2] = math.min(100, math.max(0, m_ResourceDemands[resourceIndex2]));

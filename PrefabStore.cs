@@ -91,10 +91,10 @@ public static class PrefabStore_Patches
         if (Plugin.FeatureNewCompanies.Value && !CompaniesCreated && __instance.name == "CompaniesCollection")
         {
             //Plugin.Log($"Adding new CompanyPrefabs");
-            CompanyPrefabs[0] = CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.22f, 70f); // price 85
-            CompanyPrefabs[1] = CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Simple, 0.3f, 60f); // price 60
-            CompanyPrefabs[2] = CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.22f, 60f); // price 70
-            CompanyPrefabs[3] = CreateNewCompanyPrefab("Commercial_MediaStore", ResourceInEditor.Media, WorkplaceComplexity.Simple, 0.3f, 60f); // price 60
+            CompanyPrefabs[0] = CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.4f, 280f); // price 85
+            CompanyPrefabs[1] = CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Complex, 0.4f, 450f); // price 60
+            CompanyPrefabs[2] = CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.4f, 280f); // price 70
+            CompanyPrefabs[3] = CreateNewCompanyPrefab("Commercial_MediaStore", ResourceInEditor.Media, WorkplaceComplexity.Complex, 0.4f, 300f); // price 60
             for (int i = 0; i < CompanyPrefabs.Length; i++)
                 __instance.m_Prefabs.Add(CompanyPrefabs[i]);
             CompaniesCreated = true;
