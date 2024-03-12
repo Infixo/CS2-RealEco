@@ -33,11 +33,13 @@ public class CommercialUISystem : UISystemBase
         //public FixedString32Bytes Name; // resource name
         public int Demand; // company demand
         public int Building; // building demand
+        public int Free; // free properties
         public int Companies; // num of companies
         public int Workers; // num of workers
         public int SvcFactor; // service availability
         public int CapFactor; // sales capacity
         public int WrkFactor; // employee ratio
+        public int EduFactor; // educated employees
         public int TaxFactor; // tax factor
         public FixedString512Bytes Details;
 
@@ -53,6 +55,8 @@ public class CommercialUISystem : UISystemBase
         writer.Write(data.Demand);
         writer.PropertyName("building");
         writer.Write(data.Building);
+        writer.PropertyName("free");
+        writer.Write(data.Free);
         writer.PropertyName("companies");
         writer.Write(data.Companies);
         writer.PropertyName("workers");
@@ -63,6 +67,8 @@ public class CommercialUISystem : UISystemBase
         writer.Write(data.CapFactor);
         writer.PropertyName("wrkfactor");
         writer.Write(data.WrkFactor);
+        writer.PropertyName("edufactor");
+        writer.Write(data.EduFactor);
         writer.PropertyName("taxfactor");
         writer.Write(data.TaxFactor);
         writer.PropertyName("details");

@@ -65,17 +65,19 @@ const SingleValue = ({ value, flag, width, small }) => {
 const ResourceLine = ({ data }) => {
 	return (
 	<div class="labels_L7Q row_S2v" style={{lineHeight: 0.7}} >
-		<div class="row_S2v" style={{width: '2%'}}></div>
-		<div class="row_S2v" style={{width: '10%'}}>{data.resource}</div>
+		<div class="row_S2v" style={{width: '3%'}}></div>
+		<div class="row_S2v" style={{width: '12%'}}>{data.resource}</div>
 		<SingleValue value={data.demand}    width='5%' flag={data.demand<0} />
-		<SingleValue value={data.building}  width='4%' flag={data.building<=0} />
+		<SingleValue value={data.building}  width='3%' flag={data.building<=0} />
+		<SingleValue value={data.free}      width='3%' flag={data.free<=0} />
 		<SingleValue value={data.companies} width='4%' />
 		<SingleValue value={data.workers}   width='5%' />
 		<SingleValue value={data.svcfactor} width='4%' flag={data.svcfactor<0} small={true} />
 		<SingleValue value={data.capfactor} width='4%' flag={data.capfactor<0} small={true} />
 		<SingleValue value={data.wrkfactor} width='4%' flag={data.wrkfactor<0} small={true} />
+		<SingleValue value={data.edufactor} width='4%' flag={data.edufactor<0} small={true} />
 		<SingleValue value={data.taxfactor} width='4%' flag={data.taxfactor<0} small={true} />
-		<div class="row_S2v" style={{width: '54%', fontSize: '70%'}}>{data.details}</div>
+		<div class="row_S2v" style={{width: '45%', fontSize: '80%'}}>{data.details}</div>
 	</div>
 	);
 };
@@ -94,7 +96,7 @@ const $Commercial = ({ react }) => {
 	
 	//const homelessThreshold = Math.round(residentialData[12] * residentialData[13] / 1000);
 
-	return <$Panel react={react} title="Commercial Demand" onClose={onClose} initialSize={{ width: window.innerWidth * 0.55, height: window.innerHeight * 0.34 }} initialPosition={{ top: window.innerHeight * 0.05, left: window.innerWidth * 0.005 }}>
+	return <$Panel react={react} title="Commercial Demand" onClose={onClose} initialSize={{ width: window.innerWidth * 0.45, height: window.innerHeight * 0.34 }} initialPosition={{ top: window.innerHeight * 0.05, left: window.innerWidth * 0.005 }}>
 		{demandData.length === 0 ? (
 			<p>Waiting...</p>
 		) : (
@@ -102,17 +104,19 @@ const $Commercial = ({ react }) => {
 		<div>
 		
 		<div class="labels_L7Q row_S2v">
-			<div class="row_S2v" style={{width: '2%'}}></div>
-			<div class="row_S2v" style={{width: '10%'}}>Resource</div>
-			<SingleValue value="Demand"    width='5%' />
-			<SingleValue value="Zone"  width='4%' />
-			<SingleValue value="Num" width='4%' />
-			<SingleValue value="Wrk"   width='5%' />
-			<SingleValue value="Svc" width='4%' small={true} />
-			<SingleValue value="Cap" width='4%' small={true} />
-			<SingleValue value="Emp" width='4%' small={true} />
-			<SingleValue value="Tax" width='4%' small={true} />
-			<div class="row_S2v" style={{width: '54%'}}>Details</div>
+			<div class="row_S2v" style={{width: '3%'}}></div>
+			<div class="row_S2v" style={{width: '12%'}}>Resource</div>
+			<SingleValue value="Dmnd" width='5%' />
+			<SingleValue value="Zon"  width='3%' />
+			<SingleValue value="Fre"  width='3%' />
+			<SingleValue value="Num"  width='4%' />
+			<SingleValue value="Work" width='5%' />
+			<SingleValue value="Svc"  width='4%' small={true} />
+			<SingleValue value="Cap"  width='4%' small={true} />
+			<SingleValue value="Emp"  width='4%' small={true} />
+			<SingleValue value="Edu"  width='4%' small={true} />
+			<SingleValue value="Tax"  width='4%' small={true} />
+			<div class="row_S2v" style={{width: '45%'}}>Details</div>
 		</div>
 		
 		{demandData

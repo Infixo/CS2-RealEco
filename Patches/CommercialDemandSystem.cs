@@ -217,30 +217,40 @@ private struct UpdateCommercialDemandJob : IJob
                 num4 *= 0.5f;
             }
             float num5 = ((m_TotalMaximums[resourceIndex2] == 0) ? 0f : (-2.5f + 5f * (1f - (float)m_TotalAvailables[resourceIndex2] / (float)m_TotalMaximums[resourceIndex2]))); // MODDED: (-3;10) => (-2.5;5)
-            float num6 = 2f * (m_DemandParameters.m_CommercialBaseDemand * (float)m_Consumptions[resourceIndex2] - (float)m_Productions[resourceIndex2]) / math.max(100f, (float)m_Consumptions[resourceIndex2] + 1f);
-            float num7 = -0.3f * ((float)TaxSystem.GetCommercialTaxRate(iterator.resource, m_TaxRates) - 10f); // MODDED: -0.1 => -0.3 (3x bigger effect)
-            m_ResourceDemands[resourceIndex2] = Mathf.RoundToInt(100f * (0.2f + num5 + num4 + num3 + num7 + num6));
+            float num6 = /*2f **/ (m_DemandParameters.m_CommercialBaseDemand * (float)m_Consumptions[resourceIndex2] - (float)m_Productions[resourceIndex2]) / math.max(100f, (float)m_Consumptions[resourceIndex2] + 1f); // MODDED: no 2f factor
+            float num7 = -0.2f * ((float)TaxSystem.GetCommercialTaxRate(iterator.resource, m_TaxRates) - 10f); // MODDED: -0.1 => -0.2 (2x bigger effect)
+            m_ResourceDemands[resourceIndex2] = Mathf.RoundToInt(100f * (/*0.2f + */num5 + num4 + num3 + num7 + num6)); // MODDED: 0.2f removed
 
                 // REAL ECO UI ADDITION
                 DemandData uiData = m_DemandData[resourceIndex2];
                 uiData.Resource = iterator.resource;
                 uiData.Demand = m_ResourceDemands[resourceIndex2];
                 uiData.Building = m_BuildingDemands[resourceIndex2];
+                uiData.Free = m_FreeProperties[resourceIndex2];
                 uiData.Companies = m_Companies[resourceIndex2];
                 uiData.Workers = m_TotalCurrentWorkers[resourceIndex2];
-                uiData.SvcFactor = Mathf.RoundToInt(num5 * 100f);
-                uiData.CapFactor = Mathf.RoundToInt(num6 * 100f);
-                uiData.WrkFactor = Mathf.RoundToInt(num4 * 100f);
-                uiData.TaxFactor = Mathf.RoundToInt(num7 * 100f);
+                uiData.SvcFactor = Mathf.RoundToInt(100f * num5);
+                uiData.CapFactor = Mathf.RoundToInt(100f * num6);
+                uiData.WrkFactor = Mathf.RoundToInt(100f * num4);
+                uiData.EduFactor = Mathf.RoundToInt(100f * num3);
+                uiData.TaxFactor = Mathf.RoundToInt(100f * num7);
                 uiData.Details = new FixedString512Bytes(
-                $"{iterator.resource} {m_ResourceDemands[resourceIndex2]}/{m_BuildingDemands[resourceIndex2]}: " +
-                $"svc {num5 * 100:F0} ({m_TotalAvailables[resourceIndex2]}/{m_TotalMaximums[resourceIndex2]}) " +
-                $"cap {num6 * 100:F0} ({m_Consumptions[resourceIndex2]}/{m_Productions[resourceIndex2]}) [{m_Companies[resourceIndex2]}/{(m_Companies[resourceIndex2] == 0 ? -1 : m_Productions[resourceIndex2] / m_Companies[resourceIndex2])}] " +
-                $"wrk {num4 * 100:F0} ({m_TotalCurrentWorkers[resourceIndex2]}/{m_TotalMaxWorkers[resourceIndex2]}) " +
-                $"edu {num3 * 100:F0} " +
-                $"tax {num7 * 100:F0} " +
-                $"free {m_FreeProperties[resourceIndex2]}");
-                //Plugin.Log(uiData.Details.ToString());
+                //$"{iterator.resource} {m_ResourceDemands[resourceIndex2]}/{m_BuildingDemands[resourceIndex2]}: " +
+                $"svc {m_TotalAvailables[resourceIndex2]}/{m_TotalMaximums[resourceIndex2]} " +
+                $"cap {m_Consumptions[resourceIndex2]}/{m_Productions[resourceIndex2]} " +
+                $"num {m_Companies[resourceIndex2]}/{(m_Companies[resourceIndex2] == 0 ? -1 : m_Productions[resourceIndex2] / m_Companies[resourceIndex2])} " +
+                $"wrk {m_TotalCurrentWorkers[resourceIndex2]}/{m_TotalMaxWorkers[resourceIndex2]}");
+                //$"edu {num3 * 100:F0} " +
+                //$"tax {num7 * 100:F0} " +
+                //$"free {m_FreeProperties[resourceIndex2]}");
+                /*
+                Plugin.Log($"{iterator.resource} {m_ResourceDemands[resourceIndex2]}/{m_BuildingDemands[resourceIndex2]}: " +
+                        $"svc {num5 * 100:F0} ({m_TotalAvailables[resourceIndex2]}/{m_TotalMaximums[resourceIndex2]}) " +
+                        $"cap {num6 * 100:F0} ({m_Consumptions[resourceIndex2]}/{m_Productions[resourceIndex2]}) [{m_Companies[resourceIndex2]}/{(m_Companies[resourceIndex2] == 0 ? -1 : m_Productions[resourceIndex2] / m_Companies[resourceIndex2])}] " +
+                        $"wrk {num4 * 100:F0} ({m_TotalCurrentWorkers[resourceIndex2]}/{m_TotalMaxWorkers[resourceIndex2]}) " +
+                        $"edu {num3 * 100:F0} " +
+                        $"tax {num7 * 100:F0} " +
+                        $"free {m_FreeProperties[resourceIndex2]}");*/
                 m_DemandData[resourceIndex2] = uiData;
 
             int num8 = m_ResourceDemands[resourceIndex2];

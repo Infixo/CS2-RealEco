@@ -136,16 +136,11 @@ public static class PrefabStore_Patches
     {
         if (Plugin.FeatureNewCompanies.Value && prefab.GetType().Name == "ResourcePrefab" && prefab.TryGet<TaxableResource>(out TaxableResource comp))
         {
+            bool isPatched = false;
             if (comp.m_TaxAreas.Length == 1 && comp.m_TaxAreas[0] == TaxAreaType.Office)
             {
                 comp.m_TaxAreas = [TaxAreaType.Office, TaxAreaType.Commercial];
-                // show in the log
-                string text = "";
-                for (int i = 0; i < comp.m_TaxAreas.Length; i++)
-                    text += comp.m_TaxAreas[i] + "|";
-                if (comp.m_TaxAreas.Length == 0)
-                    text = "None";
-                Plugin.Log($"{prefab.name}.{comp.name}.m_TaxAreas: {text}");
+                isPatched = true;
                 // store the prefab for later use
                 ResourcePrefab resPrefab = prefab as ResourcePrefab;
                 if (!ResourcePrefabs.ContainsKey(resPrefab.m_Resource))
@@ -153,6 +148,22 @@ public static class PrefabStore_Patches
                     ResourcePrefabs.Add(resPrefab.m_Resource, resPrefab);
                     //Plugin.Log($"...storing {prefab.name} for later use (total {ResourcePrefabs.Count})");
                 }
+            }
+            // 240312 Fix for non-taxable Gas Stations ResourcePetrochemicals.TaxableResource.m_TaxAreas: Industrial |
+            if (prefab.name == "ResourcePetrochemicals")
+            {
+                comp.m_TaxAreas = [TaxAreaType.Commercial, TaxAreaType.Industrial];
+                isPatched = true;
+            }
+            if (isPatched)
+            {
+                // show in the log
+                string text = "";
+                for (int i = 0; i < comp.m_TaxAreas.Length; i++)
+                    text += comp.m_TaxAreas[i] + "|";
+                if (comp.m_TaxAreas.Length == 0)
+                    text = "None";
+                Plugin.Log($"{prefab.name}.{comp.name}.m_TaxAreas: {text}");
             }
         }
         return true;
