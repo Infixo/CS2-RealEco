@@ -21,6 +21,7 @@ using UnityEngine.Scripting;
 using Game;
 using Game.Simulation;
 using HarmonyLib;
+using static RealEco.Systems.CommercialUISystem;
 
 namespace RealEco;
 
@@ -123,9 +124,11 @@ private struct UpdateCommercialDemandJob : IJob
 
     public NativeArray<int> m_ActualConsumptions;
 
+    public NativeArray<DemandData> m_DemandData;
+
     public void Execute()
     {
-        Plugin.Log($"--- EXECUTE ---");
+        //Plugin.Log($"--- EXECUTE ---");
         ResourceIterator iterator = ResourceIterator.GetIterator();
         Population population = m_Populations[m_City];
         Tourism tourism = m_Tourisms[m_City];
@@ -217,13 +220,29 @@ private struct UpdateCommercialDemandJob : IJob
             float num6 = 2f * (m_DemandParameters.m_CommercialBaseDemand * (float)m_Consumptions[resourceIndex2] - (float)m_Productions[resourceIndex2]) / math.max(100f, (float)m_Consumptions[resourceIndex2] + 1f);
             float num7 = -0.3f * ((float)TaxSystem.GetCommercialTaxRate(iterator.resource, m_TaxRates) - 10f); // MODDED: -0.1 => -0.3 (3x bigger effect)
             m_ResourceDemands[resourceIndex2] = Mathf.RoundToInt(100f * (0.2f + num5 + num4 + num3 + num7 + num6));
-            Plugin.Log($"{iterator.resource} {m_ResourceDemands[resourceIndex2]}/{m_BuildingDemands[resourceIndex2]}: " +
-                $"svc {num5*100:F0} ({m_TotalAvailables[resourceIndex2]}/{m_TotalMaximums[resourceIndex2]}) " +
-                $"cap {num6*100:F0} ({m_Consumptions[resourceIndex2]}/{m_Productions[resourceIndex2]}) [{m_Companies[resourceIndex2]}/{(m_Companies[resourceIndex2]==0?-1:m_Productions[resourceIndex2]/m_Companies[resourceIndex2])}] " +
-                $"wrk {num4*100:F0} ({m_TotalCurrentWorkers[resourceIndex2]}/{m_TotalMaxWorkers[resourceIndex2]}) " +
-                $"edu {num3*100:F0} " +
-                $"tax {num7*100:F0} " +
+
+                // REAL ECO UI ADDITION
+                DemandData uiData = m_DemandData[resourceIndex2];
+                uiData.Resource = iterator.resource;
+                uiData.Demand = m_ResourceDemands[resourceIndex2];
+                uiData.Building = m_BuildingDemands[resourceIndex2];
+                uiData.Companies = m_Companies[resourceIndex2];
+                uiData.Workers = m_TotalCurrentWorkers[resourceIndex2];
+                uiData.SvcFactor = Mathf.RoundToInt(num5 * 100f);
+                uiData.CapFactor = Mathf.RoundToInt(num6 * 100f);
+                uiData.WrkFactor = Mathf.RoundToInt(num4 * 100f);
+                uiData.TaxFactor = Mathf.RoundToInt(num7 * 100f);
+                uiData.Details = new FixedString512Bytes(
+                $"{iterator.resource} {m_ResourceDemands[resourceIndex2]}/{m_BuildingDemands[resourceIndex2]}: " +
+                $"svc {num5 * 100:F0} ({m_TotalAvailables[resourceIndex2]}/{m_TotalMaximums[resourceIndex2]}) " +
+                $"cap {num6 * 100:F0} ({m_Consumptions[resourceIndex2]}/{m_Productions[resourceIndex2]}) [{m_Companies[resourceIndex2]}/{(m_Companies[resourceIndex2] == 0 ? -1 : m_Productions[resourceIndex2] / m_Companies[resourceIndex2])}] " +
+                $"wrk {num4 * 100:F0} ({m_TotalCurrentWorkers[resourceIndex2]}/{m_TotalMaxWorkers[resourceIndex2]}) " +
+                $"edu {num3 * 100:F0} " +
+                $"tax {num7 * 100:F0} " +
                 $"free {m_FreeProperties[resourceIndex2]}");
+                //Plugin.Log(uiData.Details.ToString());
+                m_DemandData[resourceIndex2] = uiData;
+
             int num8 = m_ResourceDemands[resourceIndex2];
             if (m_FreeProperties[resourceIndex2] == 0)
             {
@@ -324,12 +343,27 @@ private struct TypeHandle
     private static JobHandle baseDependency = new JobHandle();
 
     private static TypeHandle __TypeHandle = new TypeHandle();
-	
-	// protected override void OnCreate()	
-	// protected override void OnDestroy()
-	// public void SetDefaults(Context context)
-	// public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
-	// public void Deserialize<TReader>(TReader reader) where TReader : IReader													 
+
+    public static NativeArray<DemandData> m_DemandData;
+
+    [HarmonyPatch(typeof(Game.Simulation.CommercialDemandSystem), "OnCreate")]
+    [HarmonyPostfix]
+    static void CommercialDemandSystem_OnCreate()
+    {
+        m_DemandData = new NativeArray<DemandData>(EconomyUtils.ResourceCount, Allocator.Persistent);
+    }
+
+    [HarmonyPatch(typeof(Game.Simulation.CommercialDemandSystem), "OnDestroy")]
+    [HarmonyPrefix]
+    static bool CommercialDemandSystem_OnDestroy()
+    {
+        m_DemandData.Dispose();
+        return true;
+    }
+
+    // public void SetDefaults(Context context)
+    // public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
+    // public void Deserialize<TReader>(TReader reader) where TReader : IReader													 
 
     [HarmonyPatch(typeof(Game.Simulation.CommercialDemandSystem), "OnUpdate")]
     [HarmonyPrefix]
@@ -417,6 +451,7 @@ private struct TypeHandle
             updateCommercialDemandJob.m_TotalCurrentWorkers = commercialCompanyDatas.m_CurrentServiceWorkers;
             updateCommercialDemandJob.m_City = ___m_CitySystem.City;
             updateCommercialDemandJob.m_ActualConsumptions = ___m_CountConsumptionSystem.GetConsumptions(out var deps4);
+            updateCommercialDemandJob.m_DemandData = m_DemandData; // MODDED
             UpdateCommercialDemandJob jobData = updateCommercialDemandJob;
             baseDependency = IJobExtensions.Schedule(jobData, JobUtils.CombineDependencies(baseDependency, ___m_ReadDependencies, deps4, outJobHandle, deps, outJobHandle2, deps2, deps3));
             ___m_WriteDependencies = baseDependency;
