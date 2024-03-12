@@ -1,186 +1,34 @@
-using UnityEngine;
+using System.Runtime.CompilerServices;
+using Colossal.Collections;
+using Colossal.Entities;
+using Colossal.Serialization.Entities;
+using Game.Buildings;
+using Game.City;
+using Game.Common;				  
+using Game.Companies;
+using Game.Debug;				 
+using Game.Economy;
+using Game.Prefabs;
+using Game.Reflection;
+using Game.Tools;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
-using Colossal.Collections;
-using Colossal.Entities;
+using UnityEngine;
+using UnityEngine.Scripting;
 using Game;
-using Game.Buildings;
-using Game.City;
-using Game.Companies;
-using Game.Economy;
-using Game.Prefabs;
 using Game.Simulation;
 using HarmonyLib;
 
 namespace RealEco;
 
 [HarmonyPatch]
-class Patches
+public class CommercialDemandSystem_Patches
 {
-    [HarmonyPatch(typeof(Game.Common.SystemOrder), "Initialize")]
-    [HarmonyPostfix]
-    public static void Initialize_Postfix(UpdateSystem updateSystem)
-    {
-        if (Plugin.FeatureNewCompanies.Value)
-            updateSystem.UpdateAt<RealEco.Systems.ResourceBuyerSystem>(SystemUpdatePhase.GameSimulation);
-        if (Plugin.FeatureConsumptionFix.Value)
-            updateSystem.UpdateAt<RealEco.Systems.HouseholdBehaviorSystem>(SystemUpdatePhase.GameSimulation);
-        //updateSystem.UpdateAt<RealEco.Systems.CitizenBehaviorSystem>(SystemUpdatePhase.GameSimulation); // debug only
-    }
-
-    private static JobHandle baseDependency = new JobHandle();
-
-    private static TypeHandle __TypeHandle = new TypeHandle();
-
-    [HarmonyPatch(typeof(Game.Simulation.CommercialDemandSystem), "OnUpdate")]
-    [HarmonyPrefix]
-    static bool CommercialDemandSystem_OnUpdate(
-            CommercialDemandSystem __instance,
-            //Game.Simulation.CommercialDemandSystem.TypeHandle __TypeHandle,
-            ResourceSystem ___m_ResourceSystem,
-            TaxSystem ___m_TaxSystem,
-            CountEmploymentSystem ___m_CountEmploymentSystem,
-            CountFreeWorkplacesSystem ___m_CountFreeWorkplacesSystem,
-            CitySystem ___m_CitySystem,
-            CountConsumptionSystem ___m_CountConsumptionSystem,
-            CountCompanyDataSystem ___m_CountCompanyDataSystem,
-            EntityQuery ___m_EconomyParameterQuery,
-            EntityQuery ___m_DemandParameterQuery,
-            EntityQuery ___m_FreeCommercialQuery,
-            EntityQuery ___m_CommercialProcessDataQuery,
-            NativeValue<int> ___m_CompanyDemand,
-            NativeValue<int> ___m_BuildingDemand,
-            NativeArray<int> ___m_DemandFactors,
-            NativeArray<int> ___m_ResourceDemands,
-            NativeArray<int> ___m_BuildingDemands,
-            NativeArray<int> ___m_Consumption,
-            NativeArray<int> ___m_FreeProperties,
-            ref JobHandle ___m_WriteDependencies,
-            JobHandle ___m_ReadDependencies,
-            ref int ___m_LastCompanyDemand,
-            ref int ___m_LastBuildingDemand
-        )
-    {
-        // Skip the patch and execute the original if the feaure is disabled
-        if (!Plugin.FeatureNewCompanies.Value)
-            return true;
-
-        // Patched code
-        if (!___m_DemandParameterQuery.IsEmptyIgnoreFilter && !___m_EconomyParameterQuery.IsEmptyIgnoreFilter)
-        {
-            ___m_LastCompanyDemand = ___m_CompanyDemand.value;
-            ___m_LastBuildingDemand = ___m_BuildingDemand.value;
-            JobHandle deps;
-            CountCompanyDataSystem.CommercialCompanyDatas commercialCompanyDatas = ___m_CountCompanyDataSystem.GetCommercialCompanyDatas(out deps);
-            __TypeHandle.__Game_City_Tourism_RO_ComponentLookup.Update(ref __instance.CheckedStateRef);
-            __TypeHandle.__Game_City_Population_RO_ComponentLookup.Update(ref __instance.CheckedStateRef);
-            __TypeHandle.__Game_Companies_CommercialCompany_RO_ComponentLookup.Update(ref __instance.CheckedStateRef);
-            __TypeHandle.__Game_Prefabs_WorkplaceData_RO_ComponentLookup.Update(ref __instance.CheckedStateRef);
-            __TypeHandle.__Game_Prefabs_ResourceData_RO_ComponentLookup.Update(ref __instance.CheckedStateRef);
-            __TypeHandle.__Game_Prefabs_BuildingPropertyData_RO_ComponentLookup.Update(ref __instance.CheckedStateRef);
-            __TypeHandle.__Game_Buildings_Renter_RO_BufferTypeHandle.Update(ref __instance.CheckedStateRef);
-            __TypeHandle.__Game_Prefabs_IndustrialProcessData_RO_ComponentTypeHandle.Update(ref __instance.CheckedStateRef);
-            __TypeHandle.__Game_Prefabs_PrefabRef_RO_ComponentTypeHandle.Update(ref __instance.CheckedStateRef);
-            __TypeHandle.__Unity_Entities_Entity_TypeHandle.Update(ref __instance.CheckedStateRef);
-            UpdateCommercialDemandJob updateCommercialDemandJob = default(UpdateCommercialDemandJob);
-            updateCommercialDemandJob.m_FreePropertyChunks = ___m_FreeCommercialQuery.ToArchetypeChunkListAsync(__instance.World.UpdateAllocator.ToAllocator, out var outJobHandle);
-            updateCommercialDemandJob.m_CommercialProcessDataChunks = ___m_CommercialProcessDataQuery.ToArchetypeChunkListAsync(__instance.World.UpdateAllocator.ToAllocator, out var outJobHandle2);
-            updateCommercialDemandJob.m_EntityType = __TypeHandle.__Unity_Entities_Entity_TypeHandle;
-            updateCommercialDemandJob.m_PrefabType = __TypeHandle.__Game_Prefabs_PrefabRef_RO_ComponentTypeHandle;
-            updateCommercialDemandJob.m_ProcessType = __TypeHandle.__Game_Prefabs_IndustrialProcessData_RO_ComponentTypeHandle;
-            updateCommercialDemandJob.m_RenterType = __TypeHandle.__Game_Buildings_Renter_RO_BufferTypeHandle;
-            updateCommercialDemandJob.m_BuildingPropertyDatas = __TypeHandle.__Game_Prefabs_BuildingPropertyData_RO_ComponentLookup;
-            updateCommercialDemandJob.m_ResourceDatas = __TypeHandle.__Game_Prefabs_ResourceData_RO_ComponentLookup;
-            updateCommercialDemandJob.m_WorkplaceDatas = __TypeHandle.__Game_Prefabs_WorkplaceData_RO_ComponentLookup;
-            updateCommercialDemandJob.m_CommercialCompanies = __TypeHandle.__Game_Companies_CommercialCompany_RO_ComponentLookup;
-            updateCommercialDemandJob.m_Populations = __TypeHandle.__Game_City_Population_RO_ComponentLookup;
-            updateCommercialDemandJob.m_Tourisms = __TypeHandle.__Game_City_Tourism_RO_ComponentLookup;
-            updateCommercialDemandJob.m_ResourcePrefabs = ___m_ResourceSystem.GetPrefabs();
-            updateCommercialDemandJob.m_DemandParameters = ___m_DemandParameterQuery.GetSingleton<DemandParameterData>();
-            updateCommercialDemandJob.m_EconomyParameters = ___m_EconomyParameterQuery.GetSingleton<EconomyParameterData>();
-            updateCommercialDemandJob.m_EmployableByEducation = ___m_CountEmploymentSystem.GetEmployableByEducation(out var deps2);
-            updateCommercialDemandJob.m_TaxRates = ___m_TaxSystem.GetTaxRates();
-            updateCommercialDemandJob.m_FreeWorkplaces = ___m_CountFreeWorkplacesSystem.GetFreeWorkplaces(out var deps3);
-            updateCommercialDemandJob.m_BaseConsumptionSum = ___m_ResourceSystem.BaseConsumptionSum;
-            updateCommercialDemandJob.m_CompanyDemand = ___m_CompanyDemand;
-            updateCommercialDemandJob.m_BuildingDemand = ___m_BuildingDemand;
-            updateCommercialDemandJob.m_DemandFactors = ___m_DemandFactors;
-            updateCommercialDemandJob.m_ResourceDemands = ___m_ResourceDemands;
-            updateCommercialDemandJob.m_BuildingDemands = ___m_BuildingDemands;
-            updateCommercialDemandJob.m_Productions = commercialCompanyDatas.m_SalesCapacities;
-            updateCommercialDemandJob.m_Consumptions = ___m_Consumption;
-            updateCommercialDemandJob.m_TotalAvailables = commercialCompanyDatas.m_CurrentAvailables;
-            updateCommercialDemandJob.m_TotalMaximums = commercialCompanyDatas.m_TotalAvailables;
-            updateCommercialDemandJob.m_Companies = commercialCompanyDatas.m_ServiceCompanies;
-            updateCommercialDemandJob.m_FreeProperties = ___m_FreeProperties;
-            updateCommercialDemandJob.m_Propertyless = commercialCompanyDatas.m_ServicePropertyless;
-            updateCommercialDemandJob.m_TotalMaxWorkers = commercialCompanyDatas.m_MaxServiceWorkers;
-            updateCommercialDemandJob.m_TotalCurrentWorkers = commercialCompanyDatas.m_CurrentServiceWorkers;
-            updateCommercialDemandJob.m_City = ___m_CitySystem.City;
-            updateCommercialDemandJob.m_ActualConsumptions = ___m_CountConsumptionSystem.GetConsumptions(out var deps4);
-            UpdateCommercialDemandJob jobData = updateCommercialDemandJob;
-            baseDependency = IJobExtensions.Schedule(jobData, JobUtils.CombineDependencies(baseDependency, ___m_ReadDependencies, deps4, outJobHandle, deps, outJobHandle2, deps2, deps3));
-            ___m_WriteDependencies = baseDependency;
-            ___m_CountConsumptionSystem.AddConsumptionWriter(baseDependency);
-            ___m_ResourceSystem.AddPrefabsReader(baseDependency);
-            ___m_CountEmploymentSystem.AddReader(baseDependency);
-            ___m_CountFreeWorkplacesSystem.AddReader(baseDependency);
-            ___m_TaxSystem.AddReader(baseDependency);
-        }
-
-        return false; // don't execute the original system
-    }
-
-    [HarmonyPatch(typeof(Game.Simulation.CommercialDemandSystem), "OnCreateForCompiler")]
-    [HarmonyPostfix]
-    public static void CommercialDemandSystem_OnCreateForCompiler(CommercialDemandSystem __instance)
-    {
-        __TypeHandle.__AssignHandles(ref __instance.CheckedStateRef);
-    }
-
-
-    // Original HouseholdBehaviorSystem
-    // This patch only removes its role as a job scheduler. There are multiple utility functions that remain in use by
-    // several other simulation systems.
-
-    [HarmonyPatch(typeof(Game.Simulation.HouseholdBehaviorSystem), "OnUpdate")]
-    [HarmonyPrefix]
-    static bool HouseholdBehaviorSystem_OnUpdate()
-    {
-        // Skip the patch and execute the original if the feaure is disabled
-        if (!Plugin.FeatureConsumptionFix.Value)
-            return true;
-
-        return false; // don't execute the original system
-    }
-
-    /* 
-    // debug only
-    [HarmonyPatch(typeof(Game.Simulation.CitizenBehaviorSystem), "OnUpdate")]
-    [HarmonyPrefix]
-    static bool CitizenBehaviorSystem_OnUpdate()
-    {
-        return false; // don't execute the original system
-    }
-    */
-
-    [HarmonyPatch(typeof(Game.Simulation.ResourceBuyerSystem), "OnUpdate")]
-    [HarmonyPrefix]
-    static bool ResourceBuyerSystem_OnUpdate()
-    {
-        // Skip the patch and execute the original if the feaure is disabled
-        if (!Plugin.FeatureNewCompanies.Value)
-            return true;
-
-        return false; // don't execute the original system
-    }
-}
-
 [BurstCompile]
-public struct UpdateCommercialDemandJob : IJob
+private struct UpdateCommercialDemandJob : IJob
 {
     [ReadOnly]
     public NativeList<ArchetypeChunk> m_FreePropertyChunks;
@@ -422,7 +270,7 @@ public struct UpdateCommercialDemandJob : IJob
     }
 }
 
-public struct TypeHandle
+private struct TypeHandle
 {
     [ReadOnly]
     public EntityTypeHandle __Unity_Entities_Entity_TypeHandle;
@@ -454,7 +302,7 @@ public struct TypeHandle
     [ReadOnly]
     public ComponentLookup<Tourism> __Game_City_Tourism_RO_ComponentLookup;
 
-    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void __AssignHandles(ref SystemState state)
     {
         __Unity_Entities_Entity_TypeHandle = state.GetEntityTypeHandle();
@@ -468,4 +316,128 @@ public struct TypeHandle
         __Game_City_Population_RO_ComponentLookup = state.GetComponentLookup<Population>(isReadOnly: true);
         __Game_City_Tourism_RO_ComponentLookup = state.GetComponentLookup<Tourism>(isReadOnly: true);
     }
+}
+
+	
+	
+	
+    private static JobHandle baseDependency = new JobHandle();
+
+    private static TypeHandle __TypeHandle = new TypeHandle();
+	
+	// protected override void OnCreate()	
+	// protected override void OnDestroy()
+	// public void SetDefaults(Context context)
+	// public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
+	// public void Deserialize<TReader>(TReader reader) where TReader : IReader													 
+
+    [HarmonyPatch(typeof(Game.Simulation.CommercialDemandSystem), "OnUpdate")]
+    [HarmonyPrefix]
+    static bool CommercialDemandSystem_OnUpdate(
+            CommercialDemandSystem __instance,
+            //Game.Simulation.CommercialDemandSystem.TypeHandle __TypeHandle,
+            ResourceSystem ___m_ResourceSystem,
+            TaxSystem ___m_TaxSystem,
+            CountEmploymentSystem ___m_CountEmploymentSystem,
+            CountFreeWorkplacesSystem ___m_CountFreeWorkplacesSystem,
+            CitySystem ___m_CitySystem,
+            CountConsumptionSystem ___m_CountConsumptionSystem,
+            CountCompanyDataSystem ___m_CountCompanyDataSystem,
+            EntityQuery ___m_EconomyParameterQuery,
+            EntityQuery ___m_DemandParameterQuery,
+            EntityQuery ___m_FreeCommercialQuery,
+            EntityQuery ___m_CommercialProcessDataQuery,
+            NativeValue<int> ___m_CompanyDemand,
+            NativeValue<int> ___m_BuildingDemand,
+            NativeArray<int> ___m_DemandFactors,
+            NativeArray<int> ___m_ResourceDemands,
+            NativeArray<int> ___m_BuildingDemands,
+            NativeArray<int> ___m_Consumption,
+            NativeArray<int> ___m_FreeProperties,
+            ref JobHandle ___m_WriteDependencies,
+            JobHandle ___m_ReadDependencies,
+            ref int ___m_LastCompanyDemand,
+            ref int ___m_LastBuildingDemand
+        )
+    {
+        // Skip the patch and execute the original if the feaure is disabled
+        if (!Plugin.FeatureNewCompanies.Value)
+            return true;
+
+        // Patched code
+        if (!___m_DemandParameterQuery.IsEmptyIgnoreFilter && !___m_EconomyParameterQuery.IsEmptyIgnoreFilter)
+        {
+            ___m_LastCompanyDemand = ___m_CompanyDemand.value;
+            ___m_LastBuildingDemand = ___m_BuildingDemand.value;
+            JobHandle deps;
+            CountCompanyDataSystem.CommercialCompanyDatas commercialCompanyDatas = ___m_CountCompanyDataSystem.GetCommercialCompanyDatas(out deps);
+            __TypeHandle.__Game_City_Tourism_RO_ComponentLookup.Update(ref __instance.CheckedStateRef);
+            __TypeHandle.__Game_City_Population_RO_ComponentLookup.Update(ref __instance.CheckedStateRef);
+            __TypeHandle.__Game_Companies_CommercialCompany_RO_ComponentLookup.Update(ref __instance.CheckedStateRef);
+            __TypeHandle.__Game_Prefabs_WorkplaceData_RO_ComponentLookup.Update(ref __instance.CheckedStateRef);
+            __TypeHandle.__Game_Prefabs_ResourceData_RO_ComponentLookup.Update(ref __instance.CheckedStateRef);
+            __TypeHandle.__Game_Prefabs_BuildingPropertyData_RO_ComponentLookup.Update(ref __instance.CheckedStateRef);
+            __TypeHandle.__Game_Buildings_Renter_RO_BufferTypeHandle.Update(ref __instance.CheckedStateRef);
+            __TypeHandle.__Game_Prefabs_IndustrialProcessData_RO_ComponentTypeHandle.Update(ref __instance.CheckedStateRef);
+            __TypeHandle.__Game_Prefabs_PrefabRef_RO_ComponentTypeHandle.Update(ref __instance.CheckedStateRef);
+            __TypeHandle.__Unity_Entities_Entity_TypeHandle.Update(ref __instance.CheckedStateRef);
+            UpdateCommercialDemandJob updateCommercialDemandJob = default(UpdateCommercialDemandJob);
+            updateCommercialDemandJob.m_FreePropertyChunks = ___m_FreeCommercialQuery.ToArchetypeChunkListAsync(__instance.World.UpdateAllocator.ToAllocator, out var outJobHandle);
+            updateCommercialDemandJob.m_CommercialProcessDataChunks = ___m_CommercialProcessDataQuery.ToArchetypeChunkListAsync(__instance.World.UpdateAllocator.ToAllocator, out var outJobHandle2);
+            updateCommercialDemandJob.m_EntityType = __TypeHandle.__Unity_Entities_Entity_TypeHandle;
+            updateCommercialDemandJob.m_PrefabType = __TypeHandle.__Game_Prefabs_PrefabRef_RO_ComponentTypeHandle;
+            updateCommercialDemandJob.m_ProcessType = __TypeHandle.__Game_Prefabs_IndustrialProcessData_RO_ComponentTypeHandle;
+            updateCommercialDemandJob.m_RenterType = __TypeHandle.__Game_Buildings_Renter_RO_BufferTypeHandle;
+            updateCommercialDemandJob.m_BuildingPropertyDatas = __TypeHandle.__Game_Prefabs_BuildingPropertyData_RO_ComponentLookup;
+            updateCommercialDemandJob.m_ResourceDatas = __TypeHandle.__Game_Prefabs_ResourceData_RO_ComponentLookup;
+            updateCommercialDemandJob.m_WorkplaceDatas = __TypeHandle.__Game_Prefabs_WorkplaceData_RO_ComponentLookup;
+            updateCommercialDemandJob.m_CommercialCompanies = __TypeHandle.__Game_Companies_CommercialCompany_RO_ComponentLookup;
+            updateCommercialDemandJob.m_Populations = __TypeHandle.__Game_City_Population_RO_ComponentLookup;
+            updateCommercialDemandJob.m_Tourisms = __TypeHandle.__Game_City_Tourism_RO_ComponentLookup;
+            updateCommercialDemandJob.m_ResourcePrefabs = ___m_ResourceSystem.GetPrefabs();
+            updateCommercialDemandJob.m_DemandParameters = ___m_DemandParameterQuery.GetSingleton<DemandParameterData>();
+            updateCommercialDemandJob.m_EconomyParameters = ___m_EconomyParameterQuery.GetSingleton<EconomyParameterData>();
+            updateCommercialDemandJob.m_EmployableByEducation = ___m_CountEmploymentSystem.GetEmployableByEducation(out var deps2);
+            updateCommercialDemandJob.m_TaxRates = ___m_TaxSystem.GetTaxRates();
+            updateCommercialDemandJob.m_FreeWorkplaces = ___m_CountFreeWorkplacesSystem.GetFreeWorkplaces(out var deps3);
+            updateCommercialDemandJob.m_BaseConsumptionSum = ___m_ResourceSystem.BaseConsumptionSum;
+            updateCommercialDemandJob.m_CompanyDemand = ___m_CompanyDemand;
+            updateCommercialDemandJob.m_BuildingDemand = ___m_BuildingDemand;
+            updateCommercialDemandJob.m_DemandFactors = ___m_DemandFactors;
+            updateCommercialDemandJob.m_ResourceDemands = ___m_ResourceDemands;
+            updateCommercialDemandJob.m_BuildingDemands = ___m_BuildingDemands;
+            updateCommercialDemandJob.m_Productions = commercialCompanyDatas.m_SalesCapacities;
+            updateCommercialDemandJob.m_Consumptions = ___m_Consumption;
+            updateCommercialDemandJob.m_TotalAvailables = commercialCompanyDatas.m_CurrentAvailables;
+            updateCommercialDemandJob.m_TotalMaximums = commercialCompanyDatas.m_TotalAvailables;
+            updateCommercialDemandJob.m_Companies = commercialCompanyDatas.m_ServiceCompanies;
+            updateCommercialDemandJob.m_FreeProperties = ___m_FreeProperties;
+            updateCommercialDemandJob.m_Propertyless = commercialCompanyDatas.m_ServicePropertyless;
+            updateCommercialDemandJob.m_TotalMaxWorkers = commercialCompanyDatas.m_MaxServiceWorkers;
+            updateCommercialDemandJob.m_TotalCurrentWorkers = commercialCompanyDatas.m_CurrentServiceWorkers;
+            updateCommercialDemandJob.m_City = ___m_CitySystem.City;
+            updateCommercialDemandJob.m_ActualConsumptions = ___m_CountConsumptionSystem.GetConsumptions(out var deps4);
+            UpdateCommercialDemandJob jobData = updateCommercialDemandJob;
+            baseDependency = IJobExtensions.Schedule(jobData, JobUtils.CombineDependencies(baseDependency, ___m_ReadDependencies, deps4, outJobHandle, deps, outJobHandle2, deps2, deps3));
+            ___m_WriteDependencies = baseDependency;
+            ___m_CountConsumptionSystem.AddConsumptionWriter(baseDependency);
+            ___m_ResourceSystem.AddPrefabsReader(baseDependency);
+            ___m_CountEmploymentSystem.AddReader(baseDependency);
+            ___m_CountFreeWorkplacesSystem.AddReader(baseDependency);
+            ___m_TaxSystem.AddReader(baseDependency);
+        }
+
+        return false; // don't execute the original system
+    }
+	
+	//private void __AssignQueries(ref SystemState state)
+	
+    [HarmonyPatch(typeof(Game.Simulation.CommercialDemandSystem), "OnCreateForCompiler")]
+    [HarmonyPostfix]
+    public static void CommercialDemandSystem_OnCreateForCompiler(CommercialDemandSystem __instance)
+    {
+        __TypeHandle.__AssignHandles(ref __instance.CheckedStateRef);
+    }
+	
+	// public CommercialDemandSystem()
 }

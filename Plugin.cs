@@ -9,6 +9,7 @@ using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Configuration;
 using HarmonyLib;
+using HookUILib.Core;
 
 #if BEPINEX_V6
     using BepInEx.Unity.Mono;
@@ -87,5 +88,18 @@ public class Plugin : BaseUnityPlugin
 
         // READ CONFIG DATA
         RealEco.Config.ConfigToolXml.LoadConfig();
+    }
+}
+
+
+public class RealEco_Commercial : UIExtension
+{
+    public new readonly string extensionID = "realeco.commercial";
+    public new readonly string extensionContent;
+    public new readonly ExtensionType extensionType = ExtensionType.Panel;
+
+    public RealEco_Commercial()
+    {
+        this.extensionContent = this.LoadEmbeddedResource("RealEco.dist.commercial.js");
     }
 }

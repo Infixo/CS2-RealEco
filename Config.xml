@@ -145,6 +145,11 @@
 		<Field name="m_InitialPrice" valueFloat="80" /> <!-- 60 -->
 	</Component>
 </Prefab>
+<Prefab name="ResourceLodging">
+	<Component name="ResourcePrefab">
+		<Field name="m_InitialPrice" valueFloat="250" /> <!-- 200 -->
+	</Component>
+</Prefab>
 <Prefab name="ResourceMeals">
   <Component name="ResourcePrefab">
     <Field name="m_InitialPrice" valueFloat="60" /> <!-- default 30; too little, it is created from Food which costs 50(!) -->
