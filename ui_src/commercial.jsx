@@ -45,11 +45,11 @@ const DataDivider = () => {
 };
 
 // centered value, if flag exists then uses colors for negative/positive
-// width is 20% by default
+// width is 10% by default
 const SingleValue = ({ value, flag, width, small }) => {
 	const rowClass = ( small ? "row_S2v small_ExK" : "row_S2v");
 	const centerStyle = {
-		width: width === undefined ? '20%' : width,
+		width: width === undefined ? '10%' : width,
 		justifyContent: 'center',
 	};
 	return (
@@ -62,71 +62,29 @@ const SingleValue = ({ value, flag, width, small }) => {
 	);
 };
 
-const BuildingDemandSection = ({ data }) => {
-	const freeL = data[0]-data[3];
-	const freeM = data[1]-data[4];
-	const freeH = data[2]-data[5];
-	const ratio = data[6]/10;
-	const ratioString = `$No demand at {ratio}%`;
-	const needL = Math.max(1, Math.floor(ratio * data[0] / 100));
-	const needM = Math.max(1, Math.floor(ratio * data[1] / 100));
-	const needH = Math.max(1, Math.floor(ratio * data[2] / 100));
-	const demandL = Math.floor((1 - freeL / needL) * 100);
-	const demandM = Math.floor((1 - freeM / needM) * 100);
-	const demandH = Math.floor((1 - freeH / needH) * 100);
+const ResourceLine = ({ data }) => {
 	return (
-	<div style={{boxSizing: 'border-box', border: '1px solid gray'}}>
-		<div class="labels_L7Q row_S2v">
-			<div class="row_S2v" style={{width: '40%'}}></div>
-			<SingleValue value="LOW" />
-			<SingleValue value="MEDIUM" />
-			<SingleValue value="HIGH" />
-		</div>
-		<div class="labels_L7Q row_S2v">
-			<div class="row_S2v" style={{width: '2%'}}></div>
-			<div class="row_S2v" style={{width: '38%'}}>Total properties</div>
-			<SingleValue value={data[0]} />
-			<SingleValue value={data[1]} />
-			<SingleValue value={data[2]} />
-		</div>
-		<div class="labels_L7Q row_S2v">
-			<div class="row_S2v small_ExK" style={{width: '2%'}}></div>
-			<div class="row_S2v small_ExK" style={{width: '38%'}}>- Occupied properties</div>
-			<SingleValue value={data[3]} small={true} />
-			<SingleValue value={data[4]} small={true} />
-			<SingleValue value={data[5]} small={true} />
-		</div>
-		<div class="labels_L7Q row_S2v">
-			<div class="row_S2v" style={{width: '2%'}}></div>
-			<div class="row_S2v" style={{width: '38%'}}>= Empty properties</div>
-			<SingleValue value={freeL} flag={freeL>needL} />
-			<SingleValue value={freeM} flag={freeM>needM} />
-			<SingleValue value={freeH} flag={freeH>needH} />
-		</div>
-		<div class="labels_L7Q row_S2v">
-			<div class="row_S2v small_ExK" style={{width: '2%'}}></div>
-			<div class="row_S2v small_ExK" style={{width: '38%'}}>{"No demand at " + ratio + "%"}</div>
-			<SingleValue value={needL} small={true} />
-			<SingleValue value={needM} small={true} />
-			<SingleValue value={needH} small={true} />
-		</div>
-		<div class="labels_L7Q row_S2v">
-			<div class="row_S2v" style={{width: '2%'}}></div>
-			<div class="row_S2v" style={{width: '38%'}}>BUILDING DEMAND</div>
-			<SingleValue value={demandL} flag={demandL<0} />
-			<SingleValue value={demandM} flag={demandM<0} />
-			<SingleValue value={demandH} flag={demandH<0} />
-		</div>
-	    <div class="space_uKL" style={{height: '3rem'}}></div>
+	<div class="labels_L7Q row_S2v" style={{lineHeight: 0.7}} >
+		<div class="row_S2v" style={{width: '2%'}}></div>
+		<div class="row_S2v" style={{width: '10%'}}>{data.resource}</div>
+		<SingleValue value={data.demand}    width='5%' flag={data.demand<0} />
+		<SingleValue value={data.building}  width='4%' flag={data.building<=0} />
+		<SingleValue value={data.companies} width='4%' />
+		<SingleValue value={data.workers}   width='5%' />
+		<SingleValue value={data.svcfactor} width='4%' flag={data.svcfactor<0} small={true} />
+		<SingleValue value={data.capfactor} width='4%' flag={data.capfactor<0} small={true} />
+		<SingleValue value={data.wrkfactor} width='4%' flag={data.wrkfactor<0} small={true} />
+		<SingleValue value={data.taxfactor} width='4%' flag={data.taxfactor<0} small={true} />
+		<div class="row_S2v" style={{width: '54%', fontSize: '70%'}}>{data.details}</div>
 	</div>
 	);
 };
 
 const $Commercial = ({ react }) => {
 	
-	// residential data
-	const [residentialData, setResidentialData] = react.useState([])
-	useDataUpdate(react, 'cityInfo.ilResidential', setResidentialData)
+	// demand data for each resource
+	const [demandData, setDemandData] = react.useState([])
+	useDataUpdate(react, 'realEco.commercialDemand', setDemandData)
 
 	const onClose = () => {
 		const data = { type: "toggle_visibility", id: 'realeco.commercial' };
@@ -134,40 +92,36 @@ const $Commercial = ({ react }) => {
 		window.dispatchEvent(event);
 	};
 	
-	const homelessThreshold = Math.round(residentialData[12] * residentialData[13] / 1000);
+	//const homelessThreshold = Math.round(residentialData[12] * residentialData[13] / 1000);
 
-	return <$Panel react={react} title="Residential Data" onClose={onClose} initialSize={{ width: window.innerWidth * 0.22, height: window.innerHeight * 0.26 }} initialPosition={{ top: window.innerHeight * 0.05, left: window.innerWidth * 0.005 }}>	
-		{residentialData.length === 0 ? (
+	return <$Panel react={react} title="Commercial Demand" onClose={onClose} initialSize={{ width: window.innerWidth * 0.55, height: window.innerHeight * 0.34 }} initialPosition={{ top: window.innerHeight * 0.05, left: window.innerWidth * 0.005 }}>
+		{demandData.length === 0 ? (
 			<p>Waiting...</p>
 		) : (
+		
 		<div>
-			<BuildingDemandSection data={residentialData} />
-			{/* OTHER DATA, two columns */}
-			<div style={{display: 'flex'}}>
-				<div style={{width: '50%', boxSizing: 'border-box', border: '1px solid gray'}}>
-					<div class="space_uKL" style={{height: '3rem'}}></div>
-					<RowWithTwoColumns left="STUDY POSITIONS" right={residentialData[14]} />
-					<DataDivider />
-					<RowWithThreeColumns left="HAPPINESS" leftSmall={`${residentialData[8]} is neutral`} right1={residentialData[7]} flag1={residentialData[7]<residentialData[8]} />
-					<DataDivider />
-					<RowWithThreeColumns left="UNEMPLOYMENT" leftSmall={`${residentialData[10]/10}% is neutral`} right1={residentialData[9]} flag1={residentialData[9]>residentialData[10]/10} />
-					<DataDivider />
-					<RowWithThreeColumns left="HOUSEHOLD DEMAND" right1={residentialData[16]} flag1={residentialData[16]<0} />
-					<div class="space_uKL" style={{height: '3rem'}}></div>
-				</div>
-				<div style={{width: '50%', boxSizing: 'border-box', border: '1px solid gray'}}>
-					<div class="space_uKL" style={{height: '3rem'}}></div>
-					<RowWithTwoColumns left="HOUSEHOLDS" right={residentialData[12]} />
-					<DataDivider />
-					<RowWithThreeColumns left="HOMELESS" leftSmall={`${homelessThreshold} is neutral`} right1={residentialData[11]} flag1={residentialData[11]>homelessThreshold} />
-					<DataDivider />
-					<RowWithThreeColumns left="TAX RATE (weighted)" leftSmall="10% is neutral" right1={residentialData[15]/10} flag1={residentialData[15]>100} />
-					<DataDivider />
-					<RowWithTwoColumns left="STUDENT CHANCE" right={`${residentialData[17]} %`} />
-					<div class="space_uKL" style={{height: '3rem'}}></div>
-				</div>
-			</div>
+		
+		<div class="labels_L7Q row_S2v">
+			<div class="row_S2v" style={{width: '2%'}}></div>
+			<div class="row_S2v" style={{width: '10%'}}>Resource</div>
+			<SingleValue value="Demand"    width='5%' />
+			<SingleValue value="Zone"  width='4%' />
+			<SingleValue value="Num" width='4%' />
+			<SingleValue value="Wrk"   width='5%' />
+			<SingleValue value="Svc" width='4%' small={true} />
+			<SingleValue value="Cap" width='4%' small={true} />
+			<SingleValue value="Emp" width='4%' small={true} />
+			<SingleValue value="Tax" width='4%' small={true} />
+			<div class="row_S2v" style={{width: '54%'}}>Details</div>
 		</div>
+		
+		{demandData
+			.filter(item => item.resource !== 'NoResource')
+			.map(item => ( <ResourceLine key={item.resource} data={item} />
+		))}
+		
+		</div>
+		
 		)}
 	</$Panel>
 };

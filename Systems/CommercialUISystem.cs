@@ -87,7 +87,7 @@ public class CommercialUISystem : UISystemBase
         base.OnCreate();
         m_SimulationSystem = base.World.GetOrCreateSystemManaged<SimulationSystem>(); // TODO: use UIUpdateState eventually
         // data
-        AddBinding(m_uiResults = new RawValueBinding(kGroup, "reCommercialDemand", delegate (IJsonWriter binder)
+        AddBinding(m_uiResults = new RawValueBinding(kGroup, "commercialDemand", delegate (IJsonWriter binder)
         {
             binder.ArrayBegin(m_Results.Length);
             for (int i = 0; i < m_Results.Length; i++)
