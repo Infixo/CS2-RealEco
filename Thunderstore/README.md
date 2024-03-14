@@ -1,7 +1,9 @@
 # Economy Rebalance Mod
 This mod allows to build a self-sufficient city in terms of resources production and consumption. It achieves that mostly by modifying existing game parameters like companies profitability, resource prices and base consumption or workplaces complexity. The mod's effects become more visible and useful the bigger the city is (>100k).
 
-Version 0.4 allows to selectively toggle key mod features: new parameters, consumption fix and new companies. Use BepInEx config `RealEco.cfg` to enable or disable the features.
+Version 0.5 includes modded commercial demand that gives more control over the commercials in your city. The increased taxes sensitivity allows to manually control what companies settle in the city.
+
+Version 0.4 includes new commercial companies and allows to selectively toggle key mod features: new parameters, consumption fix, new companies, modded commercial demand. Use BepInEx config `RealEco.cfg` to enable or disable the features.
 
 **Important note.**
 Tuning and balancing is an iterative process. The feedback about how companies and economy behave is highly appreciated and welcomed. Please see the Support paragraph below on how to reach me. If you decide to try out the mod, please make sure to turn off other mods that affect economy, resource management and companies. While the mod technically will work as advertised, the results produced may be distorted and not very useful for further balancing.
@@ -16,6 +18,8 @@ Tuning and balancing is an iterative process. The feedback about how companies a
  - Tweaks workplaces number and distribution for better alignment with available workforce.
  - Tweaks residential zones upkeep for better rent progression and leveling.
  - (v0.4) New commercial companies that sell immaterial resources.
+ - (v0.5) Rebalanced commercial demand with a dedicated UI window.
+ - (v0.5) Adjustments for lodging and leisure companies should result in more of them spawning in the city.
  
 ### Comparison to the vanilla city
  - It is possible to turn on the mod on an existing city. The effects will be seen after few in-game hours, but it will take a few in-game days for all processes to fully adjust.
@@ -28,11 +32,12 @@ Tuning and balancing is an iterative process. The feedback about how companies a
  - Companies that are not profitable enough will go bankrupt.
  - There will be lower demand for offices, since there will be less demand for immaterial resources.
  - (v0.3) Companies will increase number of workplaces by 20%-30%.
+ - (v0.5) More hotels and motels in the city.
 
 ## Features
 
 ### Toggle mod features (v0.4)
- - You can selectively toggle key mod features: new parameters, consumption fix and new companies. Use BepInEx config `RealEco.cfg` to enable or disable the features.
+ - You can selectively toggle key mod features: new parameters, consumption fix, new companies and modded commercial demand. Use BepInEx config `RealEco.cfg` to enable or disable the features.
 
 ### Config.xml file (v0.3)
  - The prefab configuration is stored in the `Config.xml` file that comes together with the mod. Please do not confuse with `RealEco.cfg` file.
@@ -72,8 +77,8 @@ Tuning and balancing is an iterative process. The feedback about how companies a
  - Mixed and Medium have slightly tweaked upkeeps to better align with LowRena and HighDens.
  - As a result, the rent progression should be (from lowest to highest): Low Rent -> Mixed, High Density -> Medium Density -> Row Housing -> Low Density.
   
-## New commercial companies (v0.4, EXPERIMENTAL)
- - This feature is DISABLED by default. To enable, set `FeatureNewCompanies` to true in BepInEx config `RealEco.cfg`.
+## New commercial companies (v0.4)
+ - This feature is DISABLED by default. To enable, set `FeatureNewCompanies` to `true` in BepInEx config `RealEco.cfg`.
  - In the vanilla game cims don't buy immaterial resources at all, despite generating household needs for them. It is a by-product of the patch 1.0.15 where cims where forbiden to buy directly at industrial factories. However, somebody forgot that Offices are also Industries and thus cims stopped buying immaterial resources.
  - The mod creates 4 new commercial companies that sell immaterial resources. Think of them as Point of Sales for Offices that are Headquarters.
  - The mod also fixes an issue where commercial companies pay for resources but don't get them. This is the reason why they end up in a negative cash balance very often.
@@ -82,6 +87,29 @@ Tuning and balancing is an iterative process. The feedback about how companies a
 
 ![NewStores](https://raw.githubusercontent.com/infixo/cs2-realeco/master/docs/newstores.png)
 
+## Modded commercial demand (v0.5, EXPERIMENTAL)
+ - This feature is DISABLED by default. To enable, set `FeatureCommercialDemand` to `true` in BepInEx config `RealEco.cfg`.
+ - Gives more control over the commercials in your city. The increased taxes sensitivity allows to manually control what companies settle in the city.
+ - Service availability - the neutral point is lowered to 50% (70% in vanilla).
+ - Sales capacity - the neutral point is increased to 200% (100% and vanilla) but sensitivity is halved.
+ - Employee capacity - the neutral point is moved to 90% (75% in vanilla).
+ - Tax sensitivity - twice as much as vanilla.
+ - As a result, the modded version is more repsonsive to actual consumption and how many customers are actually using shops - this is what Service Availability means. Sales capacity is calibrated to match the servive i.e. 50% of service matches 200% of capacity since it an inverse relation. Taxes sensitivity allows to manually boost or nerf the demand as needed.
+
+## Commercial demand window (v0.5) 
+ - This feature is DISABLED by default. To enable, set `FeatureCommercialDemand` to `true` in BepInEx config `RealEco.cfg`.
+ - Description of the columns from left to right.
+ - Demand (1): resource demand - key number that decides what companies will spawn; negative value will block spawning; the higher the number, the higher **probability** of a company being spawned.
+ - Demand (2): zone demand - key number that decides what buildings will spawn; 0 means there is no demand.
+ - Free: number of free properties (buildings) for companies selling the specific resource. Please note that as long as free properties exist and there is no company demand, no new buildings will spawn.
+ - Num: number of companies.
+ - Service: service available, factor and percentage vs. maximum service.
+ - Sales capacity: factor, percentage vs. consumption, and average capacity per company.
+ - Workers: factor, percentage vs. maximum workers, and total workers.
+ - Edu: educated workforce factor, it basically says if there is available wworkforce that matches required education levels for a company.
+ - Tax: tax factor.
+  
+![Commercial](https://raw.githubusercontent.com/infixo/cs2-realeco/master/docs/commercial.png)
 
 ## Technical
 
@@ -89,16 +117,20 @@ Tuning and balancing is an iterative process. The feedback about how companies a
 - Cities Skylines II version 1.0.19f1 or later; check GitHub or Discord if the mod is compatible with the latest game version.
 - BepInEx 5.
 - The mod will modify the savefile if new companies feature is enabled.
-- Modified systems: HouseholdBehaviorSystem (when consumption fix is enabled), ResourceBuyerSystem (when new companies feature is enabled).
+- Modified systems: HouseholdBehaviorSystem (when consumption fix is enabled), ResourceBuyerSystem (when new companies feature is enabled), CommercialDemandSystem (if modded commercial demand is enabled).
 
 ### Installation
 1. Place the `RealEco.dll` file in your BepInEx `Plugins` folder.
 2. The BepInEx config file `RealEco.cfg` is automatically created in BepInEx\config when the game is run once.
 
 ### Known Issues
-- Nothing atm.
+- (v0.4) The resource labels in the Statistics window are not displayed correctly for new companies.
 
 ### Changelog
+- v0.5.0 (2024-03-14)
+  - Modded commercial demand.
+  - Commercial demand UI window.
+  - Commercial companies balancing and tuning.
 - v0.4.0 (2024-03-06)
   - Mod features can be selectively turned on/off.
   - Wages are slightly tweaked to decrease profitability when the company levels up. This also helps with increased number of workers.

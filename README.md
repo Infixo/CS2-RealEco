@@ -32,6 +32,7 @@ Tuning and balancing is an iterative process. The feedback about how companies a
  - Companies that are not profitable enough will go bankrupt.
  - There will be lower demand for offices, since there will be less demand for immaterial resources.
  - (v0.3) Companies will increase number of workplaces by 20%-30%.
+ - (v0.5) More hotels and motels in the city.
 
 ## Features
 
@@ -76,8 +77,8 @@ Tuning and balancing is an iterative process. The feedback about how companies a
  - Mixed and Medium have slightly tweaked upkeeps to better align with LowRena and HighDens.
  - As a result, the rent progression should be (from lowest to highest): Low Rent -> Mixed, High Density -> Medium Density -> Row Housing -> Low Density.
   
-## New commercial companies (v0.4, EXPERIMENTAL)
- - This feature is DISABLED by default. To enable, set `FeatureNewCompanies` to true in BepInEx config `RealEco.cfg`.
+## New commercial companies (v0.4)
+ - This feature is DISABLED by default. To enable, set `FeatureNewCompanies` to `true` in BepInEx config `RealEco.cfg`.
  - In the vanilla game cims don't buy immaterial resources at all, despite generating household needs for them. It is a by-product of the patch 1.0.15 where cims where forbiden to buy directly at industrial factories. However, somebody forgot that Offices are also Industries and thus cims stopped buying immaterial resources.
  - The mod creates 4 new commercial companies that sell immaterial resources. Think of them as Point of Sales for Offices that are Headquarters.
  - The mod also fixes an issue where commercial companies pay for resources but don't get them. This is the reason why they end up in a negative cash balance very often.
@@ -87,7 +88,7 @@ Tuning and balancing is an iterative process. The feedback about how companies a
 ![NewStores](https://raw.githubusercontent.com/infixo/cs2-realeco/master/docs/newstores.png)
 
 ## Modded commercial demand (v0.5, EXPERIMENTAL)
- - This feature is DISABLED by default. To enable, set `FeatureCommercialDemand` to true in BepInEx config `RealEco.cfg`.
+ - This feature is DISABLED by default. To enable, set `FeatureCommercialDemand` to `true` in BepInEx config `RealEco.cfg`.
  - Gives more control over the commercials in your city. The increased taxes sensitivity allows to manually control what companies settle in the city.
  - Service availability - the neutral point is lowered to 50% (70% in vanilla).
  - Sales capacity - the neutral point is increased to 200% (100% and vanilla) but sensitivity is halved.
@@ -96,13 +97,13 @@ Tuning and balancing is an iterative process. The feedback about how companies a
  - As a result, the modded version is more repsonsive to actual consumption and how many customers are actually using shops - this is what Service Availability means. Sales capacity is calibrated to match the servive i.e. 50% of service matches 200% of capacity since it an inverse relation. Taxes sensitivity allows to manually boost or nerf the demand as needed.
 
 ## Commercial demand window (v0.5) 
- - This feature is DISABLED by default. To enable, set `FeatureCommercialDemand` to true in BepInEx config `RealEco.cfg`.
+ - This feature is DISABLED by default. To enable, set `FeatureCommercialDemand` to `true` in BepInEx config `RealEco.cfg`.
  - Description of the columns from left to right.
- - Demand (1): resource demand - key number that decides what companies will spawn; negative value will block spawning, the higher the number the higher CHANCE of a company being spawned.
- - Demand (2): zone demand - key number that decides what buildings will be spawn; 0 means there is no demand.
- - Free: number of free properties (buildings) for companies selling the specific resource. Please note that as long as free properties exist, no new buldings will spawn.
- - Nun: number of existing companies.
- - Service: service aviailable factor and percentage.
+ - Demand (1): resource demand - key number that decides what companies will spawn; negative value will block spawning; the higher the number, the higher **probability** of a company being spawned.
+ - Demand (2): zone demand - key number that decides what buildings will spawn; 0 means there is no demand.
+ - Free: number of free properties (buildings) for companies selling the specific resource. Please note that as long as free properties exist and there is no company demand, no new buildings will spawn.
+ - Num: number of companies.
+ - Service: service available, factor and percentage vs. maximum service.
  - Sales capacity: factor, percentage vs. consumption, and average capacity per company.
  - Workers: factor, percentage vs. maximum workers, and total workers.
  - Edu: educated workforce factor, it basically says if there is available wworkforce that matches required education levels for a company.
@@ -123,7 +124,7 @@ Tuning and balancing is an iterative process. The feedback about how companies a
 2. The BepInEx config file `RealEco.cfg` is automatically created in BepInEx\config when the game is run once.
 
 ### Known Issues
-- Nothing atm.
+- (v0.4) The resource labels in the Statistics window are not displayed correctly for new companies.
 
 ### Changelog
 - v0.5.0 (2024-03-14)
