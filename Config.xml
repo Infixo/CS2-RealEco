@@ -59,10 +59,16 @@
 	<Component name="ZoneServiceConsumption">
 		<Field name="m_Upkeep" valueFloat="330" /> <!-- 450 -->
 	</Component>
+	<Component name="ZoneProperties">
+		<Field name="m_SpaceMultiplier" valueFloat="2.0" /> <!-- 2.5 -->
+	</Component>
 </Prefab>
 <Prefab name="NA Residential Mixed">
 	<Component name="ZoneServiceConsumption">
 		<Field name="m_Upkeep" valueFloat="330" /> <!-- 450 -->
+	</Component>
+	<Component name="ZoneProperties">
+		<Field name="m_SpaceMultiplier" valueFloat="2.0" /> <!-- 2.5 -->
 	</Component>
 </Prefab>
 <Prefab name="EU Residential Medium">

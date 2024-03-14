@@ -37,11 +37,15 @@ public class CommercialUISystem : UISystemBase
         public int Companies; // num of companies
         public int Workers; // num of workers
         public int SvcFactor; // service availability
+        public int SvcPercent;
         public int CapFactor; // sales capacity
+        public int CapPercent;
+        public int CapPerCompany;
         public int WrkFactor; // employee ratio
+        public int WrkPercent;
         public int EduFactor; // educated employees
         public int TaxFactor; // tax factor
-        public FixedString512Bytes Details;
+        //public FixedString512Bytes Details;
 
         public DemandData(Resource resource) { Resource = resource; } // Name = EconomyUtils.GetNameFixed(EconomyUtils.GetResource(resource)); }
     }
@@ -63,16 +67,24 @@ public class CommercialUISystem : UISystemBase
         writer.Write(data.Workers);
         writer.PropertyName("svcfactor");
         writer.Write(data.SvcFactor);
+        writer.PropertyName("svcpercent");
+        writer.Write(data.SvcPercent);
         writer.PropertyName("capfactor");
         writer.Write(data.CapFactor);
+        writer.PropertyName("cappercent");
+        writer.Write(data.CapPercent);
+        writer.PropertyName("cappercompany");
+        writer.Write(data.CapPerCompany);
         writer.PropertyName("wrkfactor");
         writer.Write(data.WrkFactor);
+        writer.PropertyName("wrkpercent");
+        writer.Write(data.WrkPercent);
         writer.PropertyName("edufactor");
         writer.Write(data.EduFactor);
         writer.PropertyName("taxfactor");
         writer.Write(data.TaxFactor);
-        writer.PropertyName("details");
-        writer.Write(data.Details.ToString());
+        //writer.PropertyName("details");
+        //writer.Write(data.Details.ToString());
         writer.TypeEnd();
     }
 

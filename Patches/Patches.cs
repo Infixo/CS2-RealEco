@@ -29,7 +29,8 @@ class Patches
         if (Plugin.FeatureConsumptionFix.Value)
             updateSystem.UpdateAt<RealEco.Systems.HouseholdBehaviorSystem>(SystemUpdatePhase.GameSimulation);
         //updateSystem.UpdateAt<RealEco.Systems.CitizenBehaviorSystem>(SystemUpdatePhase.GameSimulation); // debug only
-        updateSystem.UpdateAt<RealEco.Systems.CommercialUISystem>(SystemUpdatePhase.UIUpdate);
+        if (Plugin.FeatureCommercialDemand.Value)
+            updateSystem.UpdateAt<RealEco.Systems.CommercialUISystem>(SystemUpdatePhase.UIUpdate);
     }
 
     // Original HouseholdBehaviorSystem

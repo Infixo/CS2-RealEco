@@ -60,6 +60,7 @@ public class Plugin : BaseUnityPlugin
     public static ConfigEntry<bool> FeaturePrefabs;
     public static ConfigEntry<bool> FeatureConsumptionFix;
     public static ConfigEntry<bool> FeatureNewCompanies;
+    public static ConfigEntry<bool> FeatureCommercialDemand;
 
     private void Awake()
     {
@@ -74,6 +75,7 @@ public class Plugin : BaseUnityPlugin
         FeaturePrefabs = base.Config.Bind<bool>("Features", "FeaturePrefabs", true, "Enables new prefab params.");
         FeatureConsumptionFix = base.Config.Bind<bool>("Features", "FeatureConsumptionFix", true, "Enables Consumption Fix.");
         FeatureNewCompanies = base.Config.Bind<bool>("Features", "FeatureNewCompanies", false, "Enables commercial companies for immaterial resources.");
+        FeatureCommercialDemand = base.Config.Bind<bool>("Features", "FeatureCommercialDemand", false, "Enables modded commercial demand and dedicated UI.");
 
         Log($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
 

@@ -230,10 +230,15 @@ private struct UpdateCommercialDemandJob : IJob
                 uiData.Companies = m_Companies[resourceIndex2];
                 uiData.Workers = m_TotalCurrentWorkers[resourceIndex2];
                 uiData.SvcFactor = Mathf.RoundToInt(100f * num5);
+                uiData.SvcPercent = ( m_TotalMaximums[resourceIndex2] == 0 ? 0 : 100 * m_TotalAvailables[resourceIndex2] / m_TotalMaximums[resourceIndex2] );
                 uiData.CapFactor = Mathf.RoundToInt(100f * num6);
+                uiData.CapPercent = 100 * m_Productions[resourceIndex2] / math.max(100, m_Consumptions[resourceIndex2]);
+                uiData.CapPerCompany = ( m_Companies[resourceIndex2] == 0 ? 0 : m_Productions[resourceIndex2] / m_Companies[resourceIndex2] );
                 uiData.WrkFactor = Mathf.RoundToInt(100f * num4);
+                uiData.WrkPercent = 100 * (m_TotalCurrentWorkers[resourceIndex2] + 1) / (m_TotalMaxWorkers[resourceIndex2] + 1);
                 uiData.EduFactor = Mathf.RoundToInt(100f * num3);
                 uiData.TaxFactor = Mathf.RoundToInt(100f * num7);
+                /*
                 uiData.Details = new FixedString512Bytes(
                 //$"{iterator.resource} {m_ResourceDemands[resourceIndex2]}/{m_BuildingDemands[resourceIndex2]}: " +
                 $"svc {m_TotalAvailables[resourceIndex2]}/{m_TotalMaximums[resourceIndex2]} " +
@@ -243,6 +248,7 @@ private struct UpdateCommercialDemandJob : IJob
                 //$"edu {num3 * 100:F0} " +
                 //$"tax {num7 * 100:F0} " +
                 //$"free {m_FreeProperties[resourceIndex2]}");
+                */
                 /*
                 Plugin.Log($"{iterator.resource} {m_ResourceDemands[resourceIndex2]}/{m_BuildingDemands[resourceIndex2]}: " +
                         $"svc {num5 * 100:F0} ({m_TotalAvailables[resourceIndex2]}/{m_TotalMaximums[resourceIndex2]}) " +
@@ -405,7 +411,7 @@ private struct TypeHandle
         )
     {
         // Skip the patch and execute the original if the feaure is disabled
-        if (!Plugin.FeatureNewCompanies.Value)
+        if (!Plugin.FeatureCommercialDemand.Value)
             return true;
 
         // Patched code
