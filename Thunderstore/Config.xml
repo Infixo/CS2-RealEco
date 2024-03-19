@@ -21,7 +21,7 @@
 	<Component name="EconomyPrefab">
 		<Field name="m_CommercialDiscount" valueFloat="0.5" /> <!-- deafult: 0.5f -->
 		<!-- default: 0.85f, this change effectively increases Extractor production; 0.65f for 31%, 0.75f for 13%, 0.70 for 21% -->
-		<Field name="m_ExtractorCompanyExportMultiplier" valueFloat="0.70" />
+		<Field name="m_ExtractorCompanyExportMultiplier" valueFloat="0.75" />
 		<!-- default 0.0001f, commercial is 0.0010f, extractor is 64/10000 i.e. 0.0064f -->
 		<Field name="m_IndustrialProfitFactor" valueFloat="0.0008" />
 		<Field name="m_Wage0" valueInt="1330" /> <!-- 1200, 1550 -->
@@ -60,7 +60,7 @@
 		<Field name="m_Upkeep" valueFloat="330" /> <!-- 450 -->
 	</Component>
 	<Component name="ZoneProperties">
-		<Field name="m_SpaceMultiplier" valueFloat="2.0" /> <!-- 2.5 -->
+		<Field name="m_SpaceMultiplier" valueFloat="2.1" /> <!-- 2.5 -->
 	</Component>
 </Prefab>
 <Prefab name="NA Residential Mixed">
@@ -68,7 +68,7 @@
 		<Field name="m_Upkeep" valueFloat="330" /> <!-- 450 -->
 	</Component>
 	<Component name="ZoneProperties">
-		<Field name="m_SpaceMultiplier" valueFloat="2.0" /> <!-- 2.5 -->
+		<Field name="m_SpaceMultiplier" valueFloat="2.1" /> <!-- 2.5 -->
 	</Component>
 </Prefab>
 <Prefab name="EU Residential Medium">
@@ -397,7 +397,7 @@
   </Prefab>
   <Prefab name="Commercial_Restaurant"> <!-- ResourceFood (50) => ResourceMeals (60) -->
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="30" /> <!-- 420 -->
+      <Field name="profitability" valueInt="0" valueFloat="60" /> <!-- 420 -->
     </Component>
     <Component name="IndustrialProcess">
       <Field name="m_Output.m_Amount" valueInt="2"/> <!-- 1 Food -> 1 Meals -->
@@ -439,7 +439,7 @@
   <Prefab name="Commercial_Bar"> <!-- ResourceBeverages (45) -> ResourceEntertainment (80) -->
     <!-- LeisureProvider.m_Efficiency: 13 -->
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueFloat="10" /> <!-- 380 -->
+      <Field name="profitability" valueFloat="30" /> <!-- 380 -->
     </Component>
     <Component name="IndustrialProcess">
       <Field name="m_Output.m_Amount" valueInt="5"/> <!-- 1 Beverages -> 1 Entertainment -->
@@ -460,7 +460,7 @@
   </Prefab>
   <Prefab name="Commercial_ConvenienceFoodStore">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="20" />
+      <Field name="profitability" valueFloat="30" />
     </Component>
     <Component name="Workplace">
       <Field name="m_Complexity" valueInt="0" /> <!-- Simple => Manual -->
@@ -472,7 +472,7 @@
   </Prefab>
   <Prefab name="Commercial_DrugStore"> <!-- Complex -->
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueFloat="15" /> <!-- 600 -->
+      <Field name="profitability" valueFloat="20" /> <!-- 600 -->
     </Component>
 	<!-- Commercial_DrugStore.ServiceCompany.m_MaxWorkersPerCell: 0.5 -->
     <Component name="ServiceCompany">
@@ -494,7 +494,7 @@
   </Prefab>
   <Prefab name="Commercial_LiquorStore">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="15" />
+      <Field name="profitability" valueInt="0" valueFloat="20" />
     </Component>
 	<!-- Commercial_LiquorStore.ServiceCompany.m_MaxWorkersPerCell: 0.38 -->
     <Component name="ServiceCompany">
@@ -509,7 +509,7 @@
   <Prefab name="Commercial_RecreactionStore"> <!-- None => ResourceRecreation (140) -->
     <!-- LeisureProvider.m_Efficiency: 20 -->
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="10" /> <!-- 360 -->
+      <Field name="profitability" valueFloat="40" /> <!-- 360 -->
     </Component>
     <!-- ServiceCompany.m_ServiceConsuming: 10 -->
     <Component name="ServiceCompany">
@@ -691,13 +691,13 @@
   </Prefab>
   <Prefab name="Industrial_SawMill">
     <Component name="CompanyPrefab">
-      <Field name="profitability" valueInt="0" valueFloat="35" />
+      <Field name="profitability" valueInt="0" valueFloat="45" />
     </Component>
     <Component name="Workplace">
       <Field name="m_Complexity" valueInt="1" /> <!-- Manual => Simple -->
     </Component>
     <Component name="IndustrialProcess">
-      <Field name="m_MaxWorkersPerCell" valueFloat="0.4" /> <!-- 0.32 Simple -->
+      <Field name="m_MaxWorkersPerCell" valueFloat="0.38" /> <!-- 0.32 Simple -->
     </Component>
   </Prefab>
   <Prefab name="Industrial_FurnitureFactory">

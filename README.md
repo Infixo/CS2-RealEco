@@ -127,6 +127,9 @@ Tuning and balancing is an iterative process. The feedback about how companies a
 - (v0.4) The resource labels in the Statistics window are not displayed correctly for new companies.
 
 ### Changelog
+- v0.5.1 (2024-03-19)
+  - Fixed issue with Mixed Zones classified as High Density.
+  - Slightly boosts profitability of Saw Mill and Leisure Commercial companies.
 - v0.5.0 (2024-03-14)
   - Modded commercial demand.
   - Commercial demand UI window.
