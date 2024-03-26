@@ -114,7 +114,7 @@ Tuning and balancing is an iterative process. The feedback about how companies a
 ## Technical
 
 ### Requirements and Compatibility
-- Cities Skylines II version 1.0.19f1 or later; check GitHub or Discord if the mod is compatible with the latest game version.
+- Cities Skylines II version 1.1.0f1 or later; check GitHub or Discord if the mod is compatible with the latest game version.
 - BepInEx 5.
 - The mod will modify the savefile if new companies feature is enabled.
 - Modified systems: HouseholdBehaviorSystem (when consumption fix is enabled), ResourceBuyerSystem (when new companies feature is enabled), CommercialDemandSystem (if modded commercial demand is enabled).
@@ -127,6 +127,8 @@ Tuning and balancing is an iterative process. The feedback about how companies a
 - (v0.4) The resource labels in the Statistics window are not displayed correctly for new companies.
 
 ### Changelog
+- v0.6.0 (2024-03-21)
+  - Mod updated for v1.1 of the game.
 - v0.5.1 (2024-03-19)
   - Fixed issue with Mixed Zones classified as High Density.
   - Slightly boosts profitability of Saw Mill and Leisure Commercial companies.
