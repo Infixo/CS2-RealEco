@@ -10,6 +10,9 @@ using BepInEx.Logging;
 using BepInEx.Configuration;
 using HarmonyLib;
 using HookUILib.Core;
+using Game.UI.InGame;
+using Unity.Entities;
+using Game;
 
 #if BEPINEX_V6
     using BepInEx.Unity.Mono;
@@ -17,6 +20,7 @@ using HookUILib.Core;
 
 namespace RealEco;
 
+[HarmonyPatch]
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
@@ -62,12 +66,17 @@ public class Plugin : BaseUnityPlugin
     public static ConfigEntry<bool> FeatureNewCompanies;
     public static ConfigEntry<bool> FeatureCommercialDemand;
 
+    internal static Mod Mod;
+
     private void Awake()
     {
+        // Create mod
+        Mod = new Mod();
+
         Logger = base.Logger;
 
         // CO logging standard as described here https://cs2.paradoxwikis.com/Logging
-        s_Log = LogManager.GetLogger(MyPluginInfo.PLUGIN_NAME);
+        s_Log = Mod.log; //  LogManager.GetLogger(MyPluginInfo.PLUGIN_NAME);
 
         // Mod settings
         Logging = base.Config.Bind<bool>("Debug", "Logging", false, "Enables detailed logging.");
@@ -91,8 +100,19 @@ public class Plugin : BaseUnityPlugin
         // READ CONFIG DATA
         RealEco.Config.ConfigToolXml.LoadConfig();
     }
-}
 
+    // Simulate Mod.OnLoad
+    [HarmonyPatch(typeof(Game.Modding.ModManager), "InitializeMods")]
+    [HarmonyPostfix]
+    public static void InitializeMods(UpdateSystem updateSystem)
+    {
+        if (Mod != null)
+            Mod.OnLoad(updateSystem);
+        else
+            Log($"Mod not created");
+    }
+
+}
 
 public class RealEco_Commercial : UIExtension
 {

@@ -12,7 +12,7 @@
 		<AssemblyName>RealEco</AssemblyName>
 		<RootNamespace>RealEco</RootNamespace>
 		<Description>Economy Rebalance</Description>
-		<Version>0.5.0</Version>
+		<Version>0.6.1</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>latest</LangVersion>
 		<RestoreAdditionalProjectSources>
@@ -56,11 +56,14 @@
 		Make sure you have a private `libcs2` repository with the appropriate DLLs for this to work.
 		DO NOT make the proprietary DLLs for the game public, as the files are owned by PDX/CO. 
 	-->
+	<!--
 	<ItemGroup>
 		<Reference Include="libcs2/Colossal.*.dll" Private="False" />
 		<Reference Include="libcs2/Game.dll" Private="False" />
 		<Reference Include="libcs2/Unity.*.dll" Private="False" />
 	</ItemGroup>
+	-->
+	
 	<ItemGroup>
 	  <Compile Remove="Systems\CitizenBehaviorSystem.cs" />
 	</ItemGroup>
