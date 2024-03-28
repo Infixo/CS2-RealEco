@@ -83,7 +83,7 @@ Tuning and balancing is an iterative process. The feedback about how companies a
  - The mod creates 4 new commercial companies that sell immaterial resources. Think of them as Point of Sales for Offices that are Headquarters.
  - The mod also fixes an issue where commercial companies pay for resources but don't get them. This is the reason why they end up in a negative cash balance very often.
  - Please note. This feature will modify your save file. There will be 4 new prefabs. After disabling the mod or the feature, there will be warnings in the log. You may clean your savefile just by manually removing all new companies from the city.
- - Known issue. Atm the texts in the Statistics are not displayed correctly.
+ - (v0.6) Labels in Statistics window are displayed in the language active during the game startup.
 
 ![NewStores](https://raw.githubusercontent.com/infixo/cs2-realeco/master/docs/newstores.png)
 
@@ -114,8 +114,9 @@ Tuning and balancing is an iterative process. The feedback about how companies a
 ## Technical
 
 ### Requirements and Compatibility
-- Cities Skylines II version 1.0.19f1 or later; check GitHub or Discord if the mod is compatible with the latest game version.
+- Cities Skylines II version 1.1.0f1 or later; check GitHub or Discord if the mod is compatible with the latest game version.
 - BepInEx 5.
+- HookUI v1.1 or later.
 - The mod will modify the savefile if new companies feature is enabled.
 - Modified systems: HouseholdBehaviorSystem (when consumption fix is enabled), ResourceBuyerSystem (when new companies feature is enabled), CommercialDemandSystem (if modded commercial demand is enabled).
 
@@ -127,6 +128,10 @@ Tuning and balancing is an iterative process. The feedback about how companies a
 - (v0.4) The resource labels in the Statistics window are not displayed correctly for new companies.
 
 ### Changelog
+- v0.6.1 (2024-03-26)
+  - Labels in Statistics window are now displayed in the language active during the game startup.
+- v0.6.0 (2024-03-21)
+  - Mod updated for v1.1 of the game.
 - v0.5.1 (2024-03-19)
   - Fixed issue with Mixed Zones classified as High Density.
   - Slightly boosts profitability of Saw Mill and Leisure Commercial companies.
