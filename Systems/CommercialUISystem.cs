@@ -25,7 +25,7 @@ using Game.Simulation; // TODO: use UIUpdateState and Advance() eventully...
 namespace RealEco.Systems;
 
 [CompilerGenerated]
-public class CommercialUISystem : UISystemBase
+public partial class CommercialUISystem : UISystemBase
 {
     public struct DemandData
     {
@@ -112,7 +112,7 @@ public class CommercialUISystem : UISystemBase
                 WriteData(binder, m_Results[i]);
             binder.ArrayEnd();
         }));
-        Plugin.Log("CommercialUISystem created.");
+        Mod.log.Info("CommercialUISystem created.");
     }
 
     /*

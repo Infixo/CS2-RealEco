@@ -24,7 +24,7 @@ public class ConfigurationXml
 
     public bool TryGetPrefab(string name, out PrefabXml prefab)
     {
-        //Plugin.Log($"TryGetPrefab: {name}");
+        //Mod.Log($"TryGetPrefab: {name}");
         prefab = default(PrefabXml);
         foreach (var item in Prefabs)
             if (item.Name == name)
@@ -51,14 +51,14 @@ public class PrefabXml
 
     public void DumpToLog()
     {
-        Plugin.Log(ToString());
+        Mod.Log(ToString());
         foreach (ComponentXml component in Components)
             component.DumpToLog();
     }
 
     internal bool TryGetComponent(string name, out ComponentXml component)
     {
-        //Plugin.Log($"TryGetComponent: {name}");
+        //Mod.Log($"TryGetComponent: {name}");
         component = default(ComponentXml);
         foreach (var item in Components)
             if (item.Name == name)
@@ -86,14 +86,14 @@ public class ComponentXml
 
     public void DumpToLog()
     {
-        Plugin.Log(ToString());
+        Mod.Log(ToString());
         foreach (FieldXml field in Fields)
-            Plugin.Log(field.ToString());
+            Mod.Log(field.ToString());
     }
 
     internal bool TryGetField(string name, out FieldXml field)
     {
-        //Plugin.Log($"TryGetField: {name}");
+        //Mod.Log($"TryGetField: {name}");
         field = default(FieldXml);
         foreach (var item in Fields)
             if (item.Name == name)
@@ -186,29 +186,29 @@ public static class ConfigToolXml
                 _config = (ConfigurationXml)serializer.Deserialize(fs);
             }
             // Verify and output deserialized data
-            //Plugin.Log($"NULL: {Settings is null}");
+            //Mod.Log($"NULL: {Settings is null}");
             
             if (Config.ValidPrefabTypes.Length == 0)
             {
-                Plugin.Log("Warning! No valid prefab types are defined.");
+                Mod.Log("Warning! No valid prefab types are defined.");
             }
             else
             {
-                Plugin.LogIf($"VALID PREFAB TYPES {Config.ValidPrefabTypes.Length}");
+                Mod.LogIf($"VALID PREFAB TYPES {Config.ValidPrefabTypes.Length}");
                 foreach (string name in Config.ValidPrefabTypes)
-                    Plugin.LogIf(name);
+                    Mod.LogIf(name);
             }
             
-            if (Plugin.Logging.Value)
+            if (Mod.setting.Logging)
             {
-                Plugin.Log("PREFAB CONFIG DATA");
+                Mod.Log("PREFAB CONFIG DATA");
                 foreach (PrefabXml prefab in Config?.Prefabs)
                     prefab.DumpToLog();
             }
         }
         catch (Exception e)
         {
-            Plugin.Log($"ERROR: Cannot load settings, exception {e.Message}");
+            Mod.Log($"ERROR: Cannot load settings, exception {e.Message}");
             _config = null;
         }
     }
@@ -222,11 +222,11 @@ public static class ConfigToolXml
             {
                 serializer.Serialize(fs, Config);
             }
-            Plugin.Log($"Configuration saved to file {_dumpFile}.");
+            Mod.Log($"Configuration saved to file {_dumpFile}.");
         }
         catch (Exception e)
         {
-            Plugin.Log($"ERROR: Cannot save configuration, exception {e.Message}.");
+            Mod.Log($"ERROR: Cannot save configuration, exception {e.Message}.");
         }
     }
 }

@@ -411,7 +411,7 @@ private struct TypeHandle
         )
     {
         // Skip the patch and execute the original if the feaure is disabled
-        if (!Plugin.FeatureCommercialDemand.Value)
+        if (!Mod.setting.FeatureCommercialDemand)
             return true;
 
         // Patched code

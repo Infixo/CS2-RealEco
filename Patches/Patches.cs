@@ -24,12 +24,12 @@ class Patches
     [HarmonyPostfix]
     public static void Initialize_Postfix(UpdateSystem updateSystem)
     {
-        if (Plugin.FeatureNewCompanies.Value)
+        if (Mod.setting.FeatureNewCompanies)
             updateSystem.UpdateAt<RealEco.Systems.ResourceBuyerSystem>(SystemUpdatePhase.GameSimulation);
-        if (Plugin.FeatureConsumptionFix.Value)
+        if (Mod.setting.FeatureConsumptionFix)
             updateSystem.UpdateAt<RealEco.Systems.HouseholdBehaviorSystem>(SystemUpdatePhase.GameSimulation);
         //updateSystem.UpdateAt<RealEco.Systems.CitizenBehaviorSystem>(SystemUpdatePhase.GameSimulation); // debug only
-        if (Plugin.FeatureCommercialDemand.Value)
+        if (Mod.setting.FeatureCommercialDemand)
             updateSystem.UpdateAt<RealEco.Systems.CommercialUISystem>(SystemUpdatePhase.UIUpdate);
     }
 
@@ -42,7 +42,7 @@ class Patches
     static bool HouseholdBehaviorSystem_OnUpdate()
     {
         // Skip the patch and execute the original if the feaure is disabled
-        if (!Plugin.FeatureConsumptionFix.Value)
+        if (!Mod.setting.FeatureConsumptionFix)
             return true;
 
         return false; // don't execute the original system
@@ -63,7 +63,7 @@ class Patches
     static bool ResourceBuyerSystem_OnUpdate()
     {
         // Skip the patch and execute the original if the feaure is disabled
-        if (!Plugin.FeatureNewCompanies.Value)
+        if (!Mod.setting.FeatureNewCompanies)
             return true;
 
         return false; // don't execute the original system

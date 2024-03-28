@@ -31,7 +31,7 @@ using Game.Simulation;
 namespace RealEco.Systems;
 
 [CompilerGenerated]
-public class ResourceBuyerSystem : GameSystemBase
+public partial class ResourceBuyerSystem : GameSystemBase
 {
     [Flags]
     private enum SaleFlags : byte
@@ -1013,7 +1013,7 @@ public class ResourceBuyerSystem : GameSystemBase
         RequireForUpdate(m_BuyerQuery);
         RequireForUpdate(m_EconomyParameterQuery);
         RequireForUpdate(m_PopulationQuery);
-		Plugin.Log("Modded ResourceBuyerSystem created.");
+		Mod.log.Info("Modded ResourceBuyerSystem created.");
     }
 
     [Preserve]

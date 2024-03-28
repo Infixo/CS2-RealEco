@@ -64,7 +64,7 @@ public static class PrefabStore_Patches
         workplace.m_Complexity = complexity;
         workplace.m_EveningShiftProbability = 0.2f;
         workplace.m_NightShiftProbability = 0f;
-        Plugin.Log($"New company prefab: {prefabName} {resource} wrk {complexity} wpc {maxWorkersPerCell} prof {profitability}");
+        Mod.Log($"New company prefab: {prefabName} {resource} wrk {complexity} wpc {maxWorkersPerCell} prof {profitability}");
         // done
         return prefab;
     }
@@ -76,7 +76,7 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool AssetLibrary_Load(AssetLibrary __instance, int ___m_AssetCount)
     {
-        Plugin.Log($"AssetLibrary.Load: {__instance.name}, {__instance.m_Collections.Count} collections, {___m_AssetCount} assets");
+        Mod.Log($"AssetLibrary.Load: {__instance.name}, {__instance.m_Collections.Count} collections, {___m_AssetCount} assets");
         return true;
     }
     */
@@ -87,10 +87,10 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool AssetCollection_AddPrefabsTo_Prefix(AssetCollection __instance)
     {
-        //Plugin.Log($"AssetCollection.AddPrefabsTo: {__instance.name} {__instance.isActive}, {__instance.m_Collections.Count} collections, {__instance.m_Prefabs.Count} prefabs");
-        if (Plugin.FeatureNewCompanies.Value && !CompaniesCreated && __instance.name == "CompaniesCollection")
+        //Mod.Log($"AssetCollection.AddPrefabsTo: {__instance.name} {__instance.isActive}, {__instance.m_Collections.Count} collections, {__instance.m_Prefabs.Count} prefabs");
+        if (Mod.setting.FeatureNewCompanies && !CompaniesCreated && __instance.name == "CompaniesCollection")
         {
-            //Plugin.Log($"Adding new CompanyPrefabs");
+            //Mod.Log($"Adding new CompanyPrefabs");
             CompanyPrefabs[0] = CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.45f, 350f); // price 85
             CompanyPrefabs[1] = CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Complex, 0.45f, 450f); // price 60
             CompanyPrefabs[2] = CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.50f, 400f); // price 70
@@ -107,7 +107,7 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool ZonePrefab_Prefix(PrefabBase prefab)
     {
-        if (Plugin.FeatureNewCompanies.Value && prefab.GetType().Name == "ZonePrefab" && prefab.TryGet<ZoneProperties>(out ZoneProperties comp) && comp.m_AllowedSold.Length > 0)
+        if (Mod.setting.FeatureNewCompanies && prefab.GetType().Name == "ZonePrefab" && prefab.TryGet<ZoneProperties>(out ZoneProperties comp) && comp.m_AllowedSold.Length > 0)
         {
             if (Array.IndexOf(comp.m_AllowedSold, ResourceInEditor.Software) < 0)
             {
@@ -120,7 +120,7 @@ public static class PrefabStore_Patches
                 comp.m_AllowedSold = tempList.ToArray(); // Convert the list back to an array
 
                 Game.Economy.Resource res = Game.Economy.EconomyUtils.GetResources(comp.m_AllowedSold);
-                Plugin.Log($"{prefab.name}.{comp.name}.m_AllowedSold: {Game.Economy.EconomyUtils.GetNames(res)}");
+                Mod.Log($"{prefab.name}.{comp.name}.m_AllowedSold: {Game.Economy.EconomyUtils.GetNames(res)}");
             }
         }
         return true;
@@ -134,25 +134,25 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool ResourcePrefab_Prefix(PrefabBase prefab)
     {
-        if (Plugin.FeatureNewCompanies.Value && prefab.GetType().Name == "ResourcePrefab" && prefab.TryGet<TaxableResource>(out TaxableResource comp))
+        if (Mod.setting.FeatureNewCompanies && prefab.GetType().Name == "ResourcePrefab" && prefab.TryGet<TaxableResource>(out TaxableResource comp))
         {
             bool isPatched = false;
             if (comp.m_TaxAreas.Length == 1 && comp.m_TaxAreas[0] == TaxAreaType.Office)
             {
-                comp.m_TaxAreas = [TaxAreaType.Office, TaxAreaType.Commercial];
+                comp.m_TaxAreas = new TaxAreaType[2] { TaxAreaType.Office, TaxAreaType.Commercial };
                 isPatched = true;
                 // store the prefab for later use
                 ResourcePrefab resPrefab = prefab as ResourcePrefab;
                 if (!ResourcePrefabs.ContainsKey(resPrefab.m_Resource))
                 {
                     ResourcePrefabs.Add(resPrefab.m_Resource, resPrefab);
-                    //Plugin.Log($"...storing {prefab.name} for later use (total {ResourcePrefabs.Count})");
+                    //Mod.Log($"...storing {prefab.name} for later use (total {ResourcePrefabs.Count})");
                 }
             }
             // 240312 Fix for non-taxable Gas Stations ResourcePetrochemicals.TaxableResource.m_TaxAreas: Industrial |
             if (prefab.name == "ResourcePetrochemicals")
             {
-                comp.m_TaxAreas = [TaxAreaType.Commercial, TaxAreaType.Industrial];
+                comp.m_TaxAreas = new TaxAreaType[2] { TaxAreaType.Commercial, TaxAreaType.Industrial };
                 isPatched = true;
             }
             if (isPatched)
@@ -163,7 +163,7 @@ public static class PrefabStore_Patches
                     text += comp.m_TaxAreas[i] + "|";
                 if (comp.m_TaxAreas.Length == 0)
                     text = "None";
-                Plugin.Log($"{prefab.name}.{comp.name}.m_TaxAreas: {text}");
+                Mod.Log($"{prefab.name}.{comp.name}.m_TaxAreas: {text}");
             }
         }
         return true;
@@ -184,12 +184,12 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool ResourceStatistic_Prefix(PrefabBase prefab)
     {
-        if (Plugin.FeatureNewCompanies.Value && prefab.GetType() == typeof(ResourceStatistic) && ResourcePrefabs.Count == 4)
+        if (Mod.setting.FeatureNewCompanies && prefab.GetType() == typeof(ResourceStatistic) && ResourcePrefabs.Count == 4)
         {
             ResourceStatistic stat = prefab as ResourceStatistic;
             if (StatisticsTypesToPatch.ContainsKey(stat.m_StatisticsType) && StatisticsTypesToPatch[stat.m_StatisticsType])
             {
-                Plugin.Log($"{prefab.name}.{stat.GetType().Name}.m_StatisticsType: {stat.m_StatisticsType}");
+                Mod.Log($"{prefab.name}.{stat.GetType().Name}.m_StatisticsType: {stat.m_StatisticsType}");
                 // add new resources
                 List<ResourcePrefab> tempList = new List<ResourcePrefab>(stat.m_Resources); // Convert the array to a list
                 // Add the new resources to the list
@@ -205,7 +205,7 @@ public static class PrefabStore_Patches
                     text += stat.m_Resources[i].m_Resource.ToString() + "|";
                 if (stat.m_Resources.Length == 0)
                     text = "None";
-                Plugin.Log($"{prefab.name}.{stat.GetType().Name}.m_Resources: {text}");
+                Mod.Log($"{prefab.name}.{stat.GetType().Name}.m_Resources: {text}");
             }
         }
         return true;
@@ -253,12 +253,12 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool BrandPrefab_Prefix(PrefabBase prefab)
     {
-        if (Plugin.FeatureNewCompanies.Value && prefab.GetType() == typeof(BrandPrefab) && CompaniesCreated)
+        if (Mod.setting.FeatureNewCompanies && prefab.GetType() == typeof(BrandPrefab) && CompaniesCreated)
         {
             BrandPrefab brand = prefab as BrandPrefab;
             if (BrandsToPatch.ContainsKey(brand.name) && BrandsToPatch[brand.name] != -1)
             {
-                //Plugin.Log($"{prefab.name}.{brand.GetType().Name}: patching");
+                //Mod.Log($"{prefab.name}.{brand.GetType().Name}: patching");
             
                 // add new company type to the brand
                 List<CompanyPrefab> tempList = new List<CompanyPrefab>(brand.m_Companies); // Convert the array to a list
@@ -272,7 +272,7 @@ public static class PrefabStore_Patches
                     text += brand.m_Companies[i].name + "|";
                 if (brand.m_Companies.Length == 0)
                     text = "None";
-                Plugin.Log($"{prefab.name}.{brand.GetType().Name}: {text}");
+                Mod.Log($"{prefab.name}.{brand.GetType().Name}: {text}");
             }
         }
         return true;
@@ -286,7 +286,7 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool LoadPrefabs_Postfix()
     {
-        Plugin.Log("*** Game.SceneFlow.GameManager.LoadPrefabs");
+        Mod.Log("*** Game.SceneFlow.GameManager.LoadPrefabs");
         return true;
     }
     */
@@ -297,7 +297,7 @@ public static class PrefabStore_Patches
     [HarmonyPrefix]
     public static bool OnUpdate_Postfix()
     {
-        Plugin.Log("*** PrefabInitializeSystem.OnUpdate ***");
+        Mod.Log("*** PrefabInitializeSystem.OnUpdate ***");
         return true;
     }
     */

@@ -26,7 +26,7 @@ using Game.Simulation;
 namespace RealEco.Systems;
 
 [CompilerGenerated]
-public class CitizenBehaviorSystem : GameSystemBase
+public partial class CitizenBehaviorSystem : GameSystemBase
 {
     [BurstCompile]
     private struct CitizenReserveHouseholdCarJob : IJob

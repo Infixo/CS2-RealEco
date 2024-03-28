@@ -141,11 +141,11 @@ public static class PrefabSystem_AddPrefab_Patches
         }
         */
 
-        if (Plugin.FeaturePrefabs.Value && prefab.GetType().Name == "ServiceFeeParameterPrefab")
+        if (Mod.setting.FeaturePrefabs && prefab.GetType().Name == "ServiceFeeParameterPrefab")
         {
             ServiceFeeParameterPrefab p = (ServiceFeeParameterPrefab)prefab;
             p.m_GarbageFee.m_Default = 0.4f;
-            Plugin.Log($"Modded {prefab.name}: GarbageFee {p.m_GarbageFee.m_Default}");
+            Mod.Log($"Modded {prefab.name}: GarbageFee {p.m_GarbageFee.m_Default}");
         }
 
         return true;
@@ -356,7 +356,7 @@ public static class PrefabSystem_AddPrefab_Patches
     [HarmonyPrefix]
     public static bool Companies_Prefix(PrefabBase prefab)
     {
-        if (Plugin.FeaturePrefabs.Value && prefab.GetType().Name == "CompanyPrefab")
+        if (Mod.setting.FeaturePrefabs && prefab.GetType().Name == "CompanyPrefab")
         {
             /* These params are in xml now
            
@@ -399,7 +399,7 @@ public static class PrefabSystem_AddPrefab_Patches
             {
                 ProcessingCompany pc = prefab.GetComponent<ProcessingCompany>();
                 pc.process.m_Input1.m_Amount = 1;
-                Plugin.Log($"Modded {prefab.name}.ProcessingCompany: out {pc.process.m_Output.m_Resource} {pc.process.m_Output.m_Amount} in1 {pc.process.m_Input1.m_Resource} {pc.process.m_Input1.m_Amount}");
+                Mod.Log($"Modded {prefab.name}.ProcessingCompany: out {pc.process.m_Output.m_Resource} {pc.process.m_Output.m_Amount} in1 {pc.process.m_Input1.m_Resource} {pc.process.m_Input1.m_Amount}");
             }
             
         }

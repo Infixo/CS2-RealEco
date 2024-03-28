@@ -25,7 +25,7 @@ using Game.Simulation;
 namespace RealEco.Systems;
 
 [CompilerGenerated]
-public class HouseholdBehaviorSystem : GameSystemBase
+public partial class HouseholdBehaviorSystem : GameSystemBase
 {
     private struct ProcessConsumptionJob : IJob
     {
@@ -705,7 +705,7 @@ public class HouseholdBehaviorSystem : GameSystemBase
         m_ConsumptionQueue = new NativeQueue<ResourceStack>(Allocator.Persistent);
         RequireForUpdate(m_HouseholdGroup);
         RequireForUpdate(m_EconomyParameterGroup);
-        Plugin.Log("Modded HouseholdBehaviorSystem created.");
+        Mod.log.Info("Modded HouseholdBehaviorSystem created.");
     }
 
     [Preserve]
