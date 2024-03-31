@@ -7,6 +7,7 @@ using Game.Economy;
 using Game.Prefabs;
 using Game.Simulation;
 using HarmonyLib;
+using static Unity.Burst.Intrinsics.X86.Avx;
 
 namespace RealEco;
 
@@ -173,7 +174,7 @@ public static class PrefabStore
     // Step 1c:  prefabSystem.AddPrefab(prefab, base.name) -> usual patched method
     //[HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
     //[HarmonyPrefix]
-    public static bool ResourcePrefab_Prefix(PrefabBase prefab)
+    public static bool ResourcePrefab_Prefix(PrefabBase prefab, Entity entity)
     {
         if (Mod.setting.FeatureNewCompanies && prefab.GetType().Name == "ResourcePrefab" && prefab.TryGet<TaxableResource>(out TaxableResource comp))
         {
@@ -205,11 +206,26 @@ public static class PrefabStore
                 if (comp.m_TaxAreas.Length == 0)
                     text = "None";
                 Mod.Log($"{prefab.name}.{comp.name}.m_TaxAreas: {text}");
+
+                // patch Entity
+                comp.Initialize(m_EntityManager, entity);
+
+                // debug check
+                if (m_PrefabSystem.TryGetComponentData<TaxableResourceData>(prefab, out TaxableResourceData data))
+                    Mod.LogIf($"{prefab.name}.TaxableResourceData.m_TaxAreas: {data.m_TaxAreas}");
             }
         }
         return true;
     }
 
+    static string[] ResourcesToPatch = new string[] { "ResourceSoftware", "ResourceTelecom", "ResourceFinancial", "ResourceMedia", "ResourcePetrochemicals" };
+
+    static void PatchResources()
+    {
+        foreach (string prefabName in ResourcesToPatch)
+            if (TryGetPrefabAndEntity(nameof(ResourcePrefab), prefabName, out PrefabBase prefab, out Entity entity))
+                _ = ResourcePrefab_Prefix(prefab, entity);
+    }
 
     static Dictionary<Game.City.StatisticType, bool> StatisticsTypesToPatch = new()
     {
@@ -223,7 +239,7 @@ public static class PrefabStore
     // Step 1c:  prefabSystem.AddPrefab(prefab, base.name) -> usual patched method
     //[HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
     //[HarmonyPrefix]
-    public static bool ResourceStatistic_Prefix(PrefabBase prefab)
+    public static bool ResourceStatistic_Prefix(PrefabBase prefab, Entity entity)
     {
         if (Mod.setting.FeatureNewCompanies && prefab.GetType() == typeof(ResourceStatistic) && ResourcePrefabs.Count == 4)
         {
@@ -247,9 +263,27 @@ public static class PrefabStore
                 if (stat.m_Resources.Length == 0)
                     text = "None";
                 Mod.Log($"{prefab.name}.{stat.GetType().Name}.m_Resources: {text}");
+
+                // patch Entity
+                m_EntityManager.GetBuffer<StatisticParameterData>(entity).Clear(); // prevents duplicated entries
+                stat.LateInitialize(m_EntityManager, entity);
+
+                // debug check
+                if (Mod.setting.Logging && m_PrefabSystem.TryGetBuffer<StatisticParameterData>(prefab, true, out DynamicBuffer<StatisticParameterData> data))
+                    for(int i = 0; i < data.Length; i++)
+                        Mod.Log($"{prefab.name}.StatisticParameterData[{i}]: {data[i].m_Value}");
             }
         }
         return true;
+    }
+
+    static string[] StatisticsToPatch = new string[] { "ServiceTaxableIncome", "ServiceCount", "ServiceWealth", "ServiceWorkers", "ServiceMaxWorkers" };
+
+    static void PatchStatistics()
+    {
+        foreach (string prefabName in StatisticsToPatch)
+            if (TryGetPrefabAndEntity(nameof(ResourceStatistic), prefabName, out PrefabBase prefab, out Entity entity))
+                _ = ResourceStatistic_Prefix(prefab, entity);
     }
 
 
@@ -352,9 +386,9 @@ public static class PrefabStore
 
         PatchZones();
 
-        //_ = ResourcePrefab_Prefix(null); // patch resources
+        PatchResources();
 
-        //_ = ResourceStatistic_Prefix(null); // patch statistics
+        PatchStatistics();
 
         GameManager.instance.localizationManager.AddSource("en-US", new StatsLocaleEN()); // create strings for statistics window
     }
