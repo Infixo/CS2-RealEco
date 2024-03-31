@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Entities;
 using Game.Economy;
 using Game.Prefabs;
 using Game.Simulation;
@@ -9,8 +10,11 @@ using HarmonyLib;
 namespace RealEco;
 
 [HarmonyPatch]
-public static class PrefabStore_Patches
+public static class PrefabStore
 {
+    private static PrefabSystem m_PrefabSystem;
+    private static EntityManager m_EntityManager;
+
     static bool CompaniesCreated = false;
     static CompanyPrefab[] CompanyPrefabs = new CompanyPrefab[4];
 
@@ -83,28 +87,28 @@ public static class PrefabStore_Patches
 
     // Step 1b: AssetLibary -> AssetCollection, mThis is called 1035 times
     // Loading: foreach (PrefabBase prefab in m_Prefabs) calls ->  prefabSystem.AddPrefab(prefab, base.name);
-    [HarmonyPatch(typeof(Game.Prefabs.AssetCollection), "AddPrefabsTo")]
-    [HarmonyPrefix]
+    //[HarmonyPatch(typeof(Game.Prefabs.AssetCollection), "AddPrefabsTo")]
+    //[HarmonyPrefix]
     public static bool AssetCollection_AddPrefabsTo_Prefix(AssetCollection __instance)
     {
         //Mod.Log($"AssetCollection.AddPrefabsTo: {__instance.name} {__instance.isActive}, {__instance.m_Collections.Count} collections, {__instance.m_Prefabs.Count} prefabs");
-        if (Mod.setting.FeatureNewCompanies && !CompaniesCreated && __instance.name == "CompaniesCollection")
-        {
+        //if (Mod.setting.FeatureNewCompanies && !CompaniesCreated && __instance.name == "CompaniesCollection")
+        //{
             //Mod.Log($"Adding new CompanyPrefabs");
             CompanyPrefabs[0] = CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.45f, 350f); // price 85
             CompanyPrefabs[1] = CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Complex, 0.45f, 450f); // price 60
             CompanyPrefabs[2] = CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.50f, 400f); // price 70
             CompanyPrefabs[3] = CreateNewCompanyPrefab("Commercial_MediaStore", ResourceInEditor.Media, WorkplaceComplexity.Complex, 0.45f, 500f); // price 60
             for (int i = 0; i < CompanyPrefabs.Length; i++)
-                __instance.m_Prefabs.Add(CompanyPrefabs[i]);
+                m_PrefabSystem.AddPrefab(CompanyPrefabs[i], "CompaniesCollection");
             CompaniesCreated = true;
-        }
+        //}
         return true;
     }
 
     // Step 1c:  prefabSystem.AddPrefab(prefab, base.name) -> usual patched method
-    [HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
-    [HarmonyPrefix]
+    //[HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
+    //[HarmonyPrefix]
     public static bool ZonePrefab_Prefix(PrefabBase prefab)
     {
         if (Mod.setting.FeatureNewCompanies && prefab.GetType().Name == "ZonePrefab" && prefab.TryGet<ZoneProperties>(out ZoneProperties comp) && comp.m_AllowedSold.Length > 0)
@@ -130,8 +134,8 @@ public static class PrefabStore_Patches
     static Dictionary<Game.Economy.ResourceInEditor, ResourcePrefab> ResourcePrefabs = new();
 
     // Step 1c:  prefabSystem.AddPrefab(prefab, base.name) -> usual patched method
-    [HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
-    [HarmonyPrefix]
+    //[HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
+    //[HarmonyPrefix]
     public static bool ResourcePrefab_Prefix(PrefabBase prefab)
     {
         if (Mod.setting.FeatureNewCompanies && prefab.GetType().Name == "ResourcePrefab" && prefab.TryGet<TaxableResource>(out TaxableResource comp))
@@ -180,8 +184,8 @@ public static class PrefabStore_Patches
     };
 
     // Step 1c:  prefabSystem.AddPrefab(prefab, base.name) -> usual patched method
-    [HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
-    [HarmonyPrefix]
+    //[HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
+    //[HarmonyPrefix]
     public static bool ResourceStatistic_Prefix(PrefabBase prefab)
     {
         if (Mod.setting.FeatureNewCompanies && prefab.GetType() == typeof(ResourceStatistic) && ResourcePrefabs.Count == 4)
@@ -301,6 +305,13 @@ public static class PrefabStore_Patches
         return true;
     }
     */
+
+    public static void CreateNewCompanies()
+    {
+        m_PrefabSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabSystem>();
+        m_EntityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        _ = AssetCollection_AddPrefabsTo_Prefix(null); // create CompanyPrefabs
+    }
 }
 
 

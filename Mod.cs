@@ -53,8 +53,11 @@ public class Mod : IMod
 
         AssetDatabase.global.LoadSettings(nameof(RealEco), setting, new Setting(this));
 
+        // NEW COMPANIES
+        if (setting.FeatureNewCompanies) PrefabStore.CreateNewCompanies();
+
         // READ AND APPLY CONFIG
-        ConfigTool.ReadAndApply();
+        if (setting.FeaturePrefabs) ConfigTool.ReadAndApply();
 
         // Disable original systems
         /*
