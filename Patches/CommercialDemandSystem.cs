@@ -29,7 +29,7 @@ namespace RealEco;
 public class CommercialDemandSystem_Patches
 {
 #if !DEBUG
-[BurstCompile]
+    [BurstCompile]
 #endif
     private struct UpdateCommercialDemandJob : IJob
     {

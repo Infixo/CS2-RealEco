@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Unity.Entities;
 using Colossal.IO.AssetDatabase;
 using Colossal.Logging;
 using Game;
@@ -48,7 +49,6 @@ public class Mod : IMod
         setting = new Setting(this);
         setting.RegisterInOptionsUI();
         GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(setting));
-        GameManager.instance.localizationManager.AddSource("en-US", new StatsLocaleEN());
         setting._Hidden = false;
 
         AssetDatabase.global.LoadSettings(nameof(RealEco), setting, new Setting(this));
@@ -60,18 +60,12 @@ public class Mod : IMod
         if (setting.FeaturePrefabs) ConfigTool.ReadAndApply();
 
         // Disable original systems
-        /*
-        World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.AgingSystem>().Enabled = false;
-        World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.ApplyToSchoolSystem>().Enabled = false;
-        World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.BirthSystem>().Enabled = false;
-        World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.GraduationSystem>().Enabled = false;
-        World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.SchoolAISystem>().Enabled = false;
-        World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Citizens.CitizenInitializeSystem>().Enabled = false;
-        World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.DeathCheckSystem>().Enabled = Mod.setting.DeathChanceIncrease <= 0;
-        */
+        
+        World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.HouseholdBehaviorSystem>().Enabled = !Mod.setting.FeatureConsumptionFix;
+        World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.ResourceBuyerSystem>().Enabled = !Mod.setting.FeatureNewCompanies;
 
         // Create modded systems
-        //RealPopPatches.Initialize_Postfix(updateSystem); // reuse existing code
+        RealEco.Patches.Initialize_Postfix(updateSystem); // reuse existing code
 
         // Harmony
         var harmony = new Harmony(harmonyID);
@@ -88,8 +82,6 @@ public class Mod : IMod
         //patcher.PatchDemandParameters();
         //patcher.PatchHouseholds();
         //patcher.PatchInitialWealth();
-
-
     }
 
     public void OnDispose()

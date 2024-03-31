@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Entities;
+using Game.SceneFlow;
 using Game.Economy;
 using Game.Prefabs;
 using Game.Simulation;
@@ -15,11 +16,25 @@ public static class PrefabStore
     private static PrefabSystem m_PrefabSystem;
     private static EntityManager m_EntityManager;
 
+    public static bool TryGetPrefabAndEntity(string prefabType, string prefabName, out PrefabBase prefab, out Entity entity)
+    {
+        PrefabID prefabID = new PrefabID(prefabType, prefabName);
+        if (m_PrefabSystem.TryGetPrefab(prefabID, out PrefabBase prefabTmp) && m_PrefabSystem.TryGetEntity(prefabTmp, out Entity entityTmp))
+        {
+            prefab = prefabTmp;
+            entity = entityTmp;
+            return true;
+        }
+        prefab = null;
+        entity = default(Entity);
+        return false;
+    }
+
     static bool CompaniesCreated = false;
     static CompanyPrefab[] CompanyPrefabs = new CompanyPrefab[4];
 
 /*
- * [2024-02-27 13:47:58,574] [INFO]  CompanyPrefab.Commercial_ElectronicsStore.CompanyPrefab.zone: Commercial
+[2024-02-27 13:47:58,574] [INFO]  CompanyPrefab.Commercial_ElectronicsStore.CompanyPrefab.zone: Commercial
 [2024-02-27 13:47:58,575] [INFO]  CompanyPrefab.Commercial_ElectronicsStore.CompanyPrefab.profitability: 600
 [2024-02-27 13:47:58,575] [INFO]  CompanyPrefab.Commercial_ElectronicsStore.ServiceCompany.m_MaxService: 5000
 [2024-02-27 13:47:58,576] [INFO]  CompanyPrefab.Commercial_ElectronicsStore.ServiceCompany.m_MaxWorkersPerCell: 0.5
@@ -35,7 +50,6 @@ public static class PrefabStore
 [2024-02-27 13:47:58,581] [INFO]  CompanyPrefab.Commercial_ElectronicsStore.Workplace.m_Complexity: Complex
 [2024-02-27 13:47:58,582] [INFO]  CompanyPrefab.Commercial_ElectronicsStore.Workplace.m_EveningShiftProbability: 0.25
 [2024-02-27 13:47:58,582] [INFO]  CompanyPrefab.Commercial_ElectronicsStore.Workplace.m_NightShiftProbability: 0
-
  */
 
     private static CompanyPrefab CreateNewCompanyPrefab(string prefabName, ResourceInEditor resource, WorkplaceComplexity complexity, float maxWorkersPerCell, float profitability)
@@ -109,7 +123,7 @@ public static class PrefabStore
     // Step 1c:  prefabSystem.AddPrefab(prefab, base.name) -> usual patched method
     //[HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
     //[HarmonyPrefix]
-    public static bool ZonePrefab_Prefix(PrefabBase prefab)
+    public static bool ZonePrefab_Prefix(PrefabBase prefab, Entity entity)
     {
         if (Mod.setting.FeatureNewCompanies && prefab.GetType().Name == "ZonePrefab" && prefab.TryGet<ZoneProperties>(out ZoneProperties comp) && comp.m_AllowedSold.Length > 0)
         {
@@ -125,9 +139,32 @@ public static class PrefabStore
 
                 Game.Economy.Resource res = Game.Economy.EconomyUtils.GetResources(comp.m_AllowedSold);
                 Mod.Log($"{prefab.name}.{comp.name}.m_AllowedSold: {Game.Economy.EconomyUtils.GetNames(res)}");
+
+                // patch Entity
+                comp.Initialize(m_EntityManager, entity);
+
+                // debug check
+                if (m_PrefabSystem.TryGetComponentData<ZonePropertiesData>(prefab, out ZonePropertiesData data))
+                    Mod.LogIf($"{prefab.name}.ZonePropertiesData.m_AllowedSold: {EconomyUtils.GetNames(data.m_AllowedSold)}");
             }
         }
         return true;
+    }
+
+    static string[] ZonesToPatch = new string[] {
+        "EU Commercial High", "EU Commercial Low", "EU Residential Mixed",
+        "NA Commercial High", "NA Commercial Low", "NA Residential Mixed",
+    };
+
+    static void PatchZones()
+    {
+        foreach (string zoneName in ZonesToPatch)
+            if (TryGetPrefabAndEntity(nameof(ZonePrefab), zoneName, out PrefabBase prefab, out Entity entity))
+        //{
+            //PrefabID prefabID = new PrefabID(nameof(ZonePrefab), zoneName);
+            //if (m_PrefabSystem.TryGetPrefab(prefabID, out PrefabBase prefab) && m_PrefabSystem.TryGetEntity(prefab, out Entity entity))
+                _ = ZonePrefab_Prefix(prefab, entity);
+        //}
     }
 
     // Need to remember resources to patch later statistics and taxes
@@ -310,7 +347,16 @@ public static class PrefabStore
     {
         m_PrefabSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabSystem>();
         m_EntityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+
         _ = AssetCollection_AddPrefabsTo_Prefix(null); // create CompanyPrefabs
+
+        PatchZones();
+
+        //_ = ResourcePrefab_Prefix(null); // patch resources
+
+        //_ = ResourceStatistic_Prefix(null); // patch statistics
+
+        GameManager.instance.localizationManager.AddSource("en-US", new StatsLocaleEN()); // create strings for statistics window
     }
 }
 

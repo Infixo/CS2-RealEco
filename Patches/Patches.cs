@@ -13,15 +13,15 @@ using Game.Companies;
 using Game.Economy;
 using Game.Prefabs;
 using Game.Simulation;
-using HarmonyLib;
+//using HarmonyLib;
 
 namespace RealEco;
 
-[HarmonyPatch]
+//[HarmonyPatch]
 class Patches
 {
-    [HarmonyPatch(typeof(Game.Common.SystemOrder), "Initialize")]
-    [HarmonyPostfix]
+    //[HarmonyPatch(typeof(Game.Common.SystemOrder), "Initialize")]
+    //[HarmonyPostfix]
     public static void Initialize_Postfix(UpdateSystem updateSystem)
     {
         if (Mod.setting.FeatureNewCompanies)
@@ -37,6 +37,7 @@ class Patches
     // This patch only removes its role as a job scheduler. There are multiple utility functions that remain in use by
     // several other simulation systems.
 
+    /* 240331 not used
     [HarmonyPatch(typeof(Game.Simulation.HouseholdBehaviorSystem), "OnUpdate")]
     [HarmonyPrefix]
     static bool HouseholdBehaviorSystem_OnUpdate()
@@ -47,6 +48,7 @@ class Patches
 
         return false; // don't execute the original system
     }
+    */
 
     /* 
     // debug only
@@ -58,6 +60,7 @@ class Patches
     }
     */
 
+    /* 240331 not used
     [HarmonyPatch(typeof(Game.Simulation.ResourceBuyerSystem), "OnUpdate")]
     [HarmonyPrefix]
     static bool ResourceBuyerSystem_OnUpdate()
@@ -68,4 +71,5 @@ class Patches
 
         return false; // don't execute the original system
     }
+    */
 }
