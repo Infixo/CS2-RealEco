@@ -1,10 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Reflection;
 using Colossal.IO.AssetDatabase;
 using Colossal.Logging;
 using Game;
 using Game.Modding;
 using Game.SceneFlow;
 using HarmonyLib;
+using RealEco.Config;
 
 namespace RealEco;
 
@@ -12,8 +15,9 @@ public class Mod : IMod
 {
     public static readonly string harmonyID = "Infixo." + nameof(RealEco);
 
-    // mod's instance
+    // mod's instance and asset
     public static Mod instance { get; private set; }
+    public static ExecutableAsset modAsset { get; private set; }
 
     // logging
     public static ILog log = LogManager.GetLogger($"{nameof(RealEco)}").SetShowsErrorsInUI(false);
@@ -35,7 +39,11 @@ public class Mod : IMod
         log.Info(nameof(OnLoad));
 
         if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
-            log.Info($"Current mod asset at {asset.path}");
+        {
+            log.Info($"{asset.name} mod asset at {asset.path}");
+            modAsset = asset;
+            //DumpObjectData(asset);
+        }
 
         setting = new Setting(this);
         setting.RegisterInOptionsUI();
@@ -44,6 +52,9 @@ public class Mod : IMod
         setting._Hidden = false;
 
         AssetDatabase.global.LoadSettings(nameof(RealEco), setting, new Setting(this));
+
+        // READ AND APPLY CONFIG
+        ConfigTool.ReadAndApply();
 
         // Disable original systems
         /*
@@ -75,8 +86,7 @@ public class Mod : IMod
         //patcher.PatchHouseholds();
         //patcher.PatchInitialWealth();
 
-        // READ CONFIG DATA
-        RealEco.Config.ConfigToolXml.LoadConfig();
+
     }
 
     public void OnDispose()
@@ -90,5 +100,27 @@ public class Mod : IMod
         // Harmony
         var harmony = new Harmony(harmonyID);
         harmony.UnpatchAll(harmonyID);
+    }
+    public static void DumpObjectData(object objectToDump)
+    {
+        //string className = objectToDump.GetType().Name;
+        //Mod.log.Info($"{prefab.name}.{objectToDump.name}.CLASS: {className}");
+        Mod.log.Info($"Object: {objectToDump}");
+
+        // Fields
+        Type type = objectToDump.GetType();
+        FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        foreach (FieldInfo field in fields)
+        {
+            //if (field.Name != "isDirty" && field.Name != "active" && field.Name != "components")
+            Mod.log.Info($" {field.Name}: {field.GetValue(objectToDump)}");
+        }
+
+        // Properties
+        PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        foreach (PropertyInfo property in properties)
+        {
+            Mod.log.Info($" {property.Name}: {property.GetValue(objectToDump)}");
+        }
     }
 }
