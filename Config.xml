@@ -4,15 +4,16 @@
 <!-- The mod will only process prefab types listed below -->
 <!-- With detailed logging enabled, the mod will list all prefabs that are NOT modified -->
 
+<!--
 <ValidPrefabTypes>
 	<PrefabType>DemandPrefab</PrefabType>
 	<PrefabType>EconomyPrefab</PrefabType>
 	<PrefabType>ResourcePrefab</PrefabType>
 	<PrefabType>ZonePrefab</PrefabType>
 	<PrefabType>CompanyPrefab</PrefabType>
-	<PrefabType>BuildingPrefab</PrefabType> <!-- for Signature buildings -->
+	<PrefabType>BuildingPrefab</PrefabType> --> <!-- for Signature buildings -->
 	<!--<PrefabType>BuildingExtensionPrefab</PrefabType>-->
-</ValidPrefabTypes>
+<!--</ValidPrefabTypes>-->
 
 
 <!-- ECONOMY & DEMAND -->

@@ -9,6 +9,9 @@ using Game.Modding;
 using Game.SceneFlow;
 using HarmonyLib;
 using RealEco.Config;
+using Game.Prefabs;
+using Game.Economy;
+using Game.Common;
 
 namespace RealEco;
 
@@ -59,8 +62,12 @@ public class Mod : IMod
         // READ AND APPLY CONFIG
         if (setting.FeaturePrefabs) ConfigTool.ReadAndApply();
 
+        // 240401 We now have to siumulate initialization of core economy systems, this section might grow in the future
+        ReinitializeResources();
+        ReinitializeCompanies();
+
         // Disable original systems
-        
+
         World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.HouseholdBehaviorSystem>().Enabled = !Mod.setting.FeatureConsumptionFix;
         World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.ResourceBuyerSystem>().Enabled = !Mod.setting.FeatureNewCompanies;
 
@@ -96,6 +103,7 @@ public class Mod : IMod
         var harmony = new Harmony(harmonyID);
         harmony.UnpatchAll(harmonyID);
     }
+
     public static void DumpObjectData(object objectToDump)
     {
         //string className = objectToDump.GetType().Name;
@@ -117,5 +125,48 @@ public class Mod : IMod
         {
             Mod.log.Info($" {property.Name}: {property.GetValue(objectToDump)}");
         }
+    }
+
+    // TODO: this must be converted to Job to avoid partial inits that run only on a subset of resources
+    /// <summary>
+    /// This will run ResourceSystem.OnUpdate() again on all resources to update Entities and refresh m_BaseConsumptionSum.
+    /// </summary>
+    public static void ReinitializeResources()
+    {
+        Mod.Log("Marking Resources as Created for re-initialization.");
+        EntityManager entityManager= World.DefaultGameObjectInjectionWorld.EntityManager;
+        ResourceSystem resourceSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<ResourceSystem>();
+        ResourceIterator iterator = ResourceIterator.GetIterator();
+        while (iterator.Next())
+        {
+            Entity resourcePrefab = resourceSystem.GetPrefab(iterator.resource);
+            entityManager.SetComponentData<Created>(resourcePrefab, default(Created));
+            Mod.LogIf($"... {iterator.resource} is Created.");
+        }
+    }
+
+    // This may run in parts because the calculations are only for single companies, there is no roll-up.
+    // However, it also needs a system and it must run AFTER the Resources are refreshed.
+    /// <summary>
+    /// This will run CompanyPrefabInitializeSystem.OnUpdate() because we are changing profitabilities and economy parameters.
+    /// </summary>
+    public static void ReinitializeCompanies()
+    {
+        Mod.Log("Marking Companies as Created for re-initialization.");
+        PrefabSystem m_PrefabSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabSystem>();
+        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+
+        foreach (PrefabXml prefabXml in ConfigToolXml.Config.Prefabs)
+            if (prefabXml.Type == "CompanyPrefab")
+            {
+                PrefabID prefabID = new PrefabID(prefabXml.Type, prefabXml.Name);
+                if (m_PrefabSystem.TryGetPrefab(prefabID, out PrefabBase prefab) && m_PrefabSystem.TryGetEntity(prefab, out Entity entity))
+                {
+                    entityManager.SetComponentData<Created>(entity, default(Created));
+                    Mod.LogIf($"... {prefab.name} is Created.");
+                }
+                else
+                    Mod.log.Warn($"Failed to retrieve {prefabXml} from the PrefabSystem.");
+            }
     }
 }

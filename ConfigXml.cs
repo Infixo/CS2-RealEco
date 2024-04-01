@@ -8,6 +8,7 @@ namespace RealEco.Config;
 [XmlRoot("Configuration")]
 public class ConfigurationXml
 {
+    /*
     [XmlArray("ValidPrefabTypes")]
     [XmlArrayItem(typeof(string), ElementName = "PrefabType")]
     public string[] ValidPrefabTypes;
@@ -17,6 +18,7 @@ public class ConfigurationXml
         if (ValidPrefabTypes is null || ValidPrefabTypes.Length == 0) return false;
         return Array.IndexOf(ValidPrefabTypes, nameToCheck) != -1;
     }
+    */
 
     [XmlElement("Prefab")]
     public List<PrefabXml> Prefabs { get; set; }
@@ -184,7 +186,7 @@ public static class ConfigToolXml
             if (Mod.setting.UseLocalConfig)
             {
                 string appDataDir = Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
-                configDir = Path.Combine(appDataDir, @"LocalLow\Colossal Order\Cities Skylines II\Mods", Mod.modAsset == null ? "RealCity" : Mod.modAsset.name);
+                configDir = Path.Combine(appDataDir, @"LocalLow\Colossal Order\Cities Skylines II\Mods", Mod.modAsset == null ? "RealEco" : Mod.modAsset.name);
             }
             Mod.log.Info($"Using {(Mod.setting.UseLocalConfig ? "local" : "default")} {_configFileName} at {configDir}.");
 
@@ -195,7 +197,7 @@ public static class ConfigToolXml
             }
             // Verify and output deserialized data
             //Plugin.Log($"NULL: {Settings is null}");
-            
+            /*
             if (Config.ValidPrefabTypes.Length == 0)
             {
                 Mod.log.Info("Warning! No valid prefab types are defined.");
@@ -206,7 +208,7 @@ public static class ConfigToolXml
                 foreach (string name in Config.ValidPrefabTypes)
                     Mod.LogIf(name);
             }
-            
+            */
             if (Mod.setting.Logging)
             {
                 Mod.log.Info("PREFAB CONFIG DATA");
@@ -228,7 +230,7 @@ public static class ConfigToolXml
         try
         {
             string appDataDir = Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
-            string dumpDir = Path.Combine(appDataDir, @"LocalLow\Colossal Order\Cities Skylines II\Mods", Mod.modAsset == null ? "RealCity" : Mod.modAsset.name);
+            string dumpDir = Path.Combine(appDataDir, @"LocalLow\Colossal Order\Cities Skylines II\Mods", Mod.modAsset == null ? "RealEco" : Mod.modAsset.name);
             string dumpFile = Path.Combine(dumpDir, _dumpFileName);
             XmlSerializer serializer = new XmlSerializer(typeof(ConfigurationXml));
             using (FileStream fs = new FileStream(dumpFile, FileMode.Create))
