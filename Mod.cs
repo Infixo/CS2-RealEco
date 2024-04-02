@@ -7,11 +7,12 @@ using Colossal.Logging;
 using Game;
 using Game.Modding;
 using Game.SceneFlow;
-using HarmonyLib;
-using RealEco.Config;
 using Game.Prefabs;
 using Game.Economy;
 using Game.Common;
+using HarmonyLib;
+using RealEco.Config;
+using RealEco.Systems;
 
 namespace RealEco;
 
@@ -74,7 +75,7 @@ public class Mod : IMod
 
         // 240401 We now have to siumulate initialization of core economy systems, this section might grow in the future
         //ReinitializeResources();
-        ReinitializeCompanies();
+        //ReinitializeCompanies();
 
         // Disable original systems
         World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.HouseholdBehaviorSystem>().Enabled = !Mod.setting.FeatureConsumptionFix;
@@ -82,6 +83,7 @@ public class Mod : IMod
 
         // Create modded systems
         RealEco.Patches.Initialize_Postfix(updateSystem); // reuse existing code
+        updateSystem.UpdateAt<RealEco.Systems.CompanyPrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
 
         ConfigTool.isLatePrefabsActive = true; // enable processing of late-added prefabs
     }
@@ -140,6 +142,7 @@ public class Mod : IMod
         }
     }
 
+    /* Not used - crashes the game
     // This may run in parts because the calculations are only for single companies, there is no roll-up.
     // However, it also needs a system and it must run AFTER the Resources are refreshed.
     /// <summary>
@@ -158,10 +161,11 @@ public class Mod : IMod
                 if (m_PrefabSystem.TryGetPrefab(prefabID, out PrefabBase prefab) && m_PrefabSystem.TryGetEntity(prefab, out Entity entity))
                 {
                     entityManager.SetComponentData<Created>(entity, default(Created));
-                    Mod.LogIf($"... {prefab.name} is Created.");
+                    Mod.LogIf($"... {prefab.name} has RealEcoCreated.");
                 }
                 else
                     Mod.log.Warn($"Failed to retrieve {prefabXml} from the PrefabSystem.");
             }
     }
+    */
 }

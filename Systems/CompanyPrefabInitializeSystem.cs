@@ -8,11 +8,13 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Scripting;
+using Game;
+using Game.Prefabs;
 
-namespace Game.Prefabs;
+namespace RealEco.Systems;
 
 [CompilerGenerated]
-public class CompanyPrefabInitializeSystem : GameSystemBase
+public partial class CompanyPrefabInitializeSystem : GameSystemBase
 {
     private struct TypeHandle
     {
@@ -71,9 +73,9 @@ public class CompanyPrefabInitializeSystem : GameSystemBase
         m_PrefabSystem = base.World.GetOrCreateSystemManaged<PrefabSystem>();
         m_PrefabQuery = GetEntityQuery(new EntityQueryDesc
         {
-            All = new ComponentType[2]
+            All = new ComponentType[1]
             {
-                ComponentType.ReadOnly<Created>(),
+                //ComponentType.ReadWrite<Created>(), // process all prefabs
                 ComponentType.ReadOnly<PrefabData>()
             },
             Any = new ComponentType[2]
@@ -85,11 +87,13 @@ public class CompanyPrefabInitializeSystem : GameSystemBase
         m_EconomyParameterQuery = GetEntityQuery(ComponentType.ReadOnly<EconomyParameterData>());
         RequireForUpdate(m_PrefabQuery);
         RequireForUpdate(m_EconomyParameterQuery);
+        Mod.log.Info("CompanyPrefabInitializeSystem for RealEco created.");
     }
 
     [Preserve]
     protected override void OnUpdate()
     {
+        Mod.log.Info($"Reinitializing {m_PrefabQuery.CalculateEntityCount()} companies.");
         NativeArray<ArchetypeChunk> nativeArray = m_PrefabQuery.ToArchetypeChunkArray(Allocator.TempJob);
         __TypeHandle.__Unity_Entities_Entity_TypeHandle.Update(ref base.CheckedStateRef);
         EntityTypeHandle _Unity_Entities_Entity_TypeHandle = __TypeHandle.__Unity_Entities_Entity_TypeHandle;
@@ -111,6 +115,7 @@ public class CompanyPrefabInitializeSystem : GameSystemBase
         ComponentLookup<ResourceData> _Game_Prefabs_ResourceData_RO_ComponentLookup = __TypeHandle.__Game_Prefabs_ResourceData_RO_ComponentLookup;
         ResourcePrefabs prefabs = base.World.GetOrCreateSystemManaged<ResourceSystem>().GetPrefabs();
         EconomyParameterData economyParameters = m_EconomyParameterQuery.GetSingleton<EconomyParameterData>();
+        Mod.LogIf($"Reinitializing: ext {economyParameters.m_ExtractorCompanyExportMultiplier} ind {economyParameters.m_IndustrialProfitFactor} com {economyParameters.m_CommercialDiscount}");
         for (int i = 0; i < nativeArray.Length; i++)
         {
             ArchetypeChunk archetypeChunk = nativeArray[i];
@@ -233,6 +238,7 @@ public class CompanyPrefabInitializeSystem : GameSystemBase
             }
         }
         nativeArray.Dispose();
+        base.Enabled = false; // run only once
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
