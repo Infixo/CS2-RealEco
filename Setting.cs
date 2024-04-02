@@ -53,7 +53,11 @@ public class Setting : ModSetting
     public override void SetDefaults()
     {
         _Hidden = true;
+#if DEBUG
+        Logging = true;
+#else
         Logging = false;
+#endif
         UseLocalConfig = false;
         FeaturePrefabs = true;
         FeatureConsumptionFix = true;

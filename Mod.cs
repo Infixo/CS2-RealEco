@@ -56,24 +56,6 @@ public class Mod : IMod
 
         AssetDatabase.global.LoadSettings(nameof(RealEco), setting, new Setting(this));
 
-        // NEW COMPANIES
-        if (setting.FeatureNewCompanies) PrefabStore.CreateNewCompanies();
-
-        // READ AND APPLY CONFIG
-        if (setting.FeaturePrefabs) ConfigTool.ReadAndApply();
-
-        // 240401 We now have to siumulate initialization of core economy systems, this section might grow in the future
-        ReinitializeResources();
-        ReinitializeCompanies();
-
-        // Disable original systems
-
-        World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.HouseholdBehaviorSystem>().Enabled = !Mod.setting.FeatureConsumptionFix;
-        World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.ResourceBuyerSystem>().Enabled = !Mod.setting.FeatureNewCompanies;
-
-        // Create modded systems
-        RealEco.Patches.Initialize_Postfix(updateSystem); // reuse existing code
-
         // Harmony
         var harmony = new Harmony(harmonyID);
         harmony.PatchAll(typeof(Mod).Assembly);
@@ -81,14 +63,27 @@ public class Mod : IMod
         log.Info($"Plugin {harmonyID} made patches! Patched methods: " + patchedMethods.Length);
         foreach (var patchedMethod in patchedMethods)
         {
-            log.Info($"Patched method: {patchedMethod.Module.Name}:{patchedMethod.Name}");
+            log.Info($"Patched method: {patchedMethod.Module.Name}:{patchedMethod.DeclaringType.Name}.{patchedMethod.Name}");
         }
 
-        // Patch prefabs
-        //PrefabPatcher patcher = new PrefabPatcher();
-        //patcher.PatchDemandParameters();
-        //patcher.PatchHouseholds();
-        //patcher.PatchInitialWealth();
+        // NEW COMPANIES
+        if (setting.FeatureNewCompanies) PrefabStore.CreateNewCompanies();
+
+        // READ AND APPLY CONFIG
+        if (setting.FeaturePrefabs) ConfigTool.ReadAndApply();
+
+        // 240401 We now have to siumulate initialization of core economy systems, this section might grow in the future
+        //ReinitializeResources();
+        ReinitializeCompanies();
+
+        // Disable original systems
+        World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.HouseholdBehaviorSystem>().Enabled = !Mod.setting.FeatureConsumptionFix;
+        World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.ResourceBuyerSystem>().Enabled = !Mod.setting.FeatureNewCompanies;
+
+        // Create modded systems
+        RealEco.Patches.Initialize_Postfix(updateSystem); // reuse existing code
+
+        ConfigTool.isLatePrefabsActive = true; // enable processing of late-added prefabs
     }
 
     public void OnDispose()

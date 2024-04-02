@@ -10,8 +10,11 @@ namespace RealEco.Config;
 [HarmonyPatch]
 public static class ConfigTool
 {
+    public static bool isLatePrefabsActive = false; // will enable AddPrefab patch to process prefabs loaded AFTER mods are initialized (there are some)
+
     private static PrefabSystem m_PrefabSystem;
     private static EntityManager m_EntityManager;
+
     public static void DumpFields(PrefabBase prefab, ComponentBase component)
     {
         string className = component.GetType().Name;
@@ -212,7 +215,7 @@ public static class ConfigTool
     [HarmonyPrefix]
     public static bool PrefabSystem_AddPrefab_Prefix(object __instance, PrefabBase prefab)
     {
-        if (Mod.setting.FeaturePrefabs) // && ConfigToolXml.Config.IsPrefabValid(prefab.GetType().Name))
+        if (isLatePrefabsActive && Mod.setting.FeaturePrefabs) // && ConfigToolXml.Config.IsPrefabValid(prefab.GetType().Name))
         {
             if (ConfigToolXml.Config.TryGetPrefab(prefab.name, out PrefabXml prefabConfig))
             {
@@ -268,14 +271,16 @@ public static class ConfigTool
     }
     */
 
+    /* not used
     // Part 3: This is called 1 time
     [HarmonyPatch(typeof(Game.Prefabs.PrefabInitializeSystem), "OnUpdate")]
     [HarmonyPostfix]
     public static void OnUpdate_Postfix()
     {
-        //Mod.Log("**************************** Game.Prefabs.PrefabInitializeSystem.OnUpdate");
-        //if (Mod.ConfigDump.Value) ConfigToolXml.SaveConfig();
+        Mod.Log("**************************** Game.Prefabs.PrefabInitializeSystem.OnUpdate");
+        if (Mod.ConfigDump.Value) ConfigToolXml.SaveConfig();
     }
+    */
 
     /// <summary>
     /// Configures a specific component within a specific prefab according to config data.
