@@ -83,7 +83,8 @@ public class Mod : IMod
 
         // Create modded systems
         RealEco.Patches.Initialize_Postfix(updateSystem); // reuse existing code
-        updateSystem.UpdateAt<RealEco.Systems.CompanyPrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
+        updateSystem.UpdateAt<RealEco.Systems.CompanyPrefabReinitializeSystem>(SystemUpdatePhase.PrefabUpdate);
+        updateSystem.UpdateAt<RealEco.Systems.ResourcePrefabReinitializeSystem>(SystemUpdatePhase.PrefabUpdate);
 
         ConfigTool.isLatePrefabsActive = true; // enable processing of late-added prefabs
     }

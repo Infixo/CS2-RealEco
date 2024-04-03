@@ -14,7 +14,7 @@ using Game.Prefabs;
 namespace RealEco.Systems;
 
 [CompilerGenerated]
-public partial class CompanyPrefabInitializeSystem : GameSystemBase
+public partial class CompanyPrefabReinitializeSystem : GameSystemBase
 {
     private struct TypeHandle
     {
@@ -70,6 +70,7 @@ public partial class CompanyPrefabInitializeSystem : GameSystemBase
     protected override void OnCreate()
     {
         base.OnCreate();
+        base.Enabled = false; // start as disabled because we need to wait for resources to finish updates
         m_PrefabSystem = base.World.GetOrCreateSystemManaged<PrefabSystem>();
         m_PrefabQuery = GetEntityQuery(new EntityQueryDesc
         {
@@ -87,13 +88,13 @@ public partial class CompanyPrefabInitializeSystem : GameSystemBase
         m_EconomyParameterQuery = GetEntityQuery(ComponentType.ReadOnly<EconomyParameterData>());
         RequireForUpdate(m_PrefabQuery);
         RequireForUpdate(m_EconomyParameterQuery);
-        Mod.log.Info("CompanyPrefabInitializeSystem for RealEco created.");
+        Mod.log.Info("CompanyPrefabReinitializeSystem created.");
     }
 
     [Preserve]
     protected override void OnUpdate()
     {
-        Mod.log.Info($"Reinitializing {m_PrefabQuery.CalculateEntityCount()} companies.");
+        Mod.log.Info($"Reinitializing: {m_PrefabQuery.CalculateEntityCount()} companies.");
         NativeArray<ArchetypeChunk> nativeArray = m_PrefabQuery.ToArchetypeChunkArray(Allocator.TempJob);
         __TypeHandle.__Unity_Entities_Entity_TypeHandle.Update(ref base.CheckedStateRef);
         EntityTypeHandle _Unity_Entities_Entity_TypeHandle = __TypeHandle.__Unity_Entities_Entity_TypeHandle;
@@ -254,7 +255,7 @@ public partial class CompanyPrefabInitializeSystem : GameSystemBase
     }
 
     [Preserve]
-    public CompanyPrefabInitializeSystem()
+    public CompanyPrefabReinitializeSystem()
     {
     }
 }

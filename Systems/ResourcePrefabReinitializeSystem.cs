@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using Game.Common;
 using Game.Economy;
@@ -8,11 +10,13 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Scripting;
+using Game;
+using Game.Prefabs;
 
-namespace Game.Prefabs;
+namespace RealEco.Systems;
 
 [CompilerGenerated]
-public class ResourceSystem : GameSystemBase
+public partial class ResourcePrefabReinitializeSystem : GameSystemBase
 {
     private struct TypeHandle
     {
@@ -55,6 +59,11 @@ public class ResourceSystem : GameSystemBase
 
     public int BaseConsumptionSum => m_BaseConsumptionSum;
 
+    private ResourceSystem m_ResourceSystem; // So we can update base consumption
+
+    private CompanyPrefabReinitializeSystem m_CompanyPrefabReinitializeSystem; //  so we can start companies
+
+
     [Preserve]
     protected override void OnCreate()
     {
@@ -62,9 +71,9 @@ public class ResourceSystem : GameSystemBase
         m_PrefabSystem = base.World.GetOrCreateSystemManaged<PrefabSystem>();
         m_PrefabGroup = GetEntityQuery(new EntityQueryDesc
         {
-            All = new ComponentType[3]
+            All = new ComponentType[2]
             {
-                ComponentType.ReadOnly<Created>(),
+                //ComponentType.ReadOnly<Created>(), // refresh all resources
                 ComponentType.ReadOnly<PrefabData>(),
                 ComponentType.ReadOnly<ResourceData>()
             }
@@ -72,6 +81,10 @@ public class ResourceSystem : GameSystemBase
         m_InfoGroup = GetEntityQuery(ComponentType.ReadOnly<Created>(), ComponentType.ReadOnly<ResourceInfo>());
         m_ResourcePrefabs = new NativeArray<Entity>(EconomyUtils.ResourceCount, Allocator.Persistent);
         m_ResourceInfos = new NativeArray<Entity>(EconomyUtils.ResourceCount, Allocator.Persistent);
+        // RealEco
+        m_ResourceSystem = base.World.GetOrCreateSystemManaged<ResourceSystem>();
+        m_CompanyPrefabReinitializeSystem = base.World.GetOrCreateSystemManaged<CompanyPrefabReinitializeSystem>();
+        Mod.log.Info("ResourcePrefabReinitializeSystem created.");
     }
 
     [Preserve]
@@ -86,10 +99,11 @@ public class ResourceSystem : GameSystemBase
     [Preserve]
     protected override void OnUpdate()
     {
-        m_PrefabsReaders.Complete();
-        m_PrefabsReaders = default(JobHandle);
+        //m_PrefabsReaders.Complete();
+        //m_PrefabsReaders = default(JobHandle);
         if (!m_PrefabGroup.IsEmptyIgnoreFilter)
         {
+            Mod.log.Info($"Reinitializing: {m_PrefabGroup.CalculateEntityCount()} resources.");
             EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Allocator.Temp);
             NativeArray<ArchetypeChunk> nativeArray = m_PrefabGroup.ToArchetypeChunkArray(Allocator.TempJob);
             __TypeHandle.__Unity_Entities_Entity_TypeHandle.Update(ref base.CheckedStateRef);
@@ -131,6 +145,8 @@ public class ResourceSystem : GameSystemBase
                     int index = (int)(prefab.m_Resource - 1);
                     if (m_ResourcePrefabs[index] == Entity.Null)
                     {
+                        Mod.log.Warn($"Missing resource entity for {prefab.m_Resource}!");
+                        /* Warning! This is commented out because it should never happen. Look for warnings.
                         m_ResourcePrefabs[index] = value;
                         m_ResourceInfos[index] = entityCommandBuffer.CreateEntity();
                         entityCommandBuffer.AddComponent(m_ResourceInfos[index], new ResourceInfo
@@ -138,6 +154,7 @@ public class ResourceSystem : GameSystemBase
                             m_Resource = EconomyUtils.GetResource(prefab.m_Resource)
                         });
                         entityCommandBuffer.AddComponent(m_ResourceInfos[index], default(Created));
+                        */
                     }
                 }
             }
@@ -145,7 +162,19 @@ public class ResourceSystem : GameSystemBase
             entityCommandBuffer.Dispose();
             m_BaseConsumptionSum = Mathf.RoundToInt(num);
             nativeArray.Dispose();
+
+            // RealEco
+            base.Enabled = false; // run only once
+            // set the private field in ResourceSystem using Reflection
+            int oldValue = m_ResourceSystem.BaseConsumptionSum;
+            FieldInfo field = m_ResourceSystem.GetType().GetField("m_BaseConsumptionSum", BindingFlags.NonPublic | BindingFlags.Instance);
+            field.SetValue(m_ResourceSystem, m_BaseConsumptionSum);
+            Mod.log.Info($"Reinitializing: m_BaseConsumptionSum {oldValue} -> {m_ResourceSystem.BaseConsumptionSum}");
+            // run companies
+            m_CompanyPrefabReinitializeSystem.Enabled = true;
         }
+
+        /* This part is not used, ResourceInfos are always the same and don't need to be changed
         if (m_InfoGroup.IsEmptyIgnoreFilter)
         {
             return;
@@ -170,8 +199,10 @@ public class ResourceSystem : GameSystemBase
             }
         }
         nativeArray5.Dispose();
+        */
     }
 
+    /* not used
     public ResourcePrefabs GetPrefabs()
     {
         return new ResourcePrefabs(m_ResourcePrefabs);
@@ -186,6 +217,7 @@ public class ResourceSystem : GameSystemBase
     {
         return m_ResourcePrefabs[EconomyUtils.GetResourceIndex(resource)];
     }
+    */
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void __AssignQueries(ref SystemState state)
@@ -200,7 +232,7 @@ public class ResourceSystem : GameSystemBase
     }
 
     [Preserve]
-    public ResourceSystem()
+    public ResourcePrefabReinitializeSystem()
     {
     }
 }

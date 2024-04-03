@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
-using Game.Prefabs;
 using Unity.Entities;
+using Game.Prefabs;
 using HarmonyLib;
 
 namespace RealEco.Config;
@@ -195,7 +195,6 @@ public static class ConfigTool
         }
     }
 
-
     /// <summary>
     /// Configures a specific prefab according to the config data.
     /// </summary>
@@ -251,37 +250,7 @@ public static class ConfigTool
         return true;
     }
 
-    // Part 1: This is called 1035 times
-    /*
-    [HarmonyPatch(typeof(Game.Prefabs.AssetCollection), "AddPrefabsTo")]
-    [HarmonyPostfix]
-    public static void AddPrefabsTo_Postfix()
-    {
-        Mod.Log("**************************** Game.Prefabs.AssetCollection.AddPrefabsTo");
-    }
-    */
-
-    // Part 2: This is called 1 time
-    /*
-    [HarmonyPatch(typeof(Game.SceneFlow.GameManager), "LoadPrefabs")]
-    [HarmonyPostfix]
-    public static void LoadPrefabs_Postfix()
-    {
-        Mod.Log("**************************** Game.SceneFlow.GameManager.LoadPrefabs");
-    }
-    */
-
-    /* not used
-    // Part 3: This is called 1 time
-    [HarmonyPatch(typeof(Game.Prefabs.PrefabInitializeSystem), "OnUpdate")]
-    [HarmonyPostfix]
-    public static void OnUpdate_Postfix()
-    {
-        Mod.Log("**************************** Game.Prefabs.PrefabInitializeSystem.OnUpdate");
-        if (Mod.ConfigDump.Value) ConfigToolXml.SaveConfig();
-    }
-    */
-
+	/* NOT USED
     /// <summary>
     /// Configures a specific component within a specific prefab according to config data.
     /// </summary>
@@ -336,6 +305,7 @@ public static class ConfigTool
                 break;
         }
     }
+	*/
 
     /* not used
     /// <summary>
@@ -390,8 +360,6 @@ public static class ConfigTool
             Mod.log.Info($"{prefab.GetType().Name}.{prefab.name}.{componentType.GetManagedType().Name}: {componentType}");
         }
     }
-
-	
 }
 
 // FOR THE FUTURE
