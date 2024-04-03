@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using Game.Prefabs;
 using Game.Economy;
-using HarmonyLib;
+//using HarmonyLib;
 
 namespace RealEco;
 
-[HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
+//[HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
 public static class PrefabSystem_AddPrefab_Patches
 {
     public static readonly Dictionary<ResourceInEditor, float> ResourcePriceDict = new Dictionary<ResourceInEditor, float>()
@@ -118,7 +118,7 @@ public static class PrefabSystem_AddPrefab_Patches
     }
     */
 
-    [HarmonyPrefix]
+    //[HarmonyPrefix]
     public static bool EconomyPrefab_Prefix(object __instance, PrefabBase prefab)
     {
         /* These params are in xml now
@@ -353,7 +353,7 @@ public static class PrefabSystem_AddPrefab_Patches
         {"Industrial_WarehouseFurniture", 15},
     };
 
-    [HarmonyPrefix]
+    //[HarmonyPrefix]
     public static bool Companies_Prefix(PrefabBase prefab)
     {
         if (Mod.setting.FeaturePrefabs && prefab.GetType().Name == "CompanyPrefab")

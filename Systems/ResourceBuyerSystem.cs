@@ -57,9 +57,8 @@ public partial class ResourceBuyerSystem : GameSystemBase
         public float m_Distance;
     }
 
-#if !DEBUG
-    [BurstCompile]
-#endif
+
+    //[BurstCompile]
     private struct BuyJob : IJob
     {
         public NativeQueue<SalesEvent> m_SalesQueue;
@@ -335,9 +334,8 @@ public partial class ResourceBuyerSystem : GameSystemBase
         }
     }
 
-#if !DEBUG
-    [BurstCompile]
-#endif
+
+    //[BurstCompile]
     private struct HandleBuyersJob : IJobChunk
     {
         [ReadOnly]

@@ -28,9 +28,7 @@ namespace RealEco;
 [HarmonyPatch]
 public class CommercialDemandSystem_Patches
 {
-#if !DEBUG
-    [BurstCompile]
-#endif
+    //[BurstCompile]
     private struct UpdateCommercialDemandJob : IJob
     {
         [ReadOnly]

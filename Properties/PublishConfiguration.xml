@@ -1,33 +1,76 @@
 ﻿<Publish>
 	<!--Id must be set in order to update existed mod. it is not required for publishing mod for the first time-->
-	<ModId Value="" />
+	<ModId Value="77509" />
 	<!--Name of the mod to display to players-->
-	<DisplayName Value="RealEco" />
+	<DisplayName Value="Economy Rebalance" />
 	<!--Short description of the mod-->
-	<ShortDescription Value="Economy Rebalance Mod" />
+	<ShortDescription Value="Build a self-sufficient city in terms of resources production and consumption" />
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="Economy Rebalance Mod" /-->
 	<LongDescription>
-Economy Rebalance Mod
+Allows to build a self-sufficient city in terms of resources production and consumption. It achieves that mostly by modifying existing game parameters like companies profitability, resource prices and base consumption. The mod's effects become more visible and useful the bigger the city is (>100k). Version 0.4 includes new commercial companies. Version 0.5 includes modded commercial demand that gives more control over the commercials in your city.
+
+**Important note.**
+Tuning and balancing is an iterative process. The feedback about how companies and economy behave is highly appreciated and welcomed. If you decide to use the mod, please make sure to turn off other mods that affect economy, resource management and companies. While the mod technically will work as advertised, the results produced may be distorted and not very useful for further balancing.
+
+## Features
+
+The mod has **many** features, most of them are **configurable**. Please see GitHub page for details and full description of features and parameters. The below list is only a short overview.
+
+## Key features
+
+* (v0.3) Configuration in the xml file can be easily modified.
+* Increases output from Extractors allowing for bigger cities to be self-sufficient. Resources on standard maps should suffice for cities >300k.
+* Consumption fix - the individual consumption does not skyrocket in bigger cities.
+* Adjusts and tweaks prices and usage for some resources to make their consumption a bit more balanced and realistic.
+* Decreases the profitability of companies. This slows down their leveling.
+* Tweaks a few production chains, to better support production of resources that are consumed in high quantities.
+* Tweaks workplaces number and distribution for better alignment with available workforce.
+* Tweaks residential zones upkeep for better rent progression and leveling.
+* (v0.4) New commercial companies that sell immaterial resources.
+* (v0.5) Rebalanced commercial demand. The dedicated UI window is **not** yet available.
+* (v0.5) Adjustments for lodging and leisure companies should result in more of them spawning in the city.
+ 
+## Comparison to the vanilla city
+
+* It is possible to turn on the mod on an existing city. The effects will be seen after few in-game hours, but it will take a few in-game days for all processes to fully adjust.
+* Output of Extractors should increase by 20%-40%. Conversly, the utilization will also increase, it may be higher than renewal rate in some cases.
+* Individual consumption will decrease, the more the bigger the city is. For cities >200k it may decrease by 80% or even more.
+* There will be shifts in production and consumption of various resources.
+* Companies with profitability less than 255 will appear. The "Company Profitability" infoview will show other colors than green.
+* Companies will require more well educated and much more highly educated people. They may start employ commuters.
+* Companies that are not profitable enough will go bankrupt.
+* There will be lower demand for offices, since there will be less demand for immaterial resources.
+* (v0.3) Companies will increase number of workplaces by 20%-30%.
+* (V0.4) Commercial demand is more sensitive for taxes and number of customers. It may disappear if you overinvest.
+* (v0.5) More hotels and motels in the city.
+
+## Technical
+
+* The options are applied only once, during the mod initialization. For new setting to take effect, you need to **restart the game**.
+* The mod will modify the savefile if new companies feature is enabled.
+* Modified systems: HouseholdBehaviorSystem (when consumption fix is enabled), ResourceBuyerSystem (when new companies feature is enabled), CommercialDemandSystem (when modded commercial demand is enabled).
 	</LongDescription>
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/Thumbnail.png" />
 	<!--Screenshot, can be set multiple times-->
-	<Screenshot Value="" />
+	<Screenshot Value="docs/newstores.png" />
 	<!--Tag, can be set multiple times-->
-	<Tag Value="" />
+	<Tag Value="Code Mod" />
 	<!--Link to the forum post where the mod can be discussed-->
-	<ForumLink Value="" />
+	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/economy-rebalance.1657478/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.0" />
+	<ModVersion Value="0.7" />
 	<!--Recommended version of the base game to use the mod-->
-	<GameVersion Value="1.0.*" />
+	<GameVersion Value="1.1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog Value="" />
-	<!--ChangeLog>
-	</ChangeLog-->
+	<ChangeLog>
+v0.7.0 (2024-04-03)
+* Mod migrated to the PDXMods platform.
+	</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
-	<ExternalLink Type="" Url="" />
+	<ExternalLink Type="github" Url="https://github.com/Infixo/CS2-RealEco" />
+	<ExternalLink Type="discord" Url="https://discord.com/channels/1169011184557637825/1207641575362920508" />
 </Publish>

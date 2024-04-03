@@ -66,9 +66,8 @@ public partial class HouseholdBehaviorSystem : GameSystemBase
         }
     }
 
-#if !DEBUG
-    [BurstCompile]
-#endif
+
+    //[BurstCompile]
     private struct HouseholdTickJob : IJobChunk
     {
         [ReadOnly]

@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration>
 
-<!-- The mod will only process prefab types listed below -->
-<!-- With detailed logging enabled, the mod will list all prefabs that are NOT modified -->
+<!-- SHORT GUIDE
+
+1. Configuration is stored in the hierarchical form: Prefab -> Component -> Field.
+2. Prefabs.
+  a. You need to provide Prefab's name (e.g. ElementarySchool01) and type (e.g. BuildingPrefab).
+3. Components.
+  a. You need to know Component's type (e.g. Workplace, School, PostFacility).
+  b. There are 2 special components: FeeParameters and IndustrialProcess with limited functionality. Use them only with special fields.
+4. Fields.
+  a. You need to know the Field's name (e.g. m_Workplaces) and type (enum, int, float).
+  b. ValueInt must be defined for int fields and enum fields.
+  c. ValueFloat must be defined for float fields.
+5. Important.
+  a. Do NOT modify fields that hold other data types, arrays, references, etc. This may crash the game.
+  b. Use local Config.xml for your own params.
+  c. Enable Detailed logging to see a very comprehensive log of what the mod is doing.
+
+-->
 
 <!-- ECONOMY & DEMAND -->
 

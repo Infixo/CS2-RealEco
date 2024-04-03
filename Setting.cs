@@ -45,10 +45,12 @@ public class Setting : ModSetting
     [SettingsUISection(kSection, kOptionsGroup)]
     public bool FeatureCommercialDemand { get; set; }
 
+    /* not used atm
     [SettingsUIButton]
     [SettingsUIConfirmation]
     [SettingsUISection(kSection, kButtonGroup)]
     public bool ApplyConfiguration { set { Mod.log.Info("ApplyConfiguration clicked"); ConfigTool.ReadAndApply(); } }
+    */
 
     public override void SetDefaults()
     {
@@ -102,9 +104,11 @@ public class LocaleEN : IDictionarySource
             { m_Setting.GetOptionLabelLocaleID(nameof(Setting.FeatureCommercialDemand)), "Enable Commercial Demand" },
             { m_Setting.GetOptionDescLocaleID(nameof(Setting.FeatureCommercialDemand)), "Enables modded commercial demand and dedicated UI." },
 
+            /* not used atm
             { m_Setting.GetOptionLabelLocaleID(nameof(Setting.ApplyConfiguration)), "Apply Configuration" },
             { m_Setting.GetOptionDescLocaleID(nameof(Setting.ApplyConfiguration)), "This will apply a new configuration from Confix.xml file." },
             { m_Setting.GetOptionWarningLocaleID(nameof(Setting.ApplyConfiguration)), "This will apply a new configuration. Please confirm." },
+            */
         };
     }
 

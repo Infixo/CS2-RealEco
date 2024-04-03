@@ -28,9 +28,7 @@ namespace RealEco.Systems;
 [CompilerGenerated]
 public partial class CitizenBehaviorSystem : GameSystemBase
 {
-#if !DEBUG
-    [BurstCompile]
-#endif
+    //[BurstCompile]
     private struct CitizenReserveHouseholdCarJob : IJob
     {
         public ComponentLookup<CarKeeper> m_CarKeepers;
@@ -75,9 +73,8 @@ public partial class CitizenBehaviorSystem : GameSystemBase
         }
     }
 
-#if !DEBUG
-    [BurstCompile]
-#endif
+
+    //[BurstCompile]
     private struct CitizenTryCollectMailJob : IJob
     {
         [ReadOnly]
@@ -151,9 +148,8 @@ public partial class CitizenBehaviorSystem : GameSystemBase
         }
     }
 
-#if !DEBUG
-    [BurstCompile]
-#endif
+
+    //[BurstCompile]
     private struct CitizeSleepJob : IJob
     {
         [ReadOnly]
@@ -182,9 +178,8 @@ public partial class CitizenBehaviorSystem : GameSystemBase
         }
     }
 
-#if !DEBUG
-    [BurstCompile]
-#endif
+
+    //[BurstCompile]
     private struct CitizenAITickJob : IJobChunk
     {
         [ReadOnly]
