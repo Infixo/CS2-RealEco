@@ -7,7 +7,6 @@ using Game.Economy;
 using Game.Prefabs;
 using Game.Simulation;
 using HarmonyLib;
-using static Unity.Burst.Intrinsics.X86.Avx;
 
 namespace RealEco;
 

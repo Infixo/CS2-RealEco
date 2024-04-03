@@ -142,11 +142,11 @@ public partial class ResourcePrefabReinitializeSystem : GameSystemBase
                     resourceData.m_RequireNaturalResource = prefab.m_RequireNaturalResource;
                     nativeArray4[j] = resourceData;
                     num += math.lerp(HouseholdBehaviorSystem.GetWeight(200, resourceData, 1, leisureIncluded: false), HouseholdBehaviorSystem.GetWeight(200, resourceData, 0, leisureIncluded: false), 0.2f);
+                    /* This creates a buffer used by other systems, so not needed here
                     int index = (int)(prefab.m_Resource - 1);
                     if (m_ResourcePrefabs[index] == Entity.Null)
                     {
                         Mod.log.Warn($"Missing resource entity for {prefab.m_Resource}!");
-                        /* Warning! This is commented out because it should never happen. Look for warnings.
                         m_ResourcePrefabs[index] = value;
                         m_ResourceInfos[index] = entityCommandBuffer.CreateEntity();
                         entityCommandBuffer.AddComponent(m_ResourceInfos[index], new ResourceInfo
@@ -154,8 +154,8 @@ public partial class ResourcePrefabReinitializeSystem : GameSystemBase
                             m_Resource = EconomyUtils.GetResource(prefab.m_Resource)
                         });
                         entityCommandBuffer.AddComponent(m_ResourceInfos[index], default(Created));
-                        */
                     }
+                    */
                 }
             }
             entityCommandBuffer.Playback(base.EntityManager);

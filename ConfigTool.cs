@@ -50,7 +50,7 @@ public static class ConfigTool
         // TODO: When more structs are implemented, use Reflection to create a flexible code for all possible cases
         if (compName == "ProcessingCompany" && prefabConfig.TryGetComponent("IndustrialProcess", out ComponentXml structConfig))
         {
-            // IndustrialProcess - currently 2 fields are supported
+            // IndustrialProcess - currently 4 fields are supported
             Mod.LogIf($"{prefab.name}.IndustrialProcess: valid");
             ProcessingCompany comp = component as ProcessingCompany;
             IndustrialProcess oldProc = comp.process;
@@ -64,10 +64,49 @@ public static class ConfigTool
                 comp.process.m_Output.m_Amount = outamtField.ValueInt ?? oldProc.m_Output.m_Amount;
                 Mod.LogIf($"{prefab.name}.IndustrialProcess.{outamtField.Name}: {oldProc.m_Output.m_Amount} -> {comp.process.m_Output.m_Amount} ({comp.process.m_Output.m_Amount.GetType()}, {outamtField})");
             }
+            // Special case: Industrial_BioRefinery, make it use less Grain
+            if (structConfig.TryGetField("m_Input1.m_Amount", out FieldXml in1amtField) && in1amtField.ValueIntSpecified)
+            {
+                comp.process.m_Input1.m_Amount = in1amtField.ValueInt ?? oldProc.m_Input1.m_Amount;
+                Mod.LogIf($"{prefab.name}.IndustrialProcess.{in1amtField.Name}: {oldProc.m_Input1.m_Amount} -> {comp.process.m_Input1.m_Amount} ({comp.process.m_Input1.m_Amount.GetType()}, {in1amtField})");
+            }
+            if (structConfig.TryGetField("m_Input2.m_Amount", out FieldXml in2amtField) && in2amtField.ValueIntSpecified)
+            {
+                comp.process.m_Input2.m_Amount = in2amtField.ValueInt ?? oldProc.m_Input2.m_Amount;
+                Mod.LogIf($"{prefab.name}.IndustrialProcess.{in2amtField.Name}: {oldProc.m_Input2.m_Amount} -> {comp.process.m_Input2.m_Amount} ({comp.process.m_Input2.m_Amount.GetType()}, {in2amtField})");
+            }
             if (!Mod.setting.Logging)
-                Mod.Log($"{prefab.name}.IndustrialProcess: wpc {comp.process.m_MaxWorkersPerCell} output {comp.process.m_Output.m_Amount}");
+                Mod.Log($"{prefab.name}.IndustrialProcess: wpc {comp.process.m_MaxWorkersPerCell} out {comp.process.m_Output.m_Amount} in1 {comp.process.m_Input1.m_Amount} in2 {comp.process.m_Input2.m_Amount}");
             isPatched = true;
         }
+
+        // SERVICE FEES
+        if (compName == "ServiceFeeParameterPrefab" && prefabConfig.TryGetComponent("FeeParameters", out ComponentXml feeConfig))
+        {
+            ServiceFeeParameterPrefab feePrefab = component as ServiceFeeParameterPrefab;
+            if (feeConfig.TryGetField("m_ElectricityFee.m_Default", out FieldXml electricityField) && electricityField.ValueFloatSpecified)
+            {
+                FeeParameters oldFee = feePrefab.m_ElectricityFee;
+                feePrefab.m_ElectricityFee.m_Default = electricityField.ValueFloat ?? oldFee.m_Default;
+                Mod.LogIf($"{prefab.name}.FeeParameters.{electricityField.Name}: {oldFee.m_Default} -> {feePrefab.m_ElectricityFee.m_Default} ({feePrefab.m_ElectricityFee.m_Default.GetType()}, {electricityField})");
+            }
+            if (feeConfig.TryGetField("m_GarbageFee.m_Default", out FieldXml garbageField) && garbageField.ValueFloatSpecified)
+            {
+                FeeParameters oldFee = feePrefab.m_GarbageFee;
+                feePrefab.m_GarbageFee.m_Default = garbageField.ValueFloat ?? oldFee.m_Default;
+                Mod.LogIf($"{prefab.name}.FeeParameters.{garbageField.Name}: {oldFee.m_Default} -> {feePrefab.m_GarbageFee.m_Default} ({feePrefab.m_GarbageFee.m_Default.GetType()}, {garbageField})");
+            }
+            if (feeConfig.TryGetField("m_WaterFee.m_Default", out FieldXml waterField) && waterField.ValueFloatSpecified)
+            {
+                FeeParameters oldFee = feePrefab.m_WaterFee;
+                feePrefab.m_WaterFee.m_Default = waterField.ValueFloat ?? oldFee.m_Default;
+                Mod.LogIf($"{prefab.name}.FeeParameters.{waterField.Name}: {oldFee.m_Default} -> {feePrefab.m_WaterFee.m_Default} ({feePrefab.m_WaterFee.m_Default.GetType()}, {waterField})");
+            }
+            if (!Mod.setting.Logging)
+                Mod.Log($"{prefab.name}.FeeParameters: electricity {feePrefab.m_ElectricityFee.m_Default} garbage {feePrefab.m_GarbageFee.m_Default} water {feePrefab.m_WaterFee.m_Default}");
+            isPatched = true;
+        }
+
 
         // Default processing using Reflection
         if (prefabConfig.TryGetComponent(compName, out ComponentXml compConfig))

@@ -4,18 +4,6 @@
 <!-- The mod will only process prefab types listed below -->
 <!-- With detailed logging enabled, the mod will list all prefabs that are NOT modified -->
 
-<!--
-<ValidPrefabTypes>
-	<PrefabType>DemandPrefab</PrefabType>
-	<PrefabType>EconomyPrefab</PrefabType>
-	<PrefabType>ResourcePrefab</PrefabType>
-	<PrefabType>ZonePrefab</PrefabType>
-	<PrefabType>CompanyPrefab</PrefabType>
-	<PrefabType>BuildingPrefab</PrefabType> --> <!-- for Signature buildings -->
-	<!--<PrefabType>BuildingExtensionPrefab</PrefabType>-->
-<!--</ValidPrefabTypes>-->
-
-
 <!-- ECONOMY & DEMAND -->
 
 <Prefab type="EconomyPrefab" name="EconomyParameters">
@@ -43,6 +31,18 @@
 	<Field name="m_FreeCommercialProportion" valueFloat="20" /> <!-- default: 10 -->
   </Component>
 </Prefab>
+
+<Prefab type="ServiceFeeParameterPrefab" name="ServiceFeeParameters">
+	<!-- Special component, only 3 fees are supported atm -->
+	<Component name="FeeParameters">
+		<Field name="m_GarbageFee.m_Default" valueFloat="0.4" /> <!-- default: 1.0 -->
+		<!-- EXAMPLE
+		<Field name="m_ElectricityFee.m_Default" valueFloat="0.2" /> default: 0.2
+		<Field name="m_WaterFee.m_Default" valueFloat="0.1" /> default: 0.1
+		--> 
+	</Component>
+</Prefab>
+
   
   <!-- ZONES -->
 
@@ -543,6 +543,10 @@
     </Component>
     <Component name="IndustrialProcess">
       <Field name="m_MaxWorkersPerCell" valueFloat="0.6" /> <!-- 0.65 Hitech -->
+      <Field name="m_Input1.m_Amount" valueInt="1" /> <!-- 3 Grains -> 1 Petrochemicals -->
+	  <!-- EXAMPLE - please note that this should be only used with resources that take 2 inputs!
+      <Field name="m_Input2.m_Amount" valueInt="0" />
+	  -->
     </Component>
   </Prefab>
   <Prefab type="CompanyPrefab" name="Industrial_ElectronicsFactory">
