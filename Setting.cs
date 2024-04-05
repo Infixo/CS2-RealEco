@@ -33,6 +33,10 @@ public class Setting : ModSetting
 
     [SettingsUISection(kSection, kOptionsGroup)]
     public bool UseLocalConfig { get; set; }
+
+    [SettingsUISection(kSection, kOptionsGroup)]
+    public bool DumpConfig { get; set; }
+
     [SettingsUISection(kSection, kOptionsGroup)]
     public bool FeaturePrefabs { get; set; }
 
@@ -57,14 +61,22 @@ public class Setting : ModSetting
         _Hidden = true;
 #if DEBUG
         Logging = true;
+        DumpConfig = true;
 #else
         Logging = false;
+        DumpConfig = false;
 #endif
         UseLocalConfig = false;
         FeaturePrefabs = true;
         FeatureConsumptionFix = true;
         FeatureNewCompanies = true;
         FeatureCommercialDemand = true;
+    }
+
+    public override void Apply()
+    {
+        base.Apply();
+        if (FeatureNewCompanies) FeatureCommercialDemand = true;
     }
 }
 
@@ -87,10 +99,13 @@ public class LocaleEN : IDictionarySource
             { m_Setting.GetOptionGroupLocaleID(Setting.kButtonGroup), "Actions" },
 			
             { m_Setting.GetOptionLabelLocaleID(nameof(Setting.Logging)), "Detailed logging" },
-            { m_Setting.GetOptionDescLocaleID(nameof(Setting.Logging)), "Outputs more diagnostic information to the log file." },
+            { m_Setting.GetOptionDescLocaleID(nameof(Setting.Logging)), "Outputs more diagnostics information to the log file." },
 
             { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UseLocalConfig)), "Use local configuration" },
             { m_Setting.GetOptionDescLocaleID(nameof(Setting.UseLocalConfig)), "Local configuration will be used instead of the default one that is shipped with the mod." },
+
+            { m_Setting.GetOptionLabelLocaleID(nameof(Setting.DumpConfig)), "Dump configuration" },
+            { m_Setting.GetOptionDescLocaleID(nameof(Setting.DumpConfig)), "Configuration will be dumped to a separate file for diagnostics." },
 
             { m_Setting.GetOptionLabelLocaleID(nameof(Setting.FeaturePrefabs)), "Enable Prefabs" },
             { m_Setting.GetOptionDescLocaleID(nameof(Setting.FeaturePrefabs)), "Enables new prefab params." },
@@ -99,7 +114,7 @@ public class LocaleEN : IDictionarySource
             { m_Setting.GetOptionDescLocaleID(nameof(Setting.FeatureConsumptionFix)), "Enables Consumption Fix." },
 
             { m_Setting.GetOptionLabelLocaleID(nameof(Setting.FeatureNewCompanies)), "Enable New Companies" },
-            { m_Setting.GetOptionDescLocaleID(nameof(Setting.FeatureNewCompanies)), "Enables commercial companies for immaterial resources." },
+            { m_Setting.GetOptionDescLocaleID(nameof(Setting.FeatureNewCompanies)), "Enables commercial companies for immaterial resources. Requires Commercial Demand feature." },
 
             { m_Setting.GetOptionLabelLocaleID(nameof(Setting.FeatureCommercialDemand)), "Enable Commercial Demand" },
             { m_Setting.GetOptionDescLocaleID(nameof(Setting.FeatureCommercialDemand)), "Enables modded commercial demand and dedicated UI." },

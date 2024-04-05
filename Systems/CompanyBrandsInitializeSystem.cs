@@ -35,7 +35,7 @@ public partial class CompanyBrandsInitializeSystem : GameSystemBase
         {
             if (m_PrefabSystem.TryGetPrefab<CompanyPrefab>(companyEntity, out CompanyPrefab companyPrefab))
             {
-                Mod.log.Info($"CompanyBrandsInitializeSystem: patching {companyPrefab.name}");
+                Mod.LogIf($"CompanyBrandsInitializeSystem: patching {companyPrefab.name}");
 
                 string[] brands = null;
                 switch (companyPrefab.name)

@@ -216,7 +216,7 @@ public static class ConfigToolXml
                     prefab.DumpToLog();
             }
             // Save copy
-            SaveConfig();
+            if (Mod.setting.DumpConfig) SaveConfig();
         }
         catch (Exception e)
         {
@@ -231,6 +231,10 @@ public static class ConfigToolXml
         {
             string appDataDir = Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
             string dumpDir = Path.Combine(appDataDir, @"LocalLow\Colossal Order\Cities Skylines II\Mods", Mod.modAsset == null ? "RealEco" : Mod.modAsset.name);
+            if (!Directory.Exists(dumpDir))
+            {
+                Directory.CreateDirectory(dumpDir);
+            }
             string dumpFile = Path.Combine(dumpDir, _dumpFileName);
             XmlSerializer serializer = new XmlSerializer(typeof(ConfigurationXml));
             using (FileStream fs = new FileStream(dumpFile, FileMode.Create))
