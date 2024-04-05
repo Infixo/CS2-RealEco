@@ -159,9 +159,45 @@ public static class ConfigTool
         bool hasArch = methodArch != null; // this is a bit different because it is not declared in ComponentBase, so not components may have it
         Mod.LogIf($"{prefab.name}.{compName}: INIT {hasInit} {methodInit.DeclaringType.Name} LATE {hasLate} {methodLate.DeclaringType.Name} ARCH {hasArch} {(hasArch ? methodArch.DeclaringType.Name : "none")}");
 
+        // 240405 Fix for rare problems with DemandPrefab and prefabs in it - we cannot use LateInitialize
+        if (prefab.GetType() == typeof(DemandPrefab))
+        {
+            Mod.LogIf($"... DemandPrefab special treatment");
+            DemandParameterData componentData = m_EntityManager.GetComponentData<DemandParameterData>(entity);
+            DemandPrefab dp = prefab as DemandPrefab;
+            componentData.m_MinimumHappiness = dp.m_MinimumHappiness;
+            componentData.m_HappinessEffect = dp.m_HappinessEffect;
+            componentData.m_UnemploymentEffect = dp.m_UnemploymentEffect;
+            componentData.m_HomelessEffect = dp.m_HomelessEffect;
+            componentData.m_NeutralHappiness = dp.m_NeutralHappiness;
+            componentData.m_NeutralUnemployment = dp.m_NeutralUnemployment;
+            componentData.m_NeutralHomelessness = dp.m_NeutralHomelessness;
+            componentData.m_FreeResidentialProportion = dp.m_FreeResidentialProportion;
+            componentData.m_FreeCommercialProportion = dp.m_FreeCommercialProportion;
+            componentData.m_FreeIndustrialProportion = dp.m_FreeIndustrialProportion;
+            componentData.m_CommercialStorageMinimum = dp.m_CommercialStorageMinimum;
+            componentData.m_CommercialStorageEffect = dp.m_CommercialStorageEffect;
+            componentData.m_CommercialBaseDemand = dp.m_CommercialBaseDemand;
+            componentData.m_IndustrialStorageMinimum = dp.m_IndustrialStorageMinimum;
+            componentData.m_IndustrialStorageEffect = dp.m_IndustrialStorageEffect;
+            componentData.m_IndustrialBaseDemand = dp.m_IndustrialBaseDemand;
+            componentData.m_ExtractorBaseDemand = dp.m_ExtractorBaseDemand;
+            componentData.m_StorageDemandMultiplier = dp.m_StorageDemandMultiplier;
+            componentData.m_LowRentDefaultRent = dp.m_LowRentDefaultRent;
+            componentData.m_ResidentialHighDefaultRent = dp.m_ResidentialHighDefaultRent;
+            componentData.m_ResidentialLowDefaultRent = dp.m_ResidentialLowDefaultRent;
+            componentData.m_CommuterWorkerRatioLimit = dp.m_CommuterWorkerRatioLimit;
+            componentData.m_CommuterSlowSpawnFactor = dp.m_CommuterSlowSpawnFactor;
+            componentData.m_CommuterOCSpawnParameters = dp.m_CommuterOCSpawnParameters;
+            componentData.m_TouristOCSpawnParameters = dp.m_TouristOCSpawnParameters;
+            componentData.m_CitizenOCSpawnParameters = dp.m_CitizenOCSpawnParameters;
+            componentData.m_TeenSpawnPercentage = dp.m_TeenSpawnPercentage;
+            m_EntityManager.SetComponentData(entity, componentData);
+        }
+
         // The logic is that if there is only either Initialize or LateInitialize, we call them
         // I don't think there is a case where both are defined at the same time but if so - need to check on individual basis
-        if (hasInit && hasLate)
+        else if (hasInit && hasLate)
         {
             Mod.log.Warn($"DUALINIT: {prefab.name}.{compName} has both Init and LateInit; not supported.");
         }
@@ -190,6 +226,7 @@ public static class ConfigTool
 
     // Method to change the value of a field in an ECS component by name
     // NOT USED
+    /*
     public static void SetFieldValue<T>(ref T component, string fieldName, object newValue) where T : struct, IComponentData
     {
         Type type = typeof(T);
@@ -206,8 +243,10 @@ public static class ConfigTool
             Mod.log.Info($"Field '{fieldName}' not found in struct '{type.Name}'.");
         }
     }
+    */
 
     // NOT USED - CRASHES THE GAME ATM
+    /*
     public static void ConfigureComponentData<T>(ComponentXml compXml, ref T component) where T : struct, IComponentData
     {
         Type type = typeof(T);
@@ -233,6 +272,7 @@ public static class ConfigTool
                 Mod.LogIf($"{type.Name}.{field.Name}: {oldValue}");
         }
     }
+    */
 
     /// <summary>
     /// Configures a specific prefab according to the config data.
