@@ -10,7 +10,7 @@ namespace RealEco.Config;
 [HarmonyPatch]
 public static class ConfigTool
 {
-    public static bool isLatePrefabsActive = false; // will enable AddPrefab patch to process prefabs loaded AFTER mods are initialized (there are some)
+    //public static bool isLatePrefabsActive = false; // will enable AddPrefab patch to process prefabs loaded AFTER mods are initialized (there are some)
 
     private static PrefabSystem m_PrefabSystem;
     private static EntityManager m_EntityManager;
@@ -249,6 +249,7 @@ public static class ConfigTool
             ConfigureComponent(prefab, prefabConfig, component, entity, skipEntity);
     }
 
+    /* NOT USED 
     [HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
     [HarmonyPrefix]
     public static bool PrefabSystem_AddPrefab_Prefix(object __instance, PrefabBase prefab)
@@ -262,6 +263,7 @@ public static class ConfigTool
             else
                 Mod.LogIf($"{prefab.name}: SKIP {prefab.GetType().Name}");
         }
+    */
         // 240301 extract specific components
         /*
         ConfigurationXml config = ConfigToolXml.Config;
@@ -286,8 +288,8 @@ public static class ConfigTool
             }
         }
         */
-        return true;
-    }
+        //return true;
+    //}
 
 	/* NOT USED
     /// <summary>

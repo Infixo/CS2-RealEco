@@ -151,5 +151,13 @@ static bool ResourceBuyerSystem_OnUpdate()
         return true;
     }
 
+    [HarmonyPatch(typeof(Game.Prefabs.CompanyInitializeSystem), "OnUpdate")]
+    [HarmonyPrefix]
+    static bool CompanyInitializeSystem_OnUpdate(Game.Prefabs.CompanyInitializeSystem __instance, EntityQuery ___m_PrefabQuery, EntityQuery ___m_CompanyQuery)
+    {
+        Mod.Log($"CompanyInitializeSystem.OnUpdate: {___m_PrefabQuery.CalculateEntityCount()} {___m_CompanyQuery.CalculateEntityCount()}");
+        return true;
+    }
+
 #endif
 }

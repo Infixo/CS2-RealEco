@@ -74,8 +74,9 @@ public class Mod : IMod
         if (setting.FeaturePrefabs) ConfigTool.ReadAndApply();
 
         // 240401 We now have to siumulate initialization of core economy systems, this section might grow in the future
-        //ReinitializeResources();
-        //ReinitializeCompanies();
+        updateSystem.UpdateAt<RealEco.Systems.CompanyBrandsInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
+        updateSystem.UpdateAt<RealEco.Systems.CompanyPrefabReinitializeSystem>(SystemUpdatePhase.PrefabUpdate);
+        updateSystem.UpdateAt<RealEco.Systems.ResourcePrefabReinitializeSystem>(SystemUpdatePhase.PrefabUpdate);
 
         // Disable original systems
         World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.HouseholdBehaviorSystem>().Enabled = !Mod.setting.FeatureConsumptionFix;
@@ -83,10 +84,8 @@ public class Mod : IMod
 
         // Create modded systems
         RealEco.Patches.Initialize_Postfix(updateSystem); // reuse existing code
-        updateSystem.UpdateAt<RealEco.Systems.CompanyPrefabReinitializeSystem>(SystemUpdatePhase.PrefabUpdate);
-        updateSystem.UpdateAt<RealEco.Systems.ResourcePrefabReinitializeSystem>(SystemUpdatePhase.PrefabUpdate);
 
-        ConfigTool.isLatePrefabsActive = true; // enable processing of late-added prefabs
+        //ConfigTool.isLatePrefabsActive = true; // enable processing of late-added prefabs
     }
 
     public void OnDispose()

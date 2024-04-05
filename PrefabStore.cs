@@ -6,11 +6,11 @@ using Game.SceneFlow;
 using Game.Economy;
 using Game.Prefabs;
 using Game.Simulation;
-using HarmonyLib;
+//using HarmonyLib;
 
 namespace RealEco;
 
-[HarmonyPatch]
+//[HarmonyPatch]
 public static class PrefabStore
 {
     private static PrefabSystem m_PrefabSystem;
@@ -30,7 +30,7 @@ public static class PrefabStore
         return false;
     }
 
-    static bool CompaniesCreated = false;
+    //static bool CompaniesCreated = false;
     static CompanyPrefab[] CompanyPrefabs = new CompanyPrefab[4];
 
 /*
@@ -108,14 +108,21 @@ public static class PrefabStore
         //Mod.Log($"AssetCollection.AddPrefabsTo: {__instance.name} {__instance.isActive}, {__instance.m_Collections.Count} collections, {__instance.m_Prefabs.Count} prefabs");
         //if (Mod.setting.FeatureNewCompanies && !CompaniesCreated && __instance.name == "CompaniesCollection")
         //{
-            //Mod.Log($"Adding new CompanyPrefabs");
-            CompanyPrefabs[0] = CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.45f, 350f); // price 85
-            CompanyPrefabs[1] = CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Complex, 0.45f, 450f); // price 60
-            CompanyPrefabs[2] = CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.50f, 400f); // price 70
-            CompanyPrefabs[3] = CreateNewCompanyPrefab("Commercial_MediaStore", ResourceInEditor.Media, WorkplaceComplexity.Complex, 0.45f, 500f); // price 60
-            for (int i = 0; i < CompanyPrefabs.Length; i++)
+        //Mod.Log($"Adding new CompanyPrefabs");
+        CompanyPrefabs[0] = CreateNewCompanyPrefab("Commercial_SoftwareStore", ResourceInEditor.Software, WorkplaceComplexity.Complex, 0.45f, 350f); // price 85
+        CompanyPrefabs[1] = CreateNewCompanyPrefab("Commercial_TelecomStore", ResourceInEditor.Telecom, WorkplaceComplexity.Complex, 0.45f, 450f); // price 60
+        CompanyPrefabs[2] = CreateNewCompanyPrefab("Commercial_FinancialStore", ResourceInEditor.Financial, WorkplaceComplexity.Complex, 0.50f, 400f); // price 70
+        CompanyPrefabs[3] = CreateNewCompanyPrefab("Commercial_MediaStore", ResourceInEditor.Media, WorkplaceComplexity.Complex, 0.45f, 500f); // price 60
+
+        // 240405 Company Brands
+        AddCompanyBrands(CompanyPrefabs[0], BrandsSoftware);
+        AddCompanyBrands(CompanyPrefabs[1], BrandsTelecom);
+        AddCompanyBrands(CompanyPrefabs[2], BrandsFinancial);
+        AddCompanyBrands(CompanyPrefabs[3], BrandsMedia);
+
+        for (int i = 0; i < CompanyPrefabs.Length; i++)
                 m_PrefabSystem.AddPrefab(CompanyPrefabs[i], "CompaniesCollection");
-            CompaniesCreated = true;
+        //CompaniesCreated = true;
         //}
         return true;
     }
@@ -285,6 +292,7 @@ public static class PrefabStore
                 _ = ResourceStatistic_Prefix(prefab, entity);
     }
 
+    /* 240405 NOT USED
 
     static Dictionary<string, int> BrandsToPatch = new()
     {
@@ -350,6 +358,85 @@ public static class PrefabStore
             }
         }
         return true;
+    }
+    */
+
+    // 240405 Initialize Company Brands - cannot use AddPrefab on BrandPrefab as it runs before the mod
+
+    public static readonly string[] BrandsSoftware = new string[] {
+        "Cebeliverse",
+        "ChirpyTeck",
+        "DennyAlsLaw",
+        "DLCHut",
+        "FaultStudios",
+        "FixedTraffic",
+        "LuiboDigital",
+        "Speltware",
+        "Szoftver",
+        "TechOMat" };
+
+    public static readonly string[] BrandsTelecom = new string[] {
+        "Kapine", 
+        "LehtoElectronics",
+        "Pteropus" };
+
+    public static readonly string[] BrandsFinancial = new string[] {
+        "BanhammerBank",
+        "CRIMoore",
+        "Pihi",
+        "SnafuInsurance",
+        "StadelmannAndBardolf",
+        "THELawAndAccounting" };
+
+    public static readonly string[] BrandsMedia = new string[] {
+        "AshtrainRecords",
+        "BendyLetters",
+        "BootAndBug",
+        "IndieLizard",
+        "MouthwaterPress",
+        "Placesstages",
+        "PNGMedia",
+        "SingTapeRecords" };
+
+    static void AddCompanyBrands(PrefabBase companyPrefab, string[] brands)
+    {
+        Mod.LogIf($"Brands: Adding brands to {companyPrefab.name}.");
+        /*
+        if (m_PrefabSystem.TryGetEntity(companyPrefab, out var companyEntity))
+        {
+            Mod.log.Warn($"Brands: Failed to retrieve entity for {companyPrefab.name}. Brands not added.");
+            return;
+        }
+        */
+        foreach (string brandName in brands)
+        {
+            if (TryGetPrefabAndEntity("BrandPrefab", brandName, out PrefabBase brandPrefab, out Entity brandEntity))
+            {
+                // STEP 1 - add company to the brand prefab
+                Mod.LogIf($"{brandPrefab.GetType().Name}.{brandPrefab.name}: patching");
+
+                // add new company type to the brand
+                List<CompanyPrefab> tempList = new List<CompanyPrefab>((brandPrefab as BrandPrefab).m_Companies); // Convert the array to a list
+                tempList.Add(companyPrefab as CompanyPrefab);
+                (brandPrefab as BrandPrefab).m_Companies = tempList.ToArray(); // Convert the list back to an array
+
+                // show in the log
+                string text = "";
+                for (int i = 0; i < (brandPrefab as BrandPrefab).m_Companies.Length; i++)
+                    text += (brandPrefab as BrandPrefab).m_Companies[i].name + "|";
+                if ((brandPrefab as BrandPrefab).m_Companies.Length == 0)
+                    text = "None";
+                Mod.Log($"{(brandPrefab as BrandPrefab).GetType().Name}.{brandPrefab.name}: {text}");
+
+                // STEP 2 - update entity's buffer with a brand and affiliated brand
+                // Based on CompanyInitializeSystem.OnUpdate
+                //m_PrefabSystem.GetBuffer<CompanyBrandElement>(companyPrefab, isReadOnly: false).Add(new CompanyBrandElement(brandEntity));
+                //m_PrefabSystem.GetBuffer<AffiliatedBrandElement>(companyPrefab, isReadOnly: false).Add(new AffiliatedBrandElement { m_Brand = brandEntity });
+                //Mod.Log($"{companyPrefab.GetType().Name}.{companyPrefab.name}: uses {brandName}");
+            }
+            else
+                Mod.log.Warn($"Brands: Failed to retrieve BrandPrefab {brandName} from the PrefabSystem. Brands not added.");
+        }
     }
 
     // Step 2: Creation of Systems
