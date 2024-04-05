@@ -74,6 +74,7 @@ public class Mod : IMod
         if (setting.FeaturePrefabs) ConfigTool.ReadAndApply();
 
         // 240401 We now have to siumulate initialization of core economy systems, this section might grow in the future
+        updateSystem.UpdateAt<RealEco.Systems.BuildingPropertyInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
         updateSystem.UpdateAt<RealEco.Systems.CompanyBrandsInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
         updateSystem.UpdateAt<RealEco.Systems.CompanyPrefabReinitializeSystem>(SystemUpdatePhase.PrefabUpdate);
         updateSystem.UpdateAt<RealEco.Systems.ResourcePrefabReinitializeSystem>(SystemUpdatePhase.PrefabUpdate);
