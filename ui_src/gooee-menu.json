@@ -1,0 +1,8 @@
+{
+	"Icon": "Media/Game/Icons/ZoneCommercial.svg",
+	"IsFAIcon": false,
+	"Label": "Economy Rebalance",
+	"OnClick": "OnToggleVisibleCommercial",
+	"OnClickKey": "Default",
+	"Children": []
+}

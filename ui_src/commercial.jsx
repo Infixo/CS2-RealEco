@@ -1,5 +1,5 @@
 import React from 'react'
-import {useDataUpdate} from 'hookui-framework'
+import useDataUpdate from './use-data-update.js'
 import $Panel from './panel'
 
 const RowWithTwoColumns = ({left, right}) => {
@@ -93,9 +93,13 @@ const $Commercial = ({ react }) => {
 	useDataUpdate(react, 'realEco.commercialDemand', setDemandData)
 
 	const onClose = () => {
-		const data = { type: "toggle_visibility", id: 'realeco.commercial' };
-		const event = new CustomEvent('hookui', { detail: data });
-		window.dispatchEvent(event);
+		// HookUI
+		//const data = { type: "toggle_visibility", id: 'realeco.commercial' };
+		//const event = new CustomEvent('hookui', { detail: data });
+		//window.dispatchEvent(event);
+		// Gooee
+        engine.trigger("realeco.realeco.OnToggleVisibleCommercial", "Commercial");
+        engine.trigger("audio.playSound", "close-panel", 1);
 	};
 	
 	//const homelessThreshold = Math.round(residentialData[12] * residentialData[13] / 1000);
@@ -131,10 +135,14 @@ const $Commercial = ({ react }) => {
 	</$Panel>
 };
 
+export default $Commercial
+
 // Registering the panel with HookUI so it shows up in the menu
+/*
 window._$hookui.registerPanel({
 	id: "realeco.commercial",
 	name: "RealEco: Commercial",
 	icon: "Media/Game/Icons/ZoneCommercial.svg",
 	component: $Commercial
 });
+*/

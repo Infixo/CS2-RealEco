@@ -9,7 +9,7 @@ restore:
 
 build-ui:
 	@npm install
-	@npx esbuild ui_src/commercial.jsx --bundle --outfile=dist/commercial.js
+	@npx esbuild ui_src/ui.jsx --bundle --outfile=dist/ui.js
 
 copy-ui:
 	copy dist\commercial.js "C:\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~UI~\HookUI\Extensions\panel.realeco.commercial.js"
@@ -17,9 +17,9 @@ copy-ui:
 build: clean restore build-ui
 	@dotnet build /p:BepInExVersion=$(BEPINEX_VERSION)
 
-dev-com:
-	@npx esbuild ui_src/commercial.jsx --bundle --outfile=dist/commercial.js
-	copy dist\commercial.js "C:\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~UI~\HookUI\Extensions\panel.realeco.commercial.js"
+dev-ui:
+	@npx esbuild ui_src/ui.jsx --bundle --outfile=dist/ui.js
+	copy dist\ui.js "C:\Users\Grzegorz\AppData\LocalLow\Colossal Order\Cities Skylines II\Mods\Gooee\Plugins\RealEco.js"
 
 package-win:
 	@-mkdir dist
