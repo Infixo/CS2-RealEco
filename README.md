@@ -122,7 +122,7 @@ Tuning and balancing is an iterative process. The feedback about how companies a
 ### Known Issues
 - None.
 
-### [Changelog](https://github.com/Infixo/CS2-RealEco/CHANGELOG.md).
+### [Changelog](https://raw.githubusercontent.com/infixo/cs2-realeco/master/CHANGELOG.md)
 
 ### Support
 - Please report bugs and issues on [GitHub](https://github.com/Infixo/CS2-RealEco).
