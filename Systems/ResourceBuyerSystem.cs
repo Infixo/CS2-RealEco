@@ -170,25 +170,42 @@ public partial class ResourceBuyerSystem : GameSystemBase
                 if (m_TradeCosts.HasBuffer(item.m_Seller))
                 {
                     DynamicBuffer<TradeCost> costs = m_TradeCosts[item.m_Seller];
-                    TradeCost tradeCost = EconomyUtils.GetTradeCost(item.m_Resource, costs);
+                    TradeCost tradeCost = EconomyUtils.GetTradeCost(item.m_Resource, costs); // Infixo: trade costs of the Seller
                     num += (float)item.m_Amount * tradeCost.m_BuyCost;
                     float weight = EconomyUtils.GetWeight(item.m_Resource, m_ResourcePrefabs, ref m_ResourceDatas);
                     Assert.IsTrue(item.m_Amount != -1);
                     float num2 = (float)EconomyUtils.GetTransportCost(item.m_Distance, item.m_Resource, item.m_Amount, weight) / (1f + (float)item.m_Amount);
-                    TradeCost tradeCost2 = default(TradeCost);
+                    TradeCost tradeCost2 = default(TradeCost); // Infixo: trade costs of the Buyer
                     if (m_TradeCosts.HasBuffer(item.m_Buyer))
                     {
                         tradeCost2 = EconomyUtils.GetTradeCost(item.m_Resource, m_TradeCosts[item.m_Buyer]);
                     }
+                    // Infixo: update trade costs for Seller
                     if (!m_OutsideConnections.HasComponent(item.m_Seller) && (item.m_Flags & SaleFlags.CommercialSeller) != 0)
                     {
                         tradeCost.m_SellCost = math.lerp(tradeCost.m_SellCost, num2 + tradeCost2.m_SellCost, 0.5f);
+                        // 240407 This correctly updates trade costs of the seller - it passes DynamicBuffer<TradeCost> of m_Seller and updated seller costs i.e. tradeCost
                         EconomyUtils.SetTradeCost(item.m_Resource, tradeCost, costs, keepLastTime: true);
                     }
+                    // Infixo: update trade costs for Buyer
                     if (m_TradeCosts.HasBuffer(item.m_Buyer) && !m_OutsideConnections.HasComponent(item.m_Buyer))
                     {
                         tradeCost2.m_BuyCost = math.lerp(tradeCost2.m_BuyCost, num2 + tradeCost.m_BuyCost, 0.5f);
-                        EconomyUtils.SetTradeCost(item.m_Resource, tradeCost, m_TradeCosts[item.m_Buyer], keepLastTime: true);
+                        // 240407 There is something wrong here... this part is supposed to update trade costs for a Buyer
+                        // It passes BufferLookup<TradeCost> of m_Buyer HOWEVER it uses trade costs of the Seller i.e. tradeCost
+                        // 240407 I am changing tradeCost -> tradeCost2 so proper costs are used
+                        // I am also adding an extra check for NaN to see if the problem is actually solved
+                        if (float.IsNaN(tradeCost2.m_BuyCost))
+                        {
+                            tradeCost2.m_BuyCost = 0f;
+                            Mod.log.Warn($"BuyJob: NaN BuyCost for {item.m_Resource}");
+                        }
+                        if (float.IsNaN(tradeCost2.m_SellCost))
+                        {
+                            tradeCost2.m_SellCost = 0f;
+                            Mod.log.Warn($"BuyJob: NaN SellCost for {item.m_Resource}");
+                        }
+                        EconomyUtils.SetTradeCost(item.m_Resource, tradeCost2, m_TradeCosts[item.m_Buyer], keepLastTime: true);
                     }
                 }
                 if (m_Resources.HasBuffer(item.m_Seller) && EconomyUtils.GetResources(item.m_Resource, m_Resources[item.m_Seller]) <= 0)

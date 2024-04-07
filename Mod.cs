@@ -45,7 +45,7 @@ public class Mod : IMod
 
         if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
         {
-            log.Info($"{asset.name} mod asset at {asset.path}");
+            log.Info($"{asset.name} v{asset.version} mod asset at {asset.path}");
             modAsset = asset;
             //DumpObjectData(asset);
         }

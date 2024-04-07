@@ -62,22 +62,15 @@ The mod has **many** features, most of them are **configurable**. Please see Git
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/economy-rebalance.1657478/" />
 	<!--Version of the mod-->
-	<ModVersion Value="0.8" />
+	<ModVersion Value="0.8.1" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="77225" /> <!-- Gooee -->
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog>
-v0.8.0 (2024-04-05)
-* Commercial Demand window is now available via Gooee.
-* Fixes New Companies not spawning (thank you augustpower71 for reporting it).
-* Fixes a rare issue with DemandPrefb (thank you wolvherin78 for reporting it).
-* DumpConfig is now an option, when enabled a local directory will be crated.
-
-v0.7.0 (2024-04-03)
-* Mod migrated to the PDXMods platform.
-	</ChangeLog>
+	<ChangeLog Value="v0.8.1 (2024-04-07) Patch to fix NaN issue with trade costs." />
+	<!--ChangeLog>
+	</ChangeLog-->
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 	<ExternalLink Type="github" Url="https://github.com/Infixo/CS2-RealEco" />
 	<ExternalLink Type="discord" Url="https://discord.com/channels/1169011184557637825/1207641575362920508" />

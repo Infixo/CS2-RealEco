@@ -36,7 +36,6 @@ public partial class RealEcoController : Controller<RealEcoModel>
 public class RealEcoGooeePluginWithControllers : IGooeePluginWithControllers, IGooeeStyleSheet
 {
     public string Name => "RealEco";
-    public string Version => "0.8.0";
     public string ScriptResource => "RealEco.dist.ui.js";
     public string StyleResource => "RealEco.dist.ui.css";
 
