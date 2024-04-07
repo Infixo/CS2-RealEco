@@ -114,52 +114,16 @@ Tuning and balancing is an iterative process. The feedback about how companies a
 ## Technical
 
 ### Requirements and Compatibility
-- Cities Skylines II version 1.1.0f1 or later; check GitHub or Discord if the mod is compatible with the latest game version.
-- BepInEx 5.
-- HookUI v1.1 or later.
+- Cities Skylines II version 1.1.1f1 or later; check GitHub or Discord if the mod is compatible with the latest game version.
+- Gooee framework by Cities2Modding.
 - The mod will modify the savefile if new companies feature is enabled.
 - Modified systems: HouseholdBehaviorSystem (when consumption fix is enabled), ResourceBuyerSystem (when new companies feature is enabled), CommercialDemandSystem (if modded commercial demand is enabled).
 
-### Installation
-1. Place the `RealEco.dll` file in your BepInEx `Plugins` folder.
-2. The BepInEx config file `RealEco.cfg` is automatically created in BepInEx\config when the game is run once.
-
 ### Known Issues
-- (v0.4) The resource labels in the Statistics window are not displayed correctly for new companies.
+- None.
 
-### Changelog
-- v0.6.1 (2024-03-26)
-  - Labels in Statistics window are now displayed in the language active during the game startup.
-- v0.6.0 (2024-03-21)
-  - Mod updated for v1.1 of the game.
-- v0.5.1 (2024-03-19)
-  - Fixed issue with Mixed Zones classified as High Density.
-  - Slightly boosts profitability of Saw Mill and Leisure Commercial companies.
-- v0.5.0 (2024-03-14)
-  - Modded commercial demand.
-  - Commercial demand UI window.
-  - Commercial companies balancing and tuning.
-- v0.4.0 (2024-03-06)
-  - Mod features can be selectively turned on/off.
-  - Wages are slightly tweaked to decrease profitability when the company levels up. This also helps with increased number of workers.
-  - Industrial Signature buildings have approx. 20% less workers.
-  - New commercial companies selling immaterial resources - experimental feature, disabled by default.
-- v0.3.0 (2024-03-01)
-  - Configuration stored in the xml file.
-  - More tuning and balancing.
-  - New features: tweaks for residential building upkeeps and more industrial and office jobs.
-  - Fixed issue where some industrial process tweaks were not applied.
-- v0.2.0 (2024-02-18)
-  - Tuning and balancing, especially in the early game.
-  - Garbage fee adjustment.
-- v0.1.0 (2024-02-15)
-  - Initial build.
+### [Changelog](https://github.com/Infixo/CS2-RealEco/CHANGELOG.md).
 
 ### Support
 - Please report bugs and issues on [GitHub](https://github.com/Infixo/CS2-RealEco).
-- You may also leave comments on [Discord1](https://discord.com/channels/1169011184557637825/1207641575362920508) or [Discord2](https://discord.com/channels/1024242828114673724/1207641284647587922).
-
-## Disclaimers and Notes
-
-> [!NOTE]
-The mod uses Cities: Skylines 2 Mod Template by Captain-Of-Coit.
+- You may also leave comments on [Discord](https://discord.com/channels/1169011184557637825/1207641575362920508).
