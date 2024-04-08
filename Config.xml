@@ -82,7 +82,7 @@
 </Prefab>
 <Prefab type="ZonePrefab" name="NA Residential Mixed">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="330" /> <!-- 450 -->
+		<Field name="m_Upkeep" valueFloat="390" /> <!-- 450 -->
 	</Component>
 	<Component name="ZoneProperties">
 		<Field name="m_SpaceMultiplier" valueFloat="2.1" /> <!-- 2.5 -->
@@ -90,17 +90,27 @@
 </Prefab>
 <Prefab type="ZonePrefab" name="EU Residential Medium">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="200" /> <!-- 250 -->
+		<Field name="m_Upkeep" valueFloat="230" /> <!-- 250 -->
 	</Component>
 </Prefab>
 <Prefab type="ZonePrefab" name="NA Residential Medium">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="200" /> <!-- 250 -->
+		<Field name="m_Upkeep" valueFloat="230" /> <!-- 250 -->
+	</Component>
+</Prefab>
+<Prefab type="ZonePrefab" name="EU Residential Medium Row">
+	<Component name="ZoneServiceConsumption">
+		<Field name="m_Upkeep" valueFloat="220" /> <!-- 140 -->
+	</Component>
+</Prefab>
+<Prefab type="ZonePrefab" name="NA Residential Medium Row">
+	<Component name="ZoneServiceConsumption">
+		<Field name="m_Upkeep" valueFloat="220" /> <!-- 140 -->
 	</Component>
 </Prefab>
 <Prefab type="ZonePrefab" name="Residential LowRent">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="150" /> <!-- 900 -->
+		<Field name="m_Upkeep" valueFloat="180" /> <!-- 900 -->
 	</Component>
 </Prefab>
 <Prefab type="ZonePrefab" name="Industrial Manufacturing">
