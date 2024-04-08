@@ -78,6 +78,7 @@ public class Mod : IMod
         updateSystem.UpdateAt<RealEco.Systems.CompanyBrandsInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
         updateSystem.UpdateAt<RealEco.Systems.CompanyPrefabReinitializeSystem>(SystemUpdatePhase.PrefabUpdate);
         updateSystem.UpdateAt<RealEco.Systems.ResourcePrefabReinitializeSystem>(SystemUpdatePhase.PrefabUpdate);
+        updateSystem.UpdateAt<RealEco.Systems.BuildingReinitializeSystem>(SystemUpdatePhase.PrefabUpdate);
 
         // Disable original systems
         World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<Game.Simulation.HouseholdBehaviorSystem>().Enabled = !Mod.setting.FeatureConsumptionFix;
