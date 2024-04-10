@@ -1,5 +1,8 @@
 ## Changelog
 
+- v0.8.2 (2024-04-08)
+  - Fixes upkeep and space multiplier for spawnable buildings.
+  
 - v0.8.1 (2024-04-07)
   - Patch to fix NaN issue with trade costs.
   

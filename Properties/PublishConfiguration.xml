@@ -45,6 +45,10 @@ The mod has **many** features, most of them are **configurable**. Please see Git
 * (V0.4) Commercial demand is more sensitive for taxes and number of customers. It may disappear if you overinvest.
 * (v0.5) More hotels and motels in the city.
 
+## Compatibility note
+
+Please note that due to changes is many economical parameters the mod recalculates data for **all buildings, resources and companies** in the game. It may overwrite changes done by other mods if loaded after them. If you want to also run other mods that tweak economy, then I recommend to set load order in such a way that Economy Rebalance would load before other mods, so they can still apply their changes.
+
 ## Technical
 
 * The options are applied only once, during the mod initialization. For new setting to take effect, you need to **restart the game**.
@@ -62,13 +66,13 @@ The mod has **many** features, most of them are **configurable**. Please see Git
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/economy-rebalance.1657478/" />
 	<!--Version of the mod-->
-	<ModVersion Value="0.8.1" />
+	<ModVersion Value="0.8.2" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="77225" /> <!-- Gooee -->
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog Value="v0.8.1 (2024-04-07) Patch to fix NaN issue with trade costs." />
+	<ChangeLog Value="v0.8.2 (2024-04-08) Fixes upkeep and space multiplier for spawnable buildings." />
 	<!--ChangeLog>
 	</ChangeLog-->
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
