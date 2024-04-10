@@ -1,5 +1,8 @@
 ## Changelog
 
+- v0.8.3 (2024-04-10)
+  - Fixes gas stations and motels selling all resources.
+
 - v0.8.2 (2024-04-08)
   - Fixes upkeep and space multiplier for spawnable buildings.
   
