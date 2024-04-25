@@ -1,5 +1,10 @@
 ## Changelog
 
+- v0.8.4 (2024-04-25)
+  - Updated for v1.1.2 of the game.
+  - LandValue params tweaked to allow for High Density Residentials to level up. This will result in approx. 2x higher LV than in the vanilla game.
+  - Old Config.xml from v0.8.3 is available in the mod files.
+  
 - v0.8.3 (2024-04-10)
   - Fixes gas stations and motels selling all resources.
 

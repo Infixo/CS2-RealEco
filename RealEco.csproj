@@ -5,7 +5,7 @@
 		<TargetFramework>net472</TargetFramework>
 		<Configurations>Debug;Release</Configurations>
 		<LangVersion>11.0</LangVersion>		
-		<Version>0.8.3</Version>
+		<Version>0.8.4</Version>
 		
 		<!--The folder where Game.dll is located. Set it only if the game is not installed in the default location, otherwise keep it empty-->
 		<CustomManagedPath>C:\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Managed</CustomManagedPath>
@@ -111,6 +111,9 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <None Update="Config.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="docs\Config_v0.8.3.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

@@ -223,15 +223,13 @@ public partial class BuildingReinitializeSystem : GameSystemBase
                 refConsData.m_TelecomNeed = zoneServiceConsumptionData.m_TelecomNeed;
 
                 // SpaceMultiplier in case it is inherited from ZonePrefab
+                ZonePropertiesData zonePropertiesData = _Game_Prefabs_ZonePropertiesData_RO_ComponentLookup[zonePrefabEntity];
                 ref BuildingPropertyData refPropData = ref nativeArray9.ElementAt(m);
                 if (!prefab.Has<BuildingProperties>() || // default case - no BuildingProperties
                     refPropData.m_AllowedSold == Resource.Lodging || // hotels & motels - Commercial Zone
                     refPropData.m_AllowedSold == Resource.Petrochemicals // gas stations - Commercial Zone
                     )
                 {
-                    ZonePropertiesData zonePropertiesData = _Game_Prefabs_ZonePropertiesData_RO_ComponentLookup[zonePrefabEntity];
-                    float oldSpaceMult = refPropData.m_SpaceMultiplier;
-
                     /* 240410 Fix for motels and gas stations seling everything. Cannot copy all data from zones here, need more logic.
                     float num = (zonePropertiesData.m_ScaleResidentials ? ((1f + 0.25f * (float)(level - 1)) * (float)lotSize) : 1f);
                     refPropData.m_ResidentialProperties = (int)math.round(num * zonePropertiesData.m_ResidentialProperties);
@@ -239,6 +237,7 @@ public partial class BuildingReinitializeSystem : GameSystemBase
                     refPropData.m_AllowedManufactured = zonePropertiesData.m_AllowedManufactured;
                     refPropData.m_AllowedStored = zonePropertiesData.m_AllowedStored;
                     */
+                    float oldSpaceMult = refPropData.m_SpaceMultiplier;
                     refPropData.m_SpaceMultiplier = zonePropertiesData.m_SpaceMultiplier;
 
                     // Track space mult changes
@@ -258,6 +257,14 @@ public partial class BuildingReinitializeSystem : GameSystemBase
                     Mod.LogIf($"{prefab.name}.m_SpaceMultiplier: SKIP");
                 }
 #endif
+
+                // 240411 Trying to fix homeless issue
+#if DEBUG
+                float num = (zonePropertiesData.m_ScaleResidentials ? ((1f + 0.25f * (float)(level - 1)) * (float)lotSize) : 1f);
+                int newResidentialProperties = (int)math.round(num * zonePropertiesData.m_ResidentialProperties);
+                Mod.LogIf($"{prefab.name}.m_ResidentialProperties: {refPropData.m_ResidentialProperties} -> {(refPropData.m_ResidentialProperties == newResidentialProperties ? "SAME" : newResidentialProperties)}");
+#endif
+
             } // chunk loop
         } // archetype chunk loop
 

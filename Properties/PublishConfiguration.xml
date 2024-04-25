@@ -66,15 +66,15 @@ Please note that due to changes is many economical parameters the mod recalculat
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/economy-rebalance.1657478/" />
 	<!--Version of the mod-->
-	<ModVersion Value="0.8.3" />
+	<ModVersion Value="0.8.4" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="77225" /> <!-- Gooee -->
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog Value="Fixes gas stations and motels selling all resources." />
-	<!--ChangeLog>
-	</ChangeLog-->
+	<ChangeLog>* Updated for v1.1.2 of the game.
+* LandValue params tweaked to allow for High Density Residentials to level up. This will result in approx. 2x higher LV than in the vanilla game.
+* Old Config.xml from v.0.8.3 is available in the mod files.</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 	<ExternalLink Type="github" Url="https://github.com/Infixo/CS2-RealEco" />
 	<ExternalLink Type="discord" Url="https://discord.com/channels/1169011184557637825/1207641575362920508" />

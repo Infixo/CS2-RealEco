@@ -29,11 +29,11 @@
 		<Field name="m_ExtractorCompanyExportMultiplier" valueFloat="0.75" />
 		<!-- default 0.0001f, commercial is 0.0010f, extractor is 64/10000 i.e. 0.0064f -->
 		<Field name="m_IndustrialProfitFactor" valueFloat="0.0008" />
-		<Field name="m_Wage0" valueInt="1250" /> <!-- 1200, 1550 -->
-		<Field name="m_Wage1" valueInt="1630" /> <!-- 2000, 1900 -->
-		<Field name="m_Wage2" valueInt="2710" /> <!-- 2500, 2980 -->
+		<Field name="m_Wage0" valueInt="1330" /> <!-- 1200, 1550 -->
+		<Field name="m_Wage1" valueInt="1700" /> <!-- 2000, 1900 -->
+		<Field name="m_Wage2" valueInt="2770" /> <!-- 2500, 2980 -->
 		<Field name="m_Wage3" valueInt="3880" /> <!-- 3500, 4020 -->
-		<Field name="m_Wage4" valueInt="5140" /> <!-- 5000, 5010 -->
+		<Field name="m_Wage4" valueInt="5040" /> <!-- 5000, 5010 -->
 		<Field name="m_Pension" valueInt="1000" /> <!-- 800 -->
 		<Field name="m_FamilyAllowance" valueInt="400" /> <!-- 300 -->
 		<Field name="m_UnemploymentBenefit" valueInt="600" /> <!-- 800 -->
@@ -51,43 +51,11 @@
 <Prefab type="ServiceFeeParameterPrefab" name="ServiceFeeParameters">
 	<!-- Special component, only 3 fees are supported atm -->
 	<Component name="FeeParameters">
-		<Field name="m_GarbageFee.m_Default" valueFloat="0.3" /> <!-- default: 1.0 -->
+		<Field name="m_GarbageFee.m_Default" valueFloat="0.4" /> <!-- default: 1.0 -->
 		<!-- EXAMPLE
 		<Field name="m_ElectricityFee.m_Default" valueFloat="0.2" /> default: 0.2
 		<Field name="m_WaterFee.m_Default" valueFloat="0.1" /> default: 0.1
 		--> 
-	</Component>
-</Prefab>
-
-
-<!-- LAND VALUE -->
-
-<Prefab type="LandValuePrefab" name="LandValueParamerters">
-	<Component name="LandValuePrefab">
-		<Field name="m_CommonFactorMaxBonus" valueInt="200" /> <!-- 100 -->
-		<Field name="m_LandValueBaseline" valueFloat="10" /> <!-- 10 -->
-		<!-- Coverage -->
-		<Field name="m_HealthCoverageBonusMultiplier" valueFloat="4" /> <!-- 2 -->
-		<Field name="m_EducationCoverageBonusMultiplier" valueFloat="4" /> <!-- 2 -->
-		<Field name="m_PoliceCoverageBonusMultiplier" valueFloat="4" /> <!-- 2 -->
-		<!-- Availability -->
-		<Field name="m_CommercialServiceBonusMultiplier" valueFloat="10" /> <!-- 5 -->
-		<Field name="m_BusBonusMultiplier" valueFloat="15" /> <!-- 5 -->
-		<Field name="m_TramSubwayBonusMultiplier" valueFloat="120" /> <!-- 50 -->
-		<!-- Cell effects -->
-		<Field name="m_AttractivenessBonusMultiplier" valueFloat="8" /> <!-- 5 -->
-		<Field name="m_TelecomCoverageBonusMultiplier" valueFloat="80" /> <!-- 20 -->
-		<!-- Pollution -->
-		<Field name="m_GroundPollutionPenaltyMultiplier" valueFloat="0.005" /> <!-- 10 -->
-		<Field name="m_AirPollutionPenaltyMultiplier" valueFloat="0.05" /> <!-- 0.1 -->
-		<Field name="m_NoisePollutionPenaltyMultiplier" valueFloat="0.02" /> <!-- 0.01 -->
-	</Component>
-</Prefab>
-
-
-<Prefab type="HealthcarePrefab" name="HealthcareParameters">
-	<Component name="HealthcarePrefab">
-		<Field name="m_TransportWarningTime" valueFloat="120" /> <!-- 60 -->
 	</Component>
 </Prefab>
 
@@ -96,12 +64,12 @@
 
 <Prefab type="ZonePrefab" name="EU Residential High">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="400" /> <!-- 900 -->
+		<Field name="m_Upkeep" valueFloat="600" /> <!-- 900 -->
 	</Component>
 </Prefab>
 <Prefab type="ZonePrefab" name="NA Residential High">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="400" /> <!-- 900 -->
+		<Field name="m_Upkeep" valueFloat="600" /> <!-- 900 -->
 	</Component>
 </Prefab>
 <Prefab type="ZonePrefab" name="EU Residential Mixed">
@@ -114,7 +82,7 @@
 </Prefab>
 <Prefab type="ZonePrefab" name="NA Residential Mixed">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="330" /> <!-- 450 -->
+		<Field name="m_Upkeep" valueFloat="390" /> <!-- 450 -->
 	</Component>
 	<Component name="ZoneProperties">
 		<Field name="m_SpaceMultiplier" valueFloat="2.1" /> <!-- 2.5 -->
@@ -122,27 +90,27 @@
 </Prefab>
 <Prefab type="ZonePrefab" name="EU Residential Medium">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="240" /> <!-- 250 -->
+		<Field name="m_Upkeep" valueFloat="230" /> <!-- 250 -->
 	</Component>
 </Prefab>
 <Prefab type="ZonePrefab" name="NA Residential Medium">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="240" /> <!-- 250 -->
+		<Field name="m_Upkeep" valueFloat="230" /> <!-- 250 -->
 	</Component>
 </Prefab>
 <Prefab type="ZonePrefab" name="EU Residential Medium Row">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="230" /> <!-- 140 -->
+		<Field name="m_Upkeep" valueFloat="220" /> <!-- 140 -->
 	</Component>
 </Prefab>
 <Prefab type="ZonePrefab" name="NA Residential Medium Row">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="230" /> <!-- 140 -->
+		<Field name="m_Upkeep" valueFloat="220" /> <!-- 140 -->
 	</Component>
 </Prefab>
 <Prefab type="ZonePrefab" name="Residential LowRent">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="140" /> <!-- 900 -->
+		<Field name="m_Upkeep" valueFloat="180" /> <!-- 900 -->
 	</Component>
 </Prefab>
 <Prefab type="ZonePrefab" name="Industrial Manufacturing">
@@ -152,7 +120,7 @@
 </Prefab>
 <Prefab type="ZonePrefab" name="Office High">
 	<Component name="ZoneServiceConsumption">
-		<Field name="m_Upkeep" valueFloat="600" /> <!-- 200 -->
+		<Field name="m_Upkeep" valueFloat="500" /> <!-- 200 -->
 	</Component>
 	<Component name="ZoneProperties">
 		<Field name="m_SpaceMultiplier" valueFloat="8.0" /> <!-- 5.0 -->

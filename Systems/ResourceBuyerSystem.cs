@@ -30,7 +30,7 @@ using Game.Simulation;
 
 namespace RealEco.Systems;
 
-[CompilerGenerated]
+//[CompilerGenerated]
 public partial class ResourceBuyerSystem : GameSystemBase
 {
     [Flags]
@@ -351,7 +351,6 @@ public partial class ResourceBuyerSystem : GameSystemBase
         }
     }
 
-
     //[BurstCompile]
     private struct HandleBuyersJob : IJobChunk
     {
@@ -614,19 +613,19 @@ public partial class ResourceBuyerSystem : GameSystemBase
                         Entity household = m_HouseholdMembers[entity].m_Household;
                         Household householdData = m_Households[household];
                         DynamicBuffer<HouseholdCitizen> dynamicBuffer2 = m_HouseholdCitizens[household];
-                        FindShopForCitizen(chunk, unfilteredChunkIndex, entity, resourceBuyer.m_ResourceNeeded, resourceBuyer.m_AmountNeeded, resourceBuyer.m_Flags, citizen, householdData, dynamicBuffer2.Length);
+                        FindShopForCitizen(chunk, unfilteredChunkIndex, entity, resourceBuyer.m_ResourceNeeded, resourceBuyer.m_AmountNeeded, resourceBuyer.m_Flags, citizen, householdData, dynamicBuffer2.Length, flag);
                         //Plugin.Log($"FindShopForCitizen {entity.Index} {resourceBuyer.m_AmountNeeded} {resourceBuyer.m_ResourceNeeded}: flags {resourceBuyer.m_Flags} household {household.Index}");
                     }
                     else
                     {
-                        FindShopForCompany(chunk, unfilteredChunkIndex, entity, resourceBuyer.m_ResourceNeeded, resourceBuyer.m_AmountNeeded, resourceBuyer.m_Flags);
+                        FindShopForCompany(chunk, unfilteredChunkIndex, entity, resourceBuyer.m_ResourceNeeded, resourceBuyer.m_AmountNeeded, resourceBuyer.m_Flags, flag);
                         //Plugin.Log($"FindShopForCompany {entity.Index} {resourceBuyer.m_AmountNeeded} {resourceBuyer.m_ResourceNeeded}: flags {resourceBuyer.m_Flags}");
                     }
                 }
             }
         }
 
-        private void FindShopForCitizen(ArchetypeChunk chunk, int index, Entity buyer, Resource resource, int amount, SetupTargetFlags flags, Citizen citizenData, Household householdData, int householdCitizenCount)
+        private void FindShopForCitizen(ArchetypeChunk chunk, int index, Entity buyer, Resource resource, int amount, SetupTargetFlags flags, Citizen citizenData, Household householdData, int householdCitizenCount, bool virtualGood)
         {
             m_CommandBuffer.AddComponent(index, buyer, in m_PathfindTypes);
             m_CommandBuffer.SetComponent(index, buyer, new PathInformation
@@ -663,6 +662,10 @@ public partial class ResourceBuyerSystem : GameSystemBase
             setupQueueTarget.m_RandomCost = 30f;
             setupQueueTarget.m_ActivityMask = creatureData.m_SupportedActivities;
             SetupQueueTarget destination = setupQueueTarget;
+            if (virtualGood)
+            {
+                parameters.m_PathfindFlags |= PathfindFlags.SkipPathfind;
+            }
             if (m_HouseholdMembers.HasComponent(buyer))
             {
                 Entity household = m_HouseholdMembers[buyer].m_Household;
@@ -707,7 +710,7 @@ public partial class ResourceBuyerSystem : GameSystemBase
             m_PathfindQueue.Enqueue(value);
         }
 
-        private void FindShopForCompany(ArchetypeChunk chunk, int index, Entity buyer, Resource resource, int amount, SetupTargetFlags flags)
+        private void FindShopForCompany(ArchetypeChunk chunk, int index, Entity buyer, Resource resource, int amount, SetupTargetFlags flags, bool virtualGood)
         {
             m_CommandBuffer.AddComponent(index, buyer, in m_PathfindTypes);
             m_CommandBuffer.SetComponent(index, buyer, new PathInformation
@@ -735,6 +738,10 @@ public partial class ResourceBuyerSystem : GameSystemBase
             setupQueueTarget.m_Value = amount;
             setupQueueTarget.m_Flags = flags;
             SetupQueueTarget destination = setupQueueTarget;
+            if (virtualGood)
+            {
+                parameters.m_PathfindFlags |= PathfindFlags.SkipPathfind;
+            }
             SetupQueueItem value = new SetupQueueItem(buyer, parameters, origin, destination);
             m_PathfindQueue.Enqueue(value);
         }
